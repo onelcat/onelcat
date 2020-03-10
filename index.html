@@ -229,6 +229,370 @@
 
 
   
+    <article id="post-超文本传输协议" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="2015/02/26/超文本传输协议/">超文本传输协议</a>
+    </h1>
+  
+
+        
+        <a href="2015/02/26/超文本传输协议/" class="archive-article-date">
+  	<time datetime="2015-02-26T11:50:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-02-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="HTTP（HyperText-Transfer-Protocol，超文本传输协议）"><a href="#HTTP（HyperText-Transfer-Protocol，超文本传输协议）" class="headerlink" title="HTTP（HyperText Transfer Protocol，超文本传输协议）"></a>HTTP（HyperText Transfer Protocol，超文本传输协议）</h2><p> HTTP是一个应用层协议，虽然在2015年已推出HTTP/2版本，并被主要的web浏览器和web服务器支持。但目前使用最广泛的还是HTTP/1.1版本。有关历史请查阅<a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#History" target="_blank" rel="noopener">这里</a>。</p>
+<ul>
+<li>支持客户/服务器模式。</li>
+<li>简单快速：客户向服务器请求服务时，只需传送请求方法和路径。由于HTTP协议简单，使得HTTP服务器的程序规模小，因而通信速度很快。</li>
+<li>灵活：HTTP允许传输任意类型的数据对象。正在传输的类型由Content-Type加以标记。</li>
+<li>无连接：无连接的含义是限制每次连接只处理一个请求。服务器处理完客户的请求，并收到客户的应答后，即断开连接。采用这种方式可以节省传输时间。</li>
+<li>无状态：HTTP协议是无状态协议。无状态是指协议对于事务处理没有记忆能力。缺少状态意味着如果后续处理需要前面的信息，则它必须重传，这样可能导致每次连接传送的数据量增大。另一方面，在服务器不需要先前信息时它的应答就较快。为了解决这个问题， Web程序引入了Cookie机制来维护状态。</li>
+</ul>
+<p>另外，HTTP请求报文和响应报文都是由开始行（对于请求消息，开始行就是请求行，对于响应消息，开始行就是状态行），消息报头（可选），空行（只有CRLF的行），消息正文（可选）组成。将在下面详细讲解.</p>
+<h2 id="请求报文结构"><a href="#请求报文结构" class="headerlink" title="请求报文结构"></a>请求报文结构</h2><p>报文中的数据都使用ASCII编码，各个字段的长度是不确定的（除了作为结尾的CRLF外，不允许出现单独的CR或LF字符）。</p>
+<p><img src="../images/http_01.png" alt="图一"></p>
+<h3 id="请求报文样例"><a href="#请求报文样例" class="headerlink" title="请求报文样例"></a>请求报文样例</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">POST /search HTTP/1.1  </span><br><span class="line">Accept:image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/vnd.ms-excel, application/vnd.ms-powerpoint, </span><br><span class="line">application/msword, application/x-silverlight, application/x-shockwave-flash, */*  </span><br><span class="line">Referer:http://www.google.cn/  </span><br><span class="line">Accept-Language:zh-cn  </span><br><span class="line">Accept-Encoding:gzip, deflate  </span><br><span class="line">User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727; TheWorld)  </span><br><span class="line">Host:www.google.cn </span><br><span class="line">Connection:Keep-Alive  </span><br><span class="line">Cookie:PREF=ID=80a06da87be9ae3c:U=f7167333e2c3b714:NW=1:TM=1261551909:LM=1261551917:S=ybYcq2wpfefs4V9g; </span><br><span class="line">NID=31=ojj8d-IygaEtSxLgaJmqSjVhCspkviJrB6omjamNrSm8lZhKy_yMfO2M4QMRKcH1g0iQv9u-2hfBW7bUFwVh7pGaRUb0RnHcJU37y-</span><br><span class="line">FxlRugatx63JLv7CWMD6UB_O_r</span><br></pre></td></tr></table></figure>
+
+<h2 id="请求报文参数详解"><a href="#请求报文参数详解" class="headerlink" title="请求报文参数详解"></a>请求报文参数详解</h2><p>所有请求方法名称全为大写，目前有9种：<br><img src="../images/http_02.png" alt="图二"></p>
+<blockquote>
+<ul>
+<li>安全性：<a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol" target="_blank" rel="noopener">传送门</a></li>
+</ul>
+</blockquote>
+<ul>
+<li>幂等性: 表示的操作至多只会被处理一次，每次调用都将返回第一次调用时的处理结果。</li>
+</ul>
+<h3 id="关于HTTP请求GET和POST的区别"><a href="#关于HTTP请求GET和POST的区别" class="headerlink" title="关于HTTP请求GET和POST的区别"></a>关于HTTP请求GET和POST的区别</h3><ol>
+<li>提交形式：GET提交的数据会放在URL之后，以?分割URL和传输数据，参数之间以&amp;相连，如EditPosts.aspx?name=test1&amp;id=123456.  POST方法是把提交的数据放在HTTP包的Body中.</li>
+<li>传输数据的大小： HTTP协议本身没有对传输的数据大小进行限制，HTTP协议规范也没有对URL长度进行限制。 而在实际开发中存在的限制主要有：  <ul>
+<li>GET:特定浏览器和服务器对URL长度有限制，例如IE对URL长度的限制是2083字节(2K+35)。对于其他浏览器，如Netscape、FireFox等，理论上没有长度限制，其限制取决于操作系统的支持。<br>因此对于GET提交时，传输数据就会受到URL长度的限制。</li>
+<li>POST:由于不是通过URL传值，理论上数据不受限。但实际各个WEB服务器会规定对post提交数据大小进行限制，Apache、IIS6都有各自的配置。</li>
+</ul>
+</li>
+<li>安全性：<br> POST的安全性要比GET的安全性高，具有真正的Security的含义。而且通过GET提交数据，用户名和密码将明文出现在URL上，因为登录页面有可能被浏览器缓存，其他用户浏览历史纪录就可以拿到账号和密码了。</li>
+</ol>
+<h2 id="请求报头域"><a href="#请求报头域" class="headerlink" title="请求报头域"></a>请求报头域</h2><p>报头域指头部中的Key，且不分大小写。<br><img src="../images/http_03.png" alt="图三"></p>
+<h2 id="响应报文结构"><a href="#响应报文结构" class="headerlink" title="响应报文结构"></a>响应报文结构</h2><p>如下图所见，响应报文结构与请求报文结构唯一真正的区别在于第一行中用状态信息代替了请求信息。状态行（status line）通过提供一个状态码来说明所请求的资源情况。<br><img src="../images/http_04.png" alt="图四"></p>
+<h3 id="响应报文样例"><a href="#响应报文样例" class="headerlink" title="响应报文样例"></a>响应报文样例</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Mon, 23 May 2005 22:38:34 GMT</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br><span class="line">Content-Encoding: UTF-8</span><br><span class="line">Content-Length: 138</span><br><span class="line">Last-Modified: Wed, 08 Jan 2003 23:11:55 GMT</span><br><span class="line">Server: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)</span><br><span class="line">ETag: <span class="string">"3f80f-1b6-3e1cb03b"</span></span><br><span class="line">Accept-Ranges: bytes</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;title&gt;An Example Page&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">Hello World, this is a very simple HTML document.</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="HTTP响应的状态码"><a href="#HTTP响应的状态码" class="headerlink" title="HTTP响应的状态码"></a>HTTP响应的状态码</h3><blockquote>
+<p>状态代码由三位数字组成，第一个数字定义了响应的类别，且有五种可能取值。</p>
+<ul>
+<li>1xx：指示信息–表示请求已接收，继续处理。</li>
+<li>2xx：成功–表示请求已被成功接收、理解、接受。</li>
+<li>3xx：重定向–要完成请求必须进行更进一步的操作。</li>
+<li>4xx：客户端错误–请求有语法错误或请求无法实现。</li>
+<li>5xx：服务器端错误–服务器未能实现合法的请求。</li>
+</ul>
+</blockquote>
+<p><strong>常用状态码：</strong></p>
+<blockquote>
+<p>304 Not Modified：代表上次的文档已经被缓存了， 还可以继续使用。<br>400 bad request   - 请求格式错误。<br>401 unauthorized   - 未授权。<br>403 forbidden   - 鉴权成功，但是该用户没有权限。<br>404 not found - 请求的资源不存在。<br>405 method not allowed - 该http方法不被允许。<br>410 gone - 这个url对应的资源现在不可用。<br>415 unsupported media type - 请求类型错误。<br>422 unprocessable entity - 校验错误时用。<br>429 too many request - 请求过多。<br>500 Internal Server Error：服务器发生了不可预期的错误。<br>503 Server Unavailable：服务器当前不能处理客户端的请求，一段时间后可能恢复正常。<br><strong>更多状态码<a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes" target="_blank" rel="noopener">传送门</a></strong></p>
+</blockquote>
+<h2 id="响应报头域"><a href="#响应报头域" class="headerlink" title="响应报头域"></a>响应报头域</h2><p>报头域指头部中的Key，且不分大小写。<br><img src="../images/http_05.png" alt="图五"></p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netdb.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sock,n;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">hostent</span> *<span class="title">hent</span>;</span></span><br><span class="line">    </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">servaddr</span> = &#123;</span> <span class="number">0</span> &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">char</span> host_name[] = <span class="string">"www.csdn.net"</span>;</span><br><span class="line">    <span class="keyword">char</span> ip[<span class="number">32</span>] = &#123; <span class="number">0</span> &#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">char</span> buf[] = <span class="string">"GET /index.html HTTP/1.1\r\n\</span></span><br><span class="line"><span class="string">Host: 101.201.172.229:8080\r\n\</span></span><br><span class="line"><span class="string">Proxy-Connection: keep-alive\r\n\</span></span><br><span class="line"><span class="string">Cache-Control: max-age=0\r\n\</span></span><br><span class="line"><span class="string">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\r\n\</span></span><br><span class="line"><span class="string">User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36\r\n\</span></span><br><span class="line"><span class="string">Accept-Encoding: gzip,deflate,sdch\r\n\</span></span><br><span class="line"><span class="string">Accept-Language: zh-CN,zh;q=0.8,en;q=0.6\r\n\</span></span><br><span class="line"><span class="string">\r\n"</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">char</span> rbuf[<span class="number">2048</span>] = &#123; <span class="number">0</span> &#125;;</span><br><span class="line">    </span><br><span class="line">    sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);</span><br><span class="line">    <span class="keyword">if</span> (sock &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">"tcp creat error"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>((hent=gethostbyname(host_name))==<span class="literal">NULL</span>)&#123;</span><br><span class="line">        perror(<span class="string">"ip error"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">           <span class="keyword">int32_t</span> ipi = <span class="number">0</span>;</span><br><span class="line">           ipi = (*(*hent-&gt;h_addr_list + <span class="number">3</span>) &lt;&lt; <span class="number">24</span>) &amp; <span class="number">0xFF000000</span>;</span><br><span class="line">           ipi |= ((*(*hent-&gt;h_addr_list + <span class="number">2</span>) &lt;&lt; <span class="number">16</span>)  &amp; <span class="number">0xFF0000</span>);</span><br><span class="line">           ipi |= ((*(*hent-&gt;h_addr_list + <span class="number">1</span>) &lt;&lt; <span class="number">8</span>) &amp; <span class="number">0xFF00</span>);</span><br><span class="line">           ipi |= ((*(*hent-&gt;h_addr_list + <span class="number">0</span>) &lt;&lt; <span class="number">0</span>) &amp; <span class="number">0xFF</span>);</span><br><span class="line">           <span class="built_in">printf</span>(<span class="string">" 0x%x \n"</span>,ipi);<span class="comment">//这也是正确的ip地址流 对位操作的时候需要知道 大小端 熟悉指针操作</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//获取到网络类型 ipv4 ipv6 两个类型 网络地址族</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,hent-&gt;h_addrtype);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//解析出 点分 地址</span></span><br><span class="line">    <span class="comment">//网络字节流 ——》IP字符串 0.0.0.0</span></span><br><span class="line">    <span class="keyword">if</span> (inet_ntop(hent-&gt;h_addrtype,(<span class="keyword">void</span> *)hent-&gt;h_addr_list[<span class="number">0</span>],ip,<span class="keyword">sizeof</span>(ip)) == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        perror(<span class="string">"inet_ntop error"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">4</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"ip %s\n"</span>,ip);</span><br><span class="line">    <span class="comment">//IP字符串 ——》网络字节流</span></span><br><span class="line">    <span class="keyword">if</span>(inet_pton(hent-&gt;h_addrtype,ip,&amp;servaddr.sin_addr) &lt;= <span class="number">0</span>)&#123;</span><br><span class="line">        perror(<span class="string">"inet_pton error"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">5</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"ips 0x%x\n"</span>,servaddr.sin_addr);</span><br><span class="line"></span><br><span class="line">    servaddr.sin_family = AF_INET;</span><br><span class="line">    servaddr.sin_port = htons(<span class="number">80</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">connect</span>(sock, (struct sockaddr *)&amp;servaddr, <span class="keyword">sizeof</span>(servaddr)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">"connect error\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">6</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">write</span>(sock, buf, <span class="built_in">strlen</span>(buf));</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> ((n = <span class="built_in">read</span>(sock, rbuf, <span class="number">2048</span>))&gt;<span class="number">0</span>) &#123;</span><br><span class="line">        rbuf[n] = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%s"</span>, rbuf);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"ok\n"</span>);</span><br><span class="line">    <span class="built_in">close</span>(sock);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HTTP</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="2015/02/26/超文本传输协议/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-TCP三次握手" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="2015/02/02/TCP三次握手/">TCP连接握手</a>
+    </h1>
+  
+
+        
+        <a href="2015/02/02/TCP三次握手/" class="archive-article-date">
+  	<time datetime="2015-02-02T12:15:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-02-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="TCP-Transmission-Control-Protocol，传输控制协议"><a href="#TCP-Transmission-Control-Protocol，传输控制协议" class="headerlink" title="TCP(Transmission Control Protocol，传输控制协议)"></a>TCP(Transmission Control Protocol，传输控制协议)</h2><p>TCP是一种面向连接（连接导向）的、可靠的基于字节流的传输层通信协议。TCP将用户数据打包成报文段，它发送后启动一个定时器，另一端收到的数据进行确认、对失序的数据重新排序、丢弃重复数据。<br>TCP的特点有：</p>
+<ul>
+<li>TCP是面向连接的运输层协议</li>
+<li>每一条TCP连接只能有两个端点，每一条TCP连接只能是点对点的</li>
+<li>TCP提供可靠交付的服务</li>
+<li>TCP提供全双工通信。数据在两个方向上独立的进行传输。因此，连接的每一端必须保持每个方向上的传输数据序号。</li>
+<li>面向字节流。面向字节流的含义：虽然应用程序和TCP交互是一次一个数据块，但TCP把应用程序交下来的数据仅仅是一连串的无结构的字节流。</li>
+</ul>
+<h2 id="TCP头格式"><a href="#TCP头格式" class="headerlink" title="TCP头格式"></a>TCP头格式</h2><p><img src="../images/tcp_01.png" alt="图一"></p>
+<ol>
+<li>Source Port（源端口号）：数据发起者的端口号，16bit。</li>
+<li>Destination Port（目的端口号）：数据接收者的端口号，16bit。</li>
+<li>Sequence Number（顺序号码，Seq）：用于在数据通信中解决网络包乱序（reordering）问题，以保证应用层接收到的数据不会因为网络上的传输问题而乱序（TCP会用这个顺序号码来拼接数据），32bit。</li>
+<li>Acknowledgment Number（确认号码，ack）：是数据接收方期望收到发送方在下一个报文段的顺序号码（Seq），因此确认号码应当是上次已成功收到顺序号码（Seq）加1，32bit。</li>
+<li>Offset（TCP报文头长度)：用于存储报文头中有多少个32bit(上图的一行)，存储长度为4bit，最大可表示（2^3+2^2+2^1+1）<em>32bit=60bytes的报文头。最小取值5，5</em>32bit=20bytes。</li>
+<li>Reserved（保留）：6bit, 均为0</li>
+<li>TCP Flags（TCP标志位）每个长度均为1bit<br> CWR：压缩，TCP Flags值0x80。<br> ECE：拥塞，0x40。<br> URG：紧急，0x20。当URG=1时，表示报文段中有紧急数据，应尽快传送。<br> ACK：确认，0x10。当ACK = 1时，代表这是一个确认的TCP包，取值0则不是确认包。<br> PSH：推送，0x08。当发送端PSH=1时，接收端尽快的交付给应用进程。<br> RST：复位，0x04。当RST=1时，表明TCP连接中出现严重差错，必须释放连接，再重新建立连接。<br> SYN：同步，0x02。在建立连接是用来同步序号。SYN=1， ACK=0表示一个连接请求报文段。SYN=1，ACK=1表示同意建立连接。<br> FIN：终止，0x01。当FIN=1时，表明此报文段的发送端的数据已经发送完毕，并要求释放传输连接。  </li>
+<li>窗口：用来控制对方发送的数据量，通知发放已确定的发送窗口上限。</li>
+<li>检验和：该字段检验的范围包括头部和数据这两部分。由发端计算和存储，并由收端进行验证。</li>
+<li>紧急指针：紧急指针在URG=1时才有效，它指出本报文段中的紧急数据的字节数。</li>
+<li>TCP选项：长度可变，最长可达40字节</li>
+</ol>
+<p>备注：ISN（Inital Sequence Number）：初始化Sequence Number，发生在建立连接时。</p>
+<h2 id="TCP协议中的三次握手和四次挥手"><a href="#TCP协议中的三次握手和四次挥手" class="headerlink" title="TCP协议中的三次握手和四次挥手"></a>TCP协议中的三次握手和四次挥手</h2><p><img src="../images/tcp_02.png" alt="图一"></p>
+<ul>
+<li><p>三次握手可以理解成: 我打电话给你你没看到，一会之后你又打电话给我问有什么事，我再给你说我有什么什么事</p>
+</li>
+<li><p>四次挥手可以理解成: 我给你说我不想再要你送的东西了，你说不行啊还有很多没有送完（继续在送），（送完啦）你说已经把所有东西都送给我啦，我说我收到了那就结束吧———–</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>特别注意:</strong><br>Seq：是发送方当前报文的顺序号码。<br>ack：是发送方期望对方在下次返回报文中给回的Seq。</p>
+</blockquote>
+<h2 id="建立连接需要三次握手"><a href="#建立连接需要三次握手" class="headerlink" title="建立连接需要三次握手"></a>建立连接需要三次握手</h2><ol>
+<li><p>第一次握手：客户端向服务端发送连接请求包，标志位SYN（同步序号）置为1，顺序号码为X=0。</p>
+</li>
+<li><p>第二次握手：服务端收到客户端发过来报文，由SYN=1知道客户端要求建立联机，则为这次连接分配资源。并向客户端发送一个SYN和ACK都置为1的TCP报文，设置初始顺序号码Y=0，将确认序号(ack)设置为上一次客户端发送过来的顺序号(Seq)加1，即X+1 = 0+1=1。</p>
+</li>
+<li><p>第三次握手：客户端收到服务端发来的包后检查确认号码(ack)是否正确，即第一次发送的Seq加1（X+1=1）。以及标志位ACK是否为1。若正确，服务端再次发送确认包，ACK标志位为1，SYN标志位为0。确认号码(ack)=Y+1=0+1=1，发送顺序号码(Seq)为X+1=1。Server收到后确认号码值与ACK=1则连接建立成功，可以传送数据了。</p>
+</li>
+</ol>
+<h2 id="断开连接需要四次挥手"><a href="#断开连接需要四次挥手" class="headerlink" title="断开连接需要四次挥手"></a>断开连接需要四次挥手</h2><p><strong>提醒：中断连接端可以是Client端，也可以是Server端。只要将下面两角色互换即可。</strong>  </p>
+<ol>
+<li><p>第一次挥手：客户端给服务端发送FIN报文，用来关闭客户端到服务端的数据传送。将标志位FIN和ACK置为1，顺序号码为X=1，确认号码为Z=1。意思是说”我Client端没有数据要发给你了，但是如果你还有数据没有发送完成，则不必急着关闭Socket，可以继续发送数据。所以你先发送ACK过来。”</p>
+</li>
+<li><p>第二次挥手：服务端收到FIN后，发回一个ACK(标志位ACK=1),确认号码为收到的顺序号码加1，即X=X+1=2。顺序号码为收到的确认号码=Z。意思是说“你的FIN请求我收到了，但是我还没准备好，请继续你等我的消息” 这个时候客户端就进入FIN_WAIT状态，继续等待服务端的FIN报文。</p>
+</li>
+<li><p>第三次挥手：当服务端确定数据已发送完成，则向客户端发送FIN报文，关闭与客户端的连接。标志位FIN和ACK置为1，顺序号码为Y=1，确认号码为X=2。意思是告诉Client端“好了，我这边数据发完了，准备好关闭连接了。”</p>
+</li>
+<li><p>第四次挥手：客户端收到服务器发送的FIN之后，发回ACK确认(标志位ACK=1),确认号码为收到的顺序号码加1，即Y+1=2。顺序号码为收到的确认号码X=2。意思是“我Client端知道可以关闭连接了，但是我还是不相信网络，怕 Server端不知道要关闭，所以发送ACK后进入TIME_WAIT状态，如果Server端没有收到ACK则可以重传。Client端等待了2MSL后依然没有收到回复，则证明Server端已正常关闭，那好，我Client端也可以关闭连接了。“（在TIME_WAIT状态中，如果TCP client端最后一次发送的ACK丢失了，它将重新发送。TIME_WAIT状态中所需要的时间是依赖于实现方法的。典型的值为30秒、1分钟和2分钟。等待之后连接正式关闭，并且所有的资源(包括端口号)都被释放。）</p>
+</li>
+</ol>
+<h2 id="为什么关闭的时候却是四次挥（握）手？"><a href="#为什么关闭的时候却是四次挥（握）手？" class="headerlink" title="为什么关闭的时候却是四次挥（握）手？"></a>为什么关闭的时候却是四次挥（握）手？</h2><blockquote>
+<p>因为当Server端收到Client端的SYN连接请求报文后，可以直接发送SYN+ACK报文。其中ACK报文是用来应答的，SYN报文是用来同步的。但是关闭连接时，当Server端收到FIN报文时，很可能并不会立即关闭SOCKET，所以只能先回复一个ACK报文，告诉Client端，”你发的FIN报文我收到了”。只有等到我Server端所有的报文都发送完了，我才能发送FIN报文，因此不能一起发送。故需要四步握手。</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">TCP</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="2015/02/02/TCP三次握手/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-IP网络协议的五层网络协议" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="2015/01/26/IP网络协议的五层网络协议/">网络五层结构</a>
+    </h1>
+  
+
+        
+        <a href="2015/01/26/IP网络协议的五层网络协议/" class="archive-article-date">
+  	<time datetime="2015-01-26T13:25:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-01-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>分层的基本想法是每一层都在它的下层提供的服务基础上提供更高级的增值服务，而最高层提供能运行分布式应用程序的服务。</p>
+</blockquote>
+<p>最开始的是OSI七层网络协议，既不实用，也比较复杂。因此被淘汰。之后的TCP/IP协议则更具优势，得到了广泛的应用。</p>
+<ul>
+<li><p>OSI七层协议模型主要是：<code>应用层（Application）</code>、<code>表示层（Presentation）</code>、<code>会话层（Session）</code>、<code>传输层（Transport）</code>、<code>网络层（Network）</code>、<code>数据链路层（Data Link）</code>、<code>物理层（Physical）</code>。</p>
+</li>
+<li><p>五层体系结构包括：<code>应用层</code>、<code>运输层</code>、<code>网络层</code>、<code>数据链路层和物理层</code>。(五层协议只是OSI和TCP/IP的综合，实际应用还是TCP/IP的四层结构。为了方便可以把下两层称为网络接口层。)</p>
+</li>
+</ul>
+<p><img src="../images/tcp_2.jpg" alt="图二"></p>
+<p>为了方便我们学习，我们采用五层网络结构。分别为：<code>应用层</code>、<code>传输层</code>、<code>网络层</code>、<code>数据链路层</code>、<code>物理层</code>。</p>
+<h2 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h2><p>应用层是最高的一层，与应用层打交道的是我们的应用进程。应用层协议规定的是应用进程之间的通信与交互的规则。</p>
+<p>针对于不同的网络应用，需要不同的网络协议。比如万维网应用HTTP协议、邮件发送的SMTP协议、支持文件发送的FTP协议。</p>
+<p><strong>应用层数据传输的基本单位是报文。</strong></p>
+<h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><p>传输层为应用层提供端到端的逻辑通信，这里的端指的是主机的应用进程。【网络层与传输层有很大的一个区别，那就是：网络层提供的是主机之间的通信】</p>
+<p>由于一台主机可以运行多个进程，因此传输层有分用和复用的功能。</p>
+<ul>
+<li>复用是指：多个进程可以同时使用下面的传输层服务。</li>
+<li>分用是指：从传输层把收到的信息分别交付给不同的应用进程。</li>
+</ul>
+<p><strong>应用进程之间的通信的可靠性由传输层保证。</strong></p>
+<p><strong>运输层主要使用以下两种协议:</strong></p>
+<ol>
+<li><p>传输控制协议TCP(Transmission Control Protocol)：面向连接的，数据传输的单位是报文段，能够提供可靠的交付。</p>
+</li>
+<li><p>用户数据包协议UDP(User Datagram Protocol)：无连接的，数据传输的单位是用户数据报，不保证提供可靠的交付，只能提供“尽最大努力交付”。</p>
+</li>
+</ol>
+<h2 id="网络层（网际层、IP层）"><a href="#网络层（网际层、IP层）" class="headerlink" title="网络层（网际层、IP层）"></a>网络层（网际层、IP层）</h2><p>网络层(network layer)主要包括以下两个任务：</p>
+<ol>
+<li><p>向上层提供简单灵活、无连接的、尽最大努力交付的数据报服务。通信的可靠性在这里不做保证。由上层提供可靠性保证。<br>为分组交换网上的主机之间提供通信。在发送数据时，网络层把运输层产生的报文段或用户数据报封装成分组或包进行传送。在TCP/IP体系中，由于网络层使用IP协议，因此分组也叫做IP数据报，或简称为数据报。</p>
+</li>
+<li><p>选中合适的路由，使源主机运输层所传下来的分组，能够通过网络中的路由器找到目的主机。</p>
+</li>
+</ol>
+<h2 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h2><p>物理层考虑的是连接计算机的传输媒体上的传输数据比特流，并不是具体的传输媒体。物理层尽可能的屏蔽掉了传输媒体、通信手段等的差异，使得上层感受不到这些差异。</p>
+<p><strong>在这里传输的数据单位是比特</strong>。发送0/1，接受0/1。它的另一个主要的任务就是确定与传输媒体接口有关的一些特性，比如： 机械特性、电气特性、功能特性、过程特性。</p>
+<p><img src="../images/tcp_3.png" alt="图三"></p>
+<p>发送请求的过程是从最顶层（应用层）出发，每一层负责封装属于自己的信息到请求中，最后将一整个请求发送给对方。<br>接收请求的过程是从最底层（网络接口层）开始，每一层的协议负责解析属于自己的东西，比如网际层（IP）处理ip信息，传输层（TCP）处理点对点的端口，应用层（HTTP）处理Request或Response的Line\Header\Body。<strong>任何一种协议都有头和内容。</strong></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">网络协议</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="2015/01/26/IP网络协议的五层网络协议/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-代码优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1027,412 +1391,6 @@
 
 
   
-    <article id="post-C程序的内存结构" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="2014/10/26/C程序的内存结构/">C程序的内存结构</a>
-    </h1>
-  
-
-        
-        <a href="2014/10/26/C程序的内存结构/" class="archive-article-date">
-  	<time datetime="2014-10-26T04:02:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-10-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>一般情况下，一个可执行C程序在内存中主要包含5个区域，分别是代码段（text），数据段（data），BSS段，堆段（heap）和栈段（stack）。<strong>其中前三个段（text，data，bss）是程序编译完成就存在的</strong>，此时程序并未载入内存进行执行。<strong>后两个段（heap，stack）是程序被加载到内存中时，才存在的</strong>。下面分别介绍：</p>
-<p>本文的参考示例代码（test.c）如下</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> gDataA = <span class="number">10</span>; </span><br><span class="line"><span class="keyword">int</span> gDataB;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> gDataC = <span class="number">20</span>; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> z)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (x + y + z + gDataC);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> DataA = <span class="number">4</span>;</span><br><span class="line">    gDataB = func(x,DataA,gDataA);</span><br><span class="line">    DataA = gDataB - DataA;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>编译：  </p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gcc test.c -o <span class="built_in">test</span> -O2 -fno-inline</span><br></pre></td></tr></table></figure>
-
-<h2 id="代码段"><a href="#代码段" class="headerlink" title="代码段"></a>代码段</h2><p>代码段（text）：就是C程序编译后的机器指令，也就是我们常见的汇编代码，汇编代码可以<br>通过objdump查看，如下图所示：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ objdump - <span class="built_in">test</span> &gt; test.hex</span><br><span class="line">$ vi test.hex</span><br></pre></td></tr></table></figure>
-
-<p><img src="../images/c_code1.png" alt="图片"></p>
-<p>其中:  </p>
-<blockquote>
-<p>红框表示该段是text段；<br>绿框表示的是程序的虚拟地址；<br>蓝框表示的是text段的实际内容，也就是一些连续的二进制机器码；<br>黄框的汇编内容实际上并不存在于text段中，它只是<code>objdump</code>程序根据蓝框中机器码解析出来的汇编信息，提高可读性。 </p>
-</blockquote>
-<p>通过<code>objdump -h test</code>，读取text段的信息，可见text段是READONLY的，这也防止其他程序恶意修改程序</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ objdump -h <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="../images/c_code2.png" alt="图片"></p>
-<h2 id="数据段"><a href="#数据段" class="headerlink" title="数据段"></a>数据段</h2><p>数据段（data）：用来存放显式初始化的全局变量或者静态（全局）变量。  </p>
-<p><strong>例如以下反汇编代码片段:</strong></p>
-<p><img src="../images/c_code3.png" alt="图片"></p>
-<p>其中DataA.1804可以理解为DataA的一个别名，与编译器有关，在此不再深入分析。<br>可见gDataA和DataA两个显式初始化的全局变量都存储在data段中。其值分别是0x000a和0x0004。（x86_64小端处理器）</p>
-<hr>
-<p><img src="../images/c_code4.png" alt="图片"></p>
-<p>上图红框中的内容是在二进制文件中实际存储的内容，而黄框中的内容是对应二进制解析出来的，对于数据段中内容解析出来后是没有意义的，因为它们是数据，不是指令。可以理解为<code>objdump</code>工具的“过度解析”（下同，不再累述）。</p>
-<h2 id="BSS段"><a href="#BSS段" class="headerlink" title="BSS段"></a>BSS段</h2><p>BSS段（Block Started by Symbol）:存储未初始化的全局变量或者静态（全局）变量。  </p>
-<p><strong>例如以下反汇编代码片段：</strong></p>
-<p><img src="../images/c_code5.png" alt="图片"></p>
-<p>gData是未被初始化的全局变量，因此存放在bss段，其值默认是0。</p>
-<h2 id="栈段（stack）"><a href="#栈段（stack）" class="headerlink" title="栈段（stack）"></a>栈段（stack）</h2><p><strong>我们很多时候习惯统一来说“堆栈”，但是堆和栈是两个不同的区域，对于我们程序员来说还是要搞清楚的（下一节我会详细说明<code>栈</code>）。</strong></p>
-<p>栈段(stack)：存放函数调用相关的参数、局部变量的值，以及在任务切换的上下文信息。为了更便于说明问题，使用下面的示例代码（本代码仅仅是为了说明问题，风格不值得借鉴）：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span> a1,<span class="keyword">int</span> a2,<span class="keyword">int</span> a3,<span class="keyword">int</span> a4,<span class="keyword">int</span> a5,<span class="keyword">int</span> a6,<span class="keyword">int</span> a7,<span class="keyword">int</span> a8,<span class="keyword">int</span> a9)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> a1,a2,a3,a4,a5,a6,a7,a8,a9;</span><br><span class="line">        <span class="keyword">int</span> sum;</span><br><span class="line">        a1 = <span class="number">0x11</span>;</span><br><span class="line">        a2 = <span class="number">0x22</span>;</span><br><span class="line">        a3 = <span class="number">0x33</span>;</span><br><span class="line">        a4 = <span class="number">0x44</span>;</span><br><span class="line">        a5 = <span class="number">0x55</span>;</span><br><span class="line">        a6 = <span class="number">0x66</span>;</span><br><span class="line">        a7 = <span class="number">0x77</span>;</span><br><span class="line">        a8 = <span class="number">0x88</span>;</span><br><span class="line">        a9 = <span class="number">0x99</span>;</span><br><span class="line">        sum = func(a1,a2,a3,a4,a5,a6,a7,a8,a9);</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>编译并objdump：</strong></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ gcc stack.c -o stack -O2 -fno-inline　　// 使用-fno-inline的目的是为了禁止内联，便于展现函数调用及参数传递过程。感兴趣的同学可以不加该参数编译下。</span><br><span class="line"></span><br><span class="line">$ objdump -M intel -D stack &gt; stack.hex</span><br></pre></td></tr></table></figure>
-<p>查看main函数和func函数的反汇编代码：</p>
-<p><img src="../images/c_code6.png" alt="图片"><br><img src="../images/c_code7.png" alt="图片"></p>
-<p>对于main函数中，为何有的使用<code>mov</code>，有的使用<code>push</code>可以参考函数调用过程中的参数传递规则（简言之就是x86_64可以使用6个寄存器(分别是<code>edi</code>，<code>esi</code>，<code>edx</code>，<code>ecx</code>，<code>r8d</code>，<code>r9d</code>)直接传递参数，而不用压栈和出栈，提高性能）。</p>
-<p>后面的参数都使用压栈的方式传递给被调用函数func。</p>
-<p>从这里也可以知道，在我们自己写函数的情况的时候，参数个数最好控制在6个以内，否则就需要用堆栈，而堆栈的访问速度是没有寄存器快的，性能就会下降。这是x86_64架构的情况，其它的如x86、ARM、ARM64、MIPS传参的规则是不一样的，就需要根据实际情况考虑了。</p>
-<p>对于func函数，直接使用<code>edi</code>、<code>esi</code>、<code>edx</code>、<code>ecx</code>、<code>r8d</code>和<code>r9d</code>获得前6个参数值，后面的参数就需要从stack上获取。</p>
-<p>栈区是由操作系统分配和管理的区域。</p>
-<h2 id="堆段（heap）"><a href="#堆段（heap）" class="headerlink" title="堆段（heap）"></a>堆段（heap）</h2><p>动态内存分配的区域，也就是malloc申请的内存区。注意malloc申请的内存不用的时候必须free，并指向NULL。</p>
-<p>堆区是由程序员显示分配与管理的。</p>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>下面来自经典书籍《UNIX环境高级编程》中对此有如下描述：<br><img src="../images/c_code8.png" alt="图片"><br>对于C代码编译出来的二进制，代码段（text）、数据段（data）和BSS段是代码编译后就确定了，但是编译后的程序存储在硬盘中，当要执行的的时候，操作系统负责将该程序load到内存中。<br>在程序运行的之后，就会涉及到堆区和栈区的操作。一般情况下，堆区是向上生长的，栈区是向下生长的，当然不同的处理器架构是不同的。</p>
-<p><a href="https://www.cnblogs.com/helloworld8102/p/9682592.html" target="_blank" rel="noopener">转载</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">内存区域 内存结构 C</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="2014/10/26/C程序的内存结构/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-汇编入门" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="2014/09/15/汇编入门/">汇编入门</a>
-    </h1>
-  
-
-        
-        <a href="2014/09/15/汇编入门/" class="archive-article-date">
-  	<time datetime="2014-09-15T03:25:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-09-15</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>学习编程其实就是学高级语言，即那些为人类设计的计算机语言。<br>但是，计算机不理解高级语言，必须通过编译器转成二进制代码，才能运行。学会高级语言，并不等于理解计算机实际的运行步骤。</p>
-</blockquote>
-<p><img src="../images/bg2018012204.png" alt="图一"></p>
-<p>计算机真正能够理解的是低级语言，它专门用来控制硬件。汇编语言就是低级语言，直接描述/控制 CPU 的运行。如果你想了解 CPU 到底干了些什么，以及代码的运行步骤，就一定要学习汇编语言。</p>
-<p>汇编语言不容易学习，就连简明扼要的介绍都很难找到。下面我尝试写一篇最好懂的汇编语言教程，解释 CPU 如何执行代码。</p>
-<p><img src="../images/bg2018012202.jpg" alt="图"></p>
-<h2 id="汇编语言是什么？"><a href="#汇编语言是什么？" class="headerlink" title="汇编语言是什么？"></a>汇编语言是什么？</h2><p>我们知道，CPU 只负责计算，本身不具备智能。你输入一条指令（instruction），它就运行一次，然后停下来，等待下一条指令。</p>
-<p>这些指令都是二进制的，称为操作码（opcode），比如加法指令就是<code>00000011</code>。编译器的作用，就是将高级语言写好的程序，翻译成一条条操作码。</p>
-<p>对于人类来说，二进制程序是不可读的，根本看不出来机器干了什么。为了解决可读性的问题，以及偶尔的编辑需求，就诞生了汇编语言。</p>
-<p><img src="../images/bg2018012203.jpg" alt="图"></p>
-<p><em>汇编语言是二进制指令的文本形式</em>，与指令是一一对应的关系。比如，加法指令<code>00000011</code>写成汇编语言就是 ADD。只要还原成二进制，汇编语言就可以被 CPU 直接执行，所以它是最底层的低级语言。</p>
-<h2 id="来历"><a href="#来历" class="headerlink" title="来历"></a>来历</h2><p>最早的时候，编写程序就是手写二进制指令，然后通过各种开关输入计算机，比如要做加法了，就按一下加法开关。后来，发明了纸带打孔机，通过在纸带上打孔，将二进制指令自动输入计算机。</p>
-<p>为了解决二进制指令的可读性问题，工程师将那些指令写成了八进制。二进制转八进制是轻而易举的，但是八进制的可读性也不行。很自然地，最后还是用文字表达，加法指令写成 ADD。内存地址也不再直接引用，而是用标签表示。</p>
-<p>这样的话，就多出一个步骤，要把这些文字指令翻译成二进制，这个步骤就称为 assembling，完成这个步骤的程序就叫做 assembler。它处理的文本，自然就叫做 aseembly code。标准化以后，称为 assembly language，缩写为 asm，中文译为汇编语言。<br><img src="../images/bg2018012205.jpg" alt="图"><br>每一种 CPU 的机器指令都是不一样的，因此对应的汇编语言也不一样。本文介绍的是目前最常见的 x86 汇编语言，即 Intel 公司的 CPU 使用的那一种。</p>
-<blockquote>
-<p>以上全部是由来，下面是需要理解的。也是必须知道的。</p>
-</blockquote>
-<h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><p>学习汇编语言，首先必须了解两个知识点：<strong>寄存器</strong>和<strong>内存模型</strong>。</p>
-<p>先来看寄存器。CPU 本身只负责运算，不负责储存数据。数据一般都储存在内存之中，CPU 要用的时候就去内存读写数据。但是，CPU 的运算速度远高于内存的读写速度，为了避免被拖慢，CPU 都自带一级缓存和二级缓存。基本上，CPU 缓存可以看作是读写速度较快的内存。</p>
-<p>但是，CPU 缓存还是不够快，另外数据在缓存里面的地址是不固定的，CPU 每次读写都要寻址也会拖慢速度。因此，除了缓存之外，CPU 还自带了寄存器（register），用来储存最常用的数据。也就是说，那些最频繁读写的数据（比如循环变量），都会放在寄存器里面，CPU 优先读写寄存器，再由寄存器跟内存交换数据。</p>
-<p><img src="../images/bg2018012206.png" alt="图"></p>
-<p>寄存器不依靠地址区分数据，而依靠名称。每一个寄存器都有自己的名称，我们告诉 CPU 去具体的哪一个寄存器拿数据，这样的速度是最快的。有人比喻寄存器是 CPU 的零级缓存。</p>
-<h2 id="寄存器的种类"><a href="#寄存器的种类" class="headerlink" title="寄存器的种类"></a>寄存器的种类</h2><p>早期的 x86 CPU 只有8个寄存器，而且每个都有不同的用途。现在的寄存器已经有100多个了，都变成通用寄存器，不特别指定用途了，但是早期寄存器的名字都被保存了下来。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- EAX</span><br><span class="line">- EBX</span><br><span class="line">- ECX</span><br><span class="line">- EDX</span><br><span class="line">- EDI</span><br><span class="line">- ESI</span><br><span class="line">- EBP</span><br><span class="line">- ESP</span><br></pre></td></tr></table></figure>
-
-<p>上面这8个寄存器之中，前面七个都是通用的。ESP 寄存器有特定用途，保存当前 Stack 的地址（详见下一节）。</p>
-<p><img src="../images/bg2018012207.png" alt="图"></p>
-<p>我们常常看到 32位 CPU、64位 CPU 这样的名称，其实指的就是寄存器的大小。32 位 CPU 的寄存器大小就是4个字节。</p>
-<h2 id="内存模型：Heap"><a href="#内存模型：Heap" class="headerlink" title="内存模型：Heap"></a>内存模型：Heap</h2><p>寄存器只能存放很少量的数据，大多数时候，CPU 要指挥寄存器，直接跟内存交换数据。所以，除了寄存器，还必须了解内存怎么储存数据。</p>
-<p>程序运行的时候，操作系统会给它分配一段内存，用来储存程序和运行产生的数据。这段内存有起始地址和结束地址，比如从<code>0x1000</code>到<code>0x8000</code>，起始地址是较小的那个地址，结束地址是较大的那个地址。</p>
-<p><img src="../images/bg2018012208.png" alt="图"></p>
-<p>程序运行过程中，对于动态的内存占用请求（比如新建对象，或者使用<code>malloc</code>命令），系统就会从预先分配好的那段内存之中，划出一部分给用户，具体规则是从起始地址开始划分（实际上，起始地址会有一段静态数据，这里忽略）。举例来说，用户要求得到10个字节内存，那么从起始地址<code>0x1000</code>开始给他分配，一直分配到地址<code>0x100A</code>，如果再要求得到22个字节，那么就分配到<code>0x1020</code>。</p>
-<p><img src="../images/bg2018012209.png" alt="图"></p>
-<p>这种因为用户主动请求而划分出来的内存区域，叫做 Heap（堆）。它由起始地址开始，从低位（地址）向高位（地址）增长。Heap 的一个重要特点就是不会自动消失，必须手动释放，或者由垃圾回收机制来回收。</p>
-<h2 id="内存模型：Stack"><a href="#内存模型：Stack" class="headerlink" title="内存模型：Stack"></a>内存模型：Stack</h2><blockquote>
-<p><strong>栈帧</strong></p>
-<p><strong>栈低</strong></p>
-<p><strong>栈顶</strong></p>
-</blockquote>
-<p>除了 Heap 以外，其他的内存占用叫做 Stack（栈）。简单说，Stack 是由于函数运行而临时占用的内存区域。</p>
-<p><img src="../images/bg2018012210.png" alt="图"></p>
-<p>请看下面的例子。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">   <span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面代码中，系统开始执行<code>main</code>函数时，会为它在内存里面建立一个帧（frame），所有main的内部变量（比如<code>a</code>和<code>b</code>）都保存在这个帧里面。main函数执行结束后，该帧就会被回收，释放所有的内部变量，不再占用空间。</p>
-<p><img src="../images/bg2018012211.png" alt="图"></p>
-<p>如果函数内部调用了其他函数，会发生什么情况？</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">   <span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line">   <span class="keyword">return</span> add_a_and_b(a, b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面代码中，<code>main</code>函数内部调用了<code>add_a_and_b</code>函数。执行到这一行的时候，系统也会为<code>add_a_and_b</code>新建一个帧，用来储存它的内部变量。也就是说，此时同时存在两个帧：<code>main</code>和<code>add_a_and_b</code>。一般来说，调用栈有多少层，就有多少帧。</p>
-<p><img src="../images/bg2018012212.png" alt="图"></p>
-<p>等到<code>add_a_and_b</code>运行结束，它的帧就会被回收，系统会回到函数<code>main</code>刚才中断执行的地方，继续往下执行。通过这种机制，就实现了函数的层层调用，并且每一层都能使用自己的本地变量。</p>
-<p>所有的帧都存放在 Stack，由于帧是一层层叠加的，所以 Stack 叫做栈。生成新的帧，叫做”入栈”，英文是 push；栈的回收叫做”出栈”，英文是 pop。Stack 的特点就是，最晚入栈的帧最早出栈（因为最内层的函数调用，最先结束运行），这就叫做”后进先出”的数据结构。每一次函数执行结束，就自动释放一个帧，所有函数执行结束，整个 Stack 就都释放了。</p>
-<p><img src="../images/bg2018012213.jpg" alt="图"></p>
-<p><img src="../images/bg2018012214.jpg" alt="图"></p>
-<p>Stack 是由内存区域的结束地址开始，从高位（地址）向低位（地址）分配。比如，内存区域的结束地址是<code>0x8000</code>，第一帧假定是16字节，那么下一次分配的地址就会从<code>0x7FF0</code>开始；第二帧假定需要64字节，那么地址就会移动到<code>0x7FB0</code>。</p>
-<p><img src="../images/bg2018012215.png" alt="图"></p>
-<h2 id="CPU-指令"><a href="#CPU-指令" class="headerlink" title="CPU 指令"></a>CPU 指令</h2><h3 id="一个实例"><a href="#一个实例" class="headerlink" title="一个实例"></a>一个实例</h3><p>了解寄存器和内存模型以后，就可以来看汇编语言到底是什么了。下面是一个简单的程序<code>example.c。</code></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add_a_and_b</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> add_a_and_b(<span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>gcc 将这个程序转成汇编语言。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -S example.c</span><br></pre></td></tr></table></figure>
-
-<p>上面的命令执行以后，会生成一个文本文件<code>example.s</code>，里面就是汇编语言，包含了几十行指令。这么说吧，一个高级语言的简单操作，底层可能由几个，甚至几十个 CPU 指令构成。CPU 依次执行这些指令，完成这一步操作。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">	.section	__TEXT,__text,regular,pure_instructions</span><br><span class="line">	.build_version macos, <span class="number">10</span>, <span class="number">14</span>	sdk_version <span class="number">10</span>, <span class="number">14</span></span><br><span class="line">	.globl	_add_a_and_b            ## -- Begin function add_a_and_b</span><br><span class="line">	.p2align	<span class="number">4</span>, <span class="number">0x90</span></span><br><span class="line">_add_a_and_b:                           ## @add_a_and_b</span><br><span class="line">	.cfi_startproc</span><br><span class="line">## %bb<span class="number">.0</span>:</span><br><span class="line">	pushq	%rbp</span><br><span class="line">	.cfi_def_cfa_offset <span class="number">16</span></span><br><span class="line">	.cfi_offset %rbp, <span class="number">-16</span></span><br><span class="line">	movq	%rsp, %rbp</span><br><span class="line">	.cfi_def_cfa_register %rbp</span><br><span class="line">	movl	%edi, <span class="number">-4</span>(%rbp)</span><br><span class="line">	movl	%esi, <span class="number">-8</span>(%rbp)</span><br><span class="line">	movl	<span class="number">-4</span>(%rbp), %esi</span><br><span class="line">	addl	<span class="number">-8</span>(%rbp), %esi</span><br><span class="line">	movl	%esi, %eax</span><br><span class="line">	popq	%rbp</span><br><span class="line">	retq</span><br><span class="line">	.cfi_endproc</span><br><span class="line">                                        ## -- End function</span><br><span class="line">	.globl	_main                   ## -- Begin function main</span><br><span class="line">	.p2align	<span class="number">4</span>, <span class="number">0x90</span></span><br><span class="line">_main:                                  ## @main</span><br><span class="line">	.cfi_startproc</span><br><span class="line">## %bb<span class="number">.0</span>:</span><br><span class="line">	pushq	%rbp</span><br><span class="line">	.cfi_def_cfa_offset <span class="number">16</span></span><br><span class="line">	.cfi_offset %rbp, <span class="number">-16</span></span><br><span class="line">	movq	%rsp, %rbp</span><br><span class="line">	.cfi_def_cfa_register %rbp</span><br><span class="line">	subq	$<span class="number">16</span>, %rsp</span><br><span class="line">	movl	$<span class="number">0</span>, <span class="number">-4</span>(%rbp)</span><br><span class="line">	movl	$<span class="number">2</span>, %edi</span><br><span class="line">	movl	$<span class="number">3</span>, %esi</span><br><span class="line">	callq	_add_a_and_b</span><br><span class="line">	addq	$<span class="number">16</span>, %rsp</span><br><span class="line">	popq	%rbp</span><br><span class="line">	retq</span><br><span class="line">	.cfi_endproc</span><br><span class="line">                                        ## -- End function</span><br><span class="line"></span><br><span class="line">.subsections_via_symbols</span><br></pre></td></tr></table></figure>
-
-<p><code>example.s</code>经过简化以后，大概是下面的样子。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">_add_a_and_b:</span><br><span class="line">   push   %ebx</span><br><span class="line">   mov    %eax, [%esp+<span class="number">8</span>] </span><br><span class="line">   mov    %ebx, [%esp+<span class="number">12</span>]</span><br><span class="line">   add    %eax, %ebx </span><br><span class="line">   pop    %ebx </span><br><span class="line">   ret  </span><br><span class="line"></span><br><span class="line">_main:</span><br><span class="line">   push   <span class="number">3</span></span><br><span class="line">   push   <span class="number">2</span></span><br><span class="line">   call   _add_a_and_b </span><br><span class="line">   add    %esp, <span class="number">8</span></span><br><span class="line">   ret</span><br></pre></td></tr></table></figure>
-
-<p>可以看到，原程序的两个函数<code>add_a_and_b</code>和<code>main</code>，对应两个标签<code>_add_a_and_b</code>和<code>_main</code>。每个标签里面是该函数所转成的 CPU 运行流程。</p>
-<p>每一行就是 CPU 执行的一次操作。它又分成两部分，就以其中一行为例。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">push   %ebx</span><br></pre></td></tr></table></figure>
-
-<p>这一行里面，<code>push</code>是 CPU 指令，<code>%ebx</code>是该指令要用到的运算子。一个 CPU 指令可以有零个到多个运算子。</p>
-<p>下面我就一行一行讲解这个汇编程序，建议读者最好把这个程序，在另一个窗口拷贝一份，省得阅读的时候再把页面滚动上来。</p>
-<h3 id="push-指令"><a href="#push-指令" class="headerlink" title="push 指令"></a><code>push</code> 指令</h3><p>根据约定，程序从<code>_main</code>标签开始执行，这时会在 Stack 上为<code>main</code>建立一个帧，并将 Stack 所指向的地址，写入 ESP 寄存器。后面如果有数据要写入<code>main</code>这个帧，就会写在 ESP 寄存器所保存的地址。</p>
-<p>然后，开始执行第一行代码。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">push   <span class="number">3</span></span><br></pre></td></tr></table></figure>
-
-<p><code>push</code>指令用于将运算子放入 Stack，这里就是将3写入main这个帧。</p>
-<p>虽然看上去很简单，<code>push</code>指令其实有一个前置操作。它会先取出 ESP 寄存器里面的地址，将其减去4个字节，然后将新地址写入 ESP 寄存器。使用减法是因为 Stack 从高位向低位发展，4个字节则是因为<code>3</code>的类型是<code>int</code>，占用4个字节。得到新地址以后， <code>3</code> 就会写入这个地址开始的四个字节。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">push   <span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<p>第二行也是一样，<code>push</code>指令将2写入<code>main</code>这个帧，位置紧贴着前面写入的3。这时，ESP 寄存器会再减去 4个字节（累计减去8）。</p>
-<p><img src="../images/bg2018012216.png" alt="图"></p>
-<h3 id="call-指令"><a href="#call-指令" class="headerlink" title="call 指令"></a>call 指令</h3><p>第三行的call指令用来调用函数。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">call   _add_a_and_b</span><br></pre></td></tr></table></figure>
-
-<p>上面的代码表示调用<code>add_a_and_b</code>函数。这时，程序就会去找<code>_add_a_and_b</code>标签，并为该函数建立一个新的帧。</p>
-<p>下面就开始执行<code>_add_a_and_b</code>的代码。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">push   %ebx</span><br></pre></td></tr></table></figure>
-
-<p>这一行表示将 EBX 寄存器里面的值，写入<code>_add_a_and_b</code>这个帧。这是因为后面要用到这个寄存器，就先把里面的值取出来，用完后再写回去。</p>
-<p>这时，<code>push</code>指令会再将 ESP 寄存器里面的地址减去4个字节（累计减去12）。</p>
-<h3 id="mov-指令"><a href="#mov-指令" class="headerlink" title="mov 指令"></a>mov 指令</h3><p><code>mov</code>指令用于将一个值写入某个寄存器。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov    %eax, [%esp+<span class="number">8</span>]</span><br></pre></td></tr></table></figure>
-
-<p>这一行代码表示，先将 ESP 寄存器里面的地址加上8个字节，得到一个新的地址，然后按照这个地址在 Stack 取出数据。根据前面的步骤，可以推算出这里取出的是2，再将2写入 EAX 寄存器。</p>
-<p>下一行代码也是干同样的事情。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov    %ebx, [%esp+<span class="number">12</span>]</span><br></pre></td></tr></table></figure>
-
-<p>上面的代码将 ESP 寄存器的值加12个字节，再按照这个地址在 Stack 取出数据，这次取出的是3，将其写入 EBX 寄存器。</p>
-<h3 id="add-指令"><a href="#add-指令" class="headerlink" title="add 指令"></a>add 指令</h3><p><code>add</code>指令用于将两个运算子相加，并将结果写入第一个运算子。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add    %eax, %ebx</span><br></pre></td></tr></table></figure>
-
-<p>上面的代码将 EAX 寄存器的值（即2）加上 EBX 寄存器的值（即3），得到结果5，再将这个结果写入第一个运算子 EAX 寄存器。</p>
-<h3 id="pop-指令"><a href="#pop-指令" class="headerlink" title="pop 指令"></a>pop 指令</h3><p><code>pop</code>指令用于取出 Stack 最近一个写入的值（即最低位地址的值），并将这个值写入运算子指定的位置。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pop    %ebx</span><br></pre></td></tr></table></figure>
-<p>上面的代码表示，取出 Stack 最近写入的值（即 EBX 寄存器的原始值），再将这个值写回 EBX 寄存器（因为加法已经做完了，EBX 寄存器用不到了）。</p>
-<p>注意，<code>pop</code>指令还会将 ESP 寄存器里面的地址加4，即回收4个字节。</p>
-<h3 id="ret-指令"><a href="#ret-指令" class="headerlink" title="ret 指令"></a>ret 指令</h3><p><code>ret</code>指令用于终止当前函数的执行，将运行权交还给上层函数。也就是，当前函数的帧将被回收。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ret</span><br></pre></td></tr></table></figure>
-<p>可以看到，该指令没有运算子。</p>
-<p>随着<code>add_a_and_b</code>函数终止执行，系统就回到刚才<code>main</code>函数中断的地方，继续往下执行。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add    %esp, <span class="number">8</span></span><br></pre></td></tr></table></figure>
-
-<p>上面的代码表示，将 ESP 寄存器里面的地址，手动加上8个字节，再写回 ESP 寄存器。这是因为 ESP 寄存器的是 Stack 的写入开始地址，前面的pop操作已经回收了4个字节，这里再回收8个字节，等于全部回收。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ret</span><br></pre></td></tr></table></figure>
-
-<p>最后，<code>main</code>函数运行结束，ret指令退出程序执行。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">汇编</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="2014/09/15/汇编入门/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-大小端" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="2014/08/26/大小端/">大小端</a>
-    </h1>
-  
-
-        
-        <a href="2014/08/26/大小端/" class="archive-article-date">
-  	<time datetime="2014-08-25T21:54:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-08-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>计算机硬件有两种储存数据的方式：大端字节序（big endian）和小端字节序（little endian）。</p>
-</blockquote>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>大小端这部分考验的其实就有关计算机原理这一块。一般面试问题就是写出一个怎么判断机器大小端的代码。</p>
-<h2 id="什么是大小端"><a href="#什么是大小端" class="headerlink" title="什么是大小端"></a>什么是大小端</h2><p>这是因为在计算机系统中，我们是以字节为单位的，每个地址单元都对应着一个字节，一个字节为<code>8bit</code>。但是在C语言中除了<code>8bit</code>的<code>char</code>之外，还有<code>16bit</code>的<code>short</code>型，<code>32bit</code>的<code>long</code>型（要看具体的编译器），另外，对于位数大于8位的处理器，例如16位或者32位的处理器，由于寄存器宽度大于一个字节，那么必然存在着一个如何将多个字节安排的问题。因此就导致了大端存储模式和小端存储模式。<br>  例如一个<code>16bit</code>的<code>short</code>型x，在内存中的地址为<code>0x0010</code>，x的值为<code>0x1122</code>，那么<code>0x11</code>为高字节，<code>0x22</code>为低字节。对于大端模式，就将<code>0x11</code>放在低地址中，即<code>0x0010</code>中，<code>0x22</code>放在高地址中，即<code>0x0011</code>中。小端模式，刚好相反。我们常用的X86结构是小端模式，而KEIL C51则为大端模式。很多的ARM，DSP都为小端模式。有些ARM处理器还可以由硬件来选择是大端模式还是小端模式。</p>
-<h2 id="为什么有大小端"><a href="#为什么有大小端" class="headerlink" title="为什么有大小端"></a>为什么有大小端</h2><p>这部分其实要知道计算机原理字节序，对下面所有的会很有帮助。  </p>
-<ul>
-<li><strong>大端模式：内存高地址存放低字节</strong>， 高位在前，便于判断正负和大小；另外，一般芯片发送的接口都是高比特先发送。</li>
-<li><strong>小端模式：内存低地址存放低字节</strong>， cpu做数值运算中依次中内存中先去高位数据再到低位数据，计算更加高效</li>
-</ul>
-<blockquote>
-<p>计算机电路先处理低位字节，效率比较高，因为计算都是从低位开始的。所以，计算机的内部处理都是小端字节序。<br>但是，人类还是习惯读写大端字节序。所以，除了计算机的内部处理，其他的场合几乎都是大端字节序，比如网络传输和文件储存。</p>
-</blockquote>
-<h2 id="判断大小端"><a href="#判断大小端" class="headerlink" title="判断大小端"></a>判断大小端</h2><p>联合体union的存放顺序是所有成员都从低地址开始存放，利用该特性就可以轻松地获得了CPU对内存采用Little-endian还是Big-endian模式读写</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*return 1: little-endian, return 0: big-endian*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">checkCPUendian</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">union</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> a;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> b; </span><br><span class="line">  &#125;c;</span><br><span class="line">  c.a = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">return</span> (c.b == <span class="number">1</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="大小端转换"><a href="#大小端转换" class="headerlink" title="大小端转换"></a>大小端转换</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//16位字节：</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BigtoLittle16(A)   (( ((uint16)(A) &amp; 0xff00) &gt;&gt; 8)    | \</span></span><br><span class="line">                                       (( (uint16)(A) &amp; <span class="number">0x00ff</span>) &lt;&lt; <span class="number">8</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">//32位子节：</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BigtoLittle32(A)   ((( (uint32)(A) &amp; 0xff000000) &gt;&gt; 24) | \</span></span><br><span class="line">                                       (( (uint32)(A) &amp; <span class="number">0x00ff0000</span>) &gt;&gt; <span class="number">8</span>)   | \</span><br><span class="line">                                       (( (uint32)(A) &amp; <span class="number">0x0000ff00</span>) &lt;&lt; <span class="number">8</span>)   | \</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ntohs(n)     <span class="comment">//16位数据类型网络字节顺序到主机字节顺序的转换</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> htons(n)     <span class="comment">//16位数据类型主机字节顺序到网络字节顺序的转换</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ntohl(n)      <span class="comment">//32位数据类型网络字节顺序到主机字节顺序的转换</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> htonl(n)      <span class="comment">//32位数据类型主机字节顺序到网络字节顺序的转换</span></span></span><br></pre></td></tr></table></figure>
-
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>对于我们开发者其实不用担心大小端，因为你写代码的时候根本不会涉及到这一块的东西。在面向对象编程的程序员可以大可放心你写的代码不会用到大小端直接相关的东西。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">大小端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="2014/08/26/大小端/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="page/2/">2</a><a class="extend next" rel="next" href="page/2/">Next &amp;raquo;</a>
@@ -1575,6 +1533,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">结构体对齐 C</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HTTP</a>
               </li>
             
             <div class="clearfix"></div>
