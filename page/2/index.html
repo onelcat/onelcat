@@ -164,6 +164,487 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Stack的几种含义" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="2014/12/24/Stack的几种含义/">Stack的几种含义</a>
+    </h1>
+  
+
+        
+        <a href="2014/12/24/Stack的几种含义/" class="archive-article-date">
+  	<time datetime="2014-12-24T09:43:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-12-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>学习编程的时候，经常会看到stack这个词，它的中文名字叫做”栈”。<br>理解这个概念，对于理解程序的运行至关重要。容易混淆的是，这个词其实有三种含义，适用于不同的场合，必须加以区分。</p>
+</blockquote>
+<h2 id="含义一：数据结构"><a href="#含义一：数据结构" class="headerlink" title="含义一：数据结构"></a>含义一：数据结构</h2><p>stack的第一种含义是一组<a href="http://en.wikipedia.org/wiki/Stack_(abstract_data_type)" target="_blank" rel="noopener">数据的存放方式</a>，特点为LIFO，即后进先出（Last in, first out）。</p>
+<p><img src="../images/bg2013112901.png" alt="图"></p>
+<p>在这种数据结构中，数据像积木那样一层层堆起来，后面加入的数据就放在最上层。使用的时候，最上层的数据第一个被用掉，这就叫做”后进先出”。</p>
+<p>与这种结构配套的，是一些特定的方法，主要为下面这些。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- push：在最顶层加入数据。</span><br><span class="line">- pop：返回并移除最顶层的数据。</span><br><span class="line">- top：返回最顶层数据的值，但不移除它。</span><br><span class="line">- isempty：返回一个布尔值，表示当前stack是否为空栈。</span><br></pre></td></tr></table></figure>
+
+<h2 id="含义二：代码运行方式"><a href="#含义二：代码运行方式" class="headerlink" title="含义二：代码运行方式"></a>含义二：代码运行方式</h2><p>stack的第二种含义是<a href="http://en.wikipedia.org/wiki/Call_stack" target="_blank" rel="noopener">“调用栈”（call stack）</a>，表示函数或子例程像堆积木一样存放，以实现层层调用。</p>
+<p>下面以一段Java代码为例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> age;              </span><br><span class="line">    String name;      </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(<span class="keyword">int</span> Age, String Name)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = Age;</span><br><span class="line">        setName(Name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String Name)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = Name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">            Student s;           </span><br><span class="line">            s = <span class="keyword">new</span> Student(<span class="number">23</span>,<span class="string">"Jonh"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面这段代码运行的时候，首先调用main方法，里面需要生成一个Student的实例，于是又调用Student构造函数。在构造函数中，又调用到setName方法。</p>
+<p><img src="../images/bg2013112902.gif" alt="图"></p>
+<p>这三次调用像积木一样堆起来，就叫做<a href="http://en.wikipedia.org/wiki/Call_stack" target="_blank" rel="noopener">调用栈</a>。程序运行的时候，总是先完成最上层的调用，然后将它的值返回到下一层调用，直至完成整个调用栈，返回最后的结果。</p>
+<h2 id="含义三：内存区域"><a href="#含义三：内存区域" class="headerlink" title="含义三：内存区域"></a>含义三：内存区域</h2><p>stack的第三种含义是存放数据的一种<a href="http://en.wikipedia.org/wiki/Stack-based_memory_allocation" target="_blank" rel="noopener">内存区域</a>。程序运行的时候，需要内存空间存放数据。一般来说，系统会划分出两种不同的内存空间：一种叫做stack（栈），另一种叫做heap（堆）</p>
+<p>它们的主要区别是：stack是有结构的，每个区块按照一定次序存放，可以明确知道每个区块的大小；heap是没有结构的，数据可以任意存放。因此，stack的寻址速度要快于heap。</p>
+<p>多线程开发需要记住 <strong>其他的区别还有，一般来说，每个线程分配一个stack，每个进程分配一个heap，也就是说，stack是线程独占的，heap是线程共用的。此外，stack创建的时候，大小是确定的，数据超过这个大小，就发生stack overflow错误，而heap的大小是不确定的，需要的话可以不断增加。</strong><br>根据上面这些区别，数据存放的规则是：只要是局部的、占用空间确定的数据，一般都存放在stack里面，否则就放在heap里面。请看下面这段代码（来源）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Method1</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i=<span class="number">4</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> y=<span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    class1 cls1 = <span class="keyword">new</span> class1();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码的Method1方法，共包含了三个变量：i, y 和 cls1。其中，i和y的值是整数，内存占用空间是确定的，而且是局部变量，只用在Method1区块之内，不会用于区块之外。cls1也是局部变量，但是类型为指针变量，指向一个对象的实例。指针变量占用的大小是确定的，但是对象实例以目前的信息无法确知所占用的内存空间大小。</p>
+<p>这三个变量和一个对象实例在内存中的存放方式如下。</p>
+<p><img src="../images/bg2013112905.jpg" alt="图"></p>
+<p>从上图可以看到，i、y和cls1都存放在stack，因为它们占用内存空间都是确定的，而且本身也属于局部变量。但是，cls1指向的对象实例存放在heap，因为它的大小不确定。作为一条规则可以记住，所有的对象都存放在heap。</p>
+<p>接下来的问题是，当Method1方法运行结束，会发生什么事？</p>
+<p>回答是整个stack被清空，i、y和cls1这三个变量消失，因为它们是局部变量，区块一旦运行结束，就没必要再存在了。而heap之中的那个对象实例继续存在，直到系统的垃圾清理机制（garbage collector）将这块内存回收。因此，一般来说，内存泄漏都发生在heap，即某些内存空间不再被使用了，却因为种种原因，没有被系统回收。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">stack</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="2014/12/24/Stack的几种含义/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-结构体对齐" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="2014/12/01/结构体对齐/">结构体对齐</a>
+    </h1>
+  
+
+        
+        <a href="2014/12/01/结构体对齐/" class="archive-article-date">
+  	<time datetime="2014-12-01T04:34:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-12-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="结构体数据成员对齐的意义"><a href="#结构体数据成员对齐的意义" class="headerlink" title="结构体数据成员对齐的意义"></a>结构体数据成员对齐的意义</h2><blockquote>
+<p>许多实际的计算机系统对基本类型数据在内存中存放的位置有限制，它们会要求这些数据的起始地址的值是某个数k的倍数，这就是所谓的内存对齐，而这个k则被称为该数据类型的对齐模数(alignment modulus)。这种强制的要求一来简化了处理器与内存之间传输系统的设计，二来可以提升读取数据的速度。<br>比如这么一种处理器，它每次读写内存的时候都从某个8倍数的地址开始，一次读出或写入8个字节的数据，假如软件能保证double类型的数据都从8倍数地址开始，那么读或写一个double类型数据就只需要一次内存操作。否则，我们就可能需要两次内存操作才能完成这个动作，因为数据或许恰好横跨在两个符合对齐要求的8字节内存块上。</p>
+</blockquote>
+<h2 id="结构体对齐包括两个方面的含义"><a href="#结构体对齐包括两个方面的含义" class="headerlink" title="结构体对齐包括两个方面的含义"></a>结构体对齐包括两个方面的含义</h2><ul>
+<li>结构体总长度；</li>
+<li>结构体内各数据成员的内存对齐，即该数据成员相对结构体的起始位置；</li>
+</ul>
+<h2 id="结构体大小的计算方法和步骤"><a href="#结构体大小的计算方法和步骤" class="headerlink" title="结构体大小的计算方法和步骤"></a>结构体大小的计算方法和步骤</h2><ol>
+<li>将结构体内所有数据成员的长度值相加，记为sum_a；</li>
+<li>将各数据成员为了内存对齐，按各自对齐模数而填充的字节数累加到和sum_a上，记为sum_b。<code>对齐模数是#pragma pack</code> 指定的数值以及该数据成员自身长度中数值较小者。该数据相对起始位置应该是对齐模式的整数倍；</li>
+<li>将和sum_b向结构体模数对齐，该模数是 <code>#pragma pack指定的数值</code> 、 <code>未指定#pragma pack时，系统默认的对齐模数（32位系统为4字节，64位为8字节）</code> 和 <code>结构体内部最大的基本数据类型成员</code> 长度中数值较小者。结构体的长度应该是该模数的整数倍。</li>
+</ol>
+<h2 id="结构体大小计算举例"><a href="#结构体大小计算举例" class="headerlink" title="结构体大小计算举例"></a>结构体大小计算举例</h2><p>在计算之前，我们首先需要明确的是各个数据成员的对齐模数，对齐模数和数据成员本身的长度以及pragma pack编译参数有关，其值是二者中最小数。如果程序没有明确指出，就需要知道编译器默认的对齐模数值。下表是Windows XP/DEV-C++和Linux/GCC中基本数据类型的长度和默认对齐模数。</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="center">char</th>
+<th align="center">short</th>
+<th align="center">int</th>
+<th align="center">long</th>
+<th align="center">float</th>
+<th align="center">double</th>
+<th align="left">long long</th>
+<th align="right">long double</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Win-32长度</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">8</td>
+<td align="left">8</td>
+<td align="right">8</td>
+</tr>
+<tr>
+<td align="left">模数</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">8</td>
+<td align="left">8</td>
+<td align="right">8</td>
+</tr>
+<tr>
+<td align="left">Linux-32长度</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">8</td>
+<td align="left">8</td>
+<td align="right">12</td>
+</tr>
+<tr>
+<td align="left">模数</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="left">4</td>
+<td align="right">4</td>
+</tr>
+<tr>
+<td align="left">Linux-64长度</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">8</td>
+<td align="center">4</td>
+<td align="center">8</td>
+<td align="left">8</td>
+<td align="right">16</td>
+</tr>
+<tr>
+<td align="left">模数</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">8</td>
+<td align="center">4</td>
+<td align="center">8</td>
+<td align="left">8</td>
+<td align="right">16</td>
+</tr>
+</tbody></table>
+<h3 id="例子1"><a href="#例子1" class="headerlink" title="例子1:"></a>例子1:</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">char</span> a;</span><br><span class="line">    <span class="keyword">long</span> <span class="keyword">double</span> b;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>此例子Windows和Linux计算方法有些许不一致。</p>
+<p><strong>在Windows中计算步骤如下:</strong></p>
+<ol>
+<li><p>所有数据成员自身长度和：1B + 8B = 9B –&gt; sum_a = 9B</p>
+</li>
+<li><p>数据成员a放在相对偏移0处，之前不需要填充字节；数据成员b为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是8，之前需填充7个字节，sum_a + 7 = 16B –&gt; sum_b = 16 B</p>
+</li>
+<li><p>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma pack中较小者，前者为8后者为4，所以结构体对齐模数是4。sum_b是4的4倍，不需再次对齐。</p>
+<p>综上3步，可知结构体的长度是16B，各数据成员在内存中的分布如图1-1所示。</p>
+</li>
+</ol>
+<p><strong>在Linux中计算步骤如下:</strong></p>
+<ol>
+<li>所有数据成员自身长度和：1B + 12B = 13B –&gt; sum_a = 13B</li>
+<li>数据成员a放在相对偏移0处，之前不需要填充字节；数据成员b为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是4，之前需填充3个字节，sum_a + 3 = 16B –&gt; sum_b = 16 B</li>
+<li>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma pack中较小者，前者为12后者为4，所以结构体对齐模数是4。sum_b是4的4倍，不需再次对齐。</li>
+</ol>
+<p>综上3步，可知结构体的长度是16B，各数据成员在内存中的分布如图1-2所示。</p>
+<p><img src="../images/1_thumb.jpg" alt="1"></p>
+<h3 id="例子2"><a href="#例子2" class="headerlink" title="例子2:"></a>例子2:</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> pack(2)</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">char</span> a;</span><br><span class="line">    <span class="keyword">long</span> <span class="keyword">double</span> b;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> pack()</span></span><br></pre></td></tr></table></figure>
+
+<p>例子1和例子2不同之处在于例子2中使用了 <code>#pragma pack(2)</code> 编译参数，它强制指定对齐模数是2。此例子Windows和Linux计算方法有些许不一致。</p>
+<p><strong>在Windows中计算步骤如下:</strong></p>
+<ol>
+<li>所有数据成员自身长度和：1B + 8B = 13B –&gt; sum_a = 9B</li>
+<li>数据成员a放在相对偏移0处，之前不需要填充字节；数据成员b为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是2，之前需填充1个字节，sum_a + 1 = 10B –&gt; sum_b = 10 B</li>
+<li>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma pack中较小者，前者为8后者为2，所以结构体对齐模数是2。sum_b是2的5倍，不需再次对齐。</li>
+</ol>
+<p>综上3步，可知结构体的长度是10B，各数据成员在内存中的分布如图2-1所示。</p>
+<p><strong>在Linux中计算步骤如下:</strong></p>
+<ol>
+<li><p>所有数据成员自身长度和：1B + 12B = 13B –&gt; sum_a = 13B</p>
+</li>
+<li><p>数据成员a放在相对偏移0处，之前不需要填充字节；数据成员b为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是2，之前需填充1个字节，sum_a + 1 = 14B –&gt; sum_b = 14 B</p>
+</li>
+<li><p>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma pack中较小者，前者为8后者为2，所以结构体对齐模数是2。sum_b是2的7倍，不需再次对齐。</p>
+<p>综上3步，可知结构体的长度是14B，各数据成员在内存中的分布如图2-2所示。</p>
+</li>
+</ol>
+<p><img src="../images/2_thumb.jpg" alt="2"></p>
+<h3 id="例子3"><a href="#例子3" class="headerlink" title="例子3:"></a>例子3:</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">char</span> a;</span><br><span class="line">    <span class="keyword">double</span> b;</span><br><span class="line">    <span class="keyword">char</span> c;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>前两例中，数据成员在Linux和Windows下都相同，例3中double的对齐模数在Linux中是4，在Windows下是8，针对这种模数不相同的情况加以分析。</p>
+<p><strong>在Windows中计算步骤如下:</strong></p>
+<ol>
+<li>所有数据成员自身长度和：1B + 8B + 1B = 10B –&gt; sum_a = 10B </li>
+<li>数据成员a放在相对偏移0处，之前不需要填充字节；数据成员b为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是8，之前需填充7个字节，sum_a + 7 = 17B –&gt; sum_b = 17B</li>
+<li>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma pack中较小者，前者为8后者为8，所以结构体对齐模数是8。sum_b应该是8的整数倍，所以要在结构体后填充8*3 - 17 = 7个字节。</li>
+</ol>
+<p>综上3步，可知结构体的长度是24B，各数据成员在内存中的分布如图3-1所示。</p>
+<p><strong>在Linux中计算步骤如下:</strong></p>
+<ol>
+<li>所有数据成员自身长度和：1B + 8B + 1B = 10B，sum_a = 10B</li>
+<li>数据成员a放在相对偏移0处，之前不需要填充字节；数据成员b为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是4，之前需填充3个字节，sum_b = sum_a + 3 = 13B</li>
+<li>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma<br>pack中较小者，前者为8后者为4，所以结构体对齐模数是4。sum_b应该是4的整数倍，所以要在结构体后填充4*4 - 13 = 3个字节。</li>
+</ol>
+<p>综上3步，可知结构体的长度是16B，各数据成员在内存中的分布如图3-2所示。</p>
+<p><img src="../images/3_thumb.jpg" alt="3"></p>
+<h3 id="例子4"><a href="#例子4" class="headerlink" title="例子4:"></a>例子4:</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">char</span> a[<span class="number">11</span>];</span><br><span class="line">    <span class="keyword">int</span> b;</span><br><span class="line">    <span class="keyword">char</span> c;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>此例子Windows和Linux计算方法一样，如下：</strong></p>
+<ol>
+<li>所有数据成员自身长度和：11B + 4B + 1B = 16B –&gt; sum_a = 16B</li>
+<li>数据成员a放在相对偏移0处，之前不需要填充字节；数据成员b为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是4，之前需填充3个字节，sum_a + 1 = 17B –&gt; sum_b = 17B</li>
+<li>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma pack中较小者，前者为4后者为4，所以结构体对齐模数是4。sum_b是4的整数倍，需在结构体后填充4*5 - 17 = 1个字节。</li>
+</ol>
+<p>综上3步，可知结构体的长度是20B，各数据成员在内存中的分布如图4所示。</p>
+<p><img src="../images/4_thumb.jpg" alt="4"></p>
+<h3 id="例子5"><a href="#例子5" class="headerlink" title="例子5:"></a>例子5:</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_test</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> my_test_a;</span><br><span class="line">    <span class="keyword">char</span> my_test_b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">my_test</span> <span class="title">a</span>;</span></span><br><span class="line">    <span class="keyword">double</span> my_struct_a;</span><br><span class="line">    <span class="keyword">int</span> my_struct_b;</span><br><span class="line">    <span class="keyword">char</span> my_struct_c;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>例子5和前几个例子均不同，在此例子中我们要计算struct my_struct的大小，而my_struct中嵌套了一个my_test结构体。这种结构体应该如何计算呢？原则是将my_test在my_struct中先展开，然后再计算，即是展开成如下结构体：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> my_test_a;</span><br><span class="line">    <span class="keyword">char</span> my_test_b;</span><br><span class="line">    <span class="keyword">double</span> my_struct_a;</span><br><span class="line">    <span class="keyword">int</span> my_struct_b;</span><br><span class="line">    <span class="keyword">char</span> my_struct_c;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>此例子Windows中的计算方法如下:</strong></p>
+<ol>
+<li>所有数据成员自身长度和：4B + 1B + 8B + 4B + 1B= 18B –&gt; sum_a = 18B</li>
+<li>数据成员my_struct_a为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是8，之前需填充3个字节：sum_a + 3 = 21B –&gt; sum_b = 21B</li>
+<li>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma pack中较小者，前者为8后者为8，所以结构体对齐模数是8。sum_b是8的整数倍，需在结构体后填充3*8 - 21 = 3个字节。</li>
+</ol>
+<p>综上3步，可知结构体的长度是24B，各数据成员在内存中的分布如图5所示。</p>
+<p><strong>此例子Linux中的计算方法如下:</strong></p>
+<ol>
+<li>所有数据成员自身长度和：4B + 1B + 8B + 4B + 1B= 18B，sum_a = 18B</li>
+<li>数据成员my_struct_a为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是4，之前需填充3个字节，sum_b = sum_a + 3 = 21B</li>
+<li>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma<br>pack中较小者，前者为4后者为4，所以结构体对齐模数是4。sum_b是4的整数倍，需在结构体后填充6*4 - 21 = 3个字节。</li>
+</ol>
+<p>综上3步，可知结构体的长度是24B，各数据成员在内存中的分布如图5所示。</p>
+<p><img src="../images/5_thumb.jpg" alt="5"></p>
+<h2 id="源代码附录"><a href="#源代码附录" class="headerlink" title="源代码附录"></a>源代码附录</h2><p>上面的例子均在Windows(VC++6.0)和Linux(GCC4.1.0)上测试验证。下面是测试程序。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(char)        = "</span> &lt;&lt; <span class="keyword">sizeof</span>(<span class="keyword">char</span>) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(short)       = "</span> &lt;&lt; <span class="keyword">sizeof</span>(short) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(int)         = "</span> &lt;&lt; <span class="keyword">sizeof</span>(<span class="keyword">int</span>) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(long)        = "</span> &lt;&lt; <span class="keyword">sizeof</span>(<span class="keyword">long</span>) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(float)       = "</span> &lt;&lt; <span class="keyword">sizeof</span>(<span class="keyword">float</span>) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(double)      = "</span> &lt;&lt; <span class="keyword">sizeof</span>(<span class="keyword">double</span>) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(long long)   = "</span> &lt;&lt; <span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(long double) = "</span> &lt;&lt; <span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">double</span>) &lt;&lt; <span class="built_in">endl</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 例子1</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">        &#123;</span></span><br><span class="line">            <span class="keyword">char</span> a;</span><br><span class="line">            <span class="keyword">long</span> <span class="keyword">double</span> b;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"exapmle-1: sizeof(my_struct) = "</span> &lt;&lt; <span class="keyword">sizeof</span>(my_struct) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">  </span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span> <span class="title">data</span>;</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"my_struct-&gt;a: %u\nmy_struct-&gt;b: %u\n\n"</span>, &amp;data.a, &amp;data.b);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 例子2</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="meta">#<span class="meta-keyword">pragma</span> pack(2)</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">        &#123;</span></span><br><span class="line">            <span class="keyword">char</span> a;</span><br><span class="line">            <span class="keyword">long</span> <span class="keyword">double</span> b;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="meta">#<span class="meta-keyword">pragma</span> pack()</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span> <span class="title">data</span>;</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"exapmle-2: sizeof(my_struct) = "</span> &lt;&lt; <span class="keyword">sizeof</span>(my_struct) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">  </span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"my_struct-&gt;a: %u\nmy_struct-&gt;b: %u\n\n"</span>, &amp;data.a, &amp;data.b);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 例子3</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">        &#123;</span></span><br><span class="line">            <span class="keyword">char</span> a;</span><br><span class="line">            <span class="keyword">double</span> b;</span><br><span class="line">            <span class="keyword">char</span> c;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span> <span class="title">data</span>;</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"exapmle-3: sizeof(my_struct) = "</span> &lt;&lt; <span class="keyword">sizeof</span>(my_struct) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">  </span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"my_struct-&gt;a: %u\nmy_struct-&gt;b: %u\nmy_struct-&gt;c: %u\n\n"</span>, &amp;data.a, &amp;data.b, &amp;data.c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 例子4</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">        &#123;</span>  </span><br><span class="line">            <span class="keyword">char</span> a[<span class="number">11</span>];  </span><br><span class="line">            <span class="keyword">int</span> b;  </span><br><span class="line">            <span class="keyword">char</span> c;  </span><br><span class="line">        &#125;;</span><br><span class="line">  </span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"example-4: sizeof(my_struct) = "</span> &lt;&lt; <span class="keyword">sizeof</span>(struct my_struct) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">  </span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span> <span class="title">data</span>;</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"my_struct-&gt;a: %u\nmy_struct-&gt;b: %u\nmy_struct-&gt;c: %u\n\n"</span>, &amp;data, &amp;data.b, &amp;data.c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 例子5</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_test</span></span></span><br><span class="line"><span class="class">        &#123;</span></span><br><span class="line">            <span class="keyword">int</span> my_test_a;</span><br><span class="line">            <span class="keyword">char</span> my_test_b;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">        &#123;</span></span><br><span class="line">            <span class="class"><span class="keyword">struct</span> <span class="title">my_test</span> <span class="title">a</span>;</span></span><br><span class="line">            <span class="keyword">double</span> my_struct_a;</span><br><span class="line">            <span class="keyword">int</span> my_struct_b;</span><br><span class="line">            <span class="keyword">char</span> my_struct_c;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"example-5: sizeof(my_struct) = "</span> &lt;&lt; <span class="keyword">sizeof</span>(struct my_struct) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">  </span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span> <span class="title">data</span>;</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"my_struct-&gt;my_test_a  : %u\n"</span></span><br><span class="line">            <span class="string">"my_struct-&gt;my_test_b  : %u\n"</span></span><br><span class="line">            <span class="string">"my_struct-&gt;my_struct_a: %u\n"</span></span><br><span class="line">            <span class="string">"my_struct-&gt;my_struct_b: %u\n"</span></span><br><span class="line">            <span class="string">"my_struct-&gt;my_struct_c: %u\n"</span>, &amp;data.a.my_test_a, &amp;data.a.my_test_b, </span><br><span class="line">            &amp;data.my_struct_a, &amp;data.my_struct_b, &amp;data.my_struct_c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="执行结果"><a href="#执行结果" class="headerlink" title="执行结果"></a>执行结果</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Linux localhost 3.4.6-2.10-desktop #1 SMP PREEMPT Thu Jul 28 19:20:26 UTC 2012 (641c197) x86_64 x86_64 x86_64 GNU/Linux</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">char</span>)        = <span class="number">1</span></span><br><span class="line"><span class="keyword">sizeof</span>(short)       = <span class="number">2</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">int</span>)         = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span>)        = <span class="number">8</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">float</span>)       = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">double</span>)      = <span class="number">8</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>)   = <span class="number">8</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">double</span>) = <span class="number">16</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-1</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">32</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2163695552</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2163695568</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-2</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">18</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2163695680</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2163695682</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-3</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">24</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2163695648</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2163695656</span></span><br><span class="line">my_struct-&gt;c: <span class="number">2163695664</span></span><br><span class="line"></span><br><span class="line">example<span class="number">-4</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">20</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2163695616</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2163695628</span></span><br><span class="line">my_struct-&gt;c: <span class="number">2163695632</span></span><br><span class="line"></span><br><span class="line">example<span class="number">-5</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">24</span></span><br><span class="line">my_struct-&gt;my_test_a  : <span class="number">2163695584</span></span><br><span class="line">my_struct-&gt;my_test_b  : <span class="number">2163695588</span></span><br><span class="line">my_struct-&gt;my_struct_a: <span class="number">2163695592</span></span><br><span class="line">my_struct-&gt;my_struct_b: <span class="number">2163695600</span></span><br><span class="line">my_struct-&gt;my_struct_c: <span class="number">2163695604</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//Linux localhost 3.4.6-2.10-desktop #1 SMP PREEMPT Thu Jul 26 09:36:26 UTC 2012 (641c197) i686 i686 i386 GNU/Linux</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">char</span>)        = <span class="number">1</span></span><br><span class="line"><span class="keyword">sizeof</span>(short)       = <span class="number">2</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">int</span>)         = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span>)        = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">float</span>)       = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">double</span>)      = <span class="number">8</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>)   = <span class="number">8</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">double</span>) = <span class="number">12</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-1</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">16</span></span><br><span class="line">my_struct-&gt;a: <span class="number">3213889904</span></span><br><span class="line">my_struct-&gt;b: <span class="number">3213889908</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-2</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">14</span></span><br><span class="line">my_struct-&gt;a: <span class="number">3213889890</span></span><br><span class="line">my_struct-&gt;b: <span class="number">3213889892</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-3</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">16</span></span><br><span class="line">my_struct-&gt;a: <span class="number">3213889872</span></span><br><span class="line">my_struct-&gt;b: <span class="number">3213889876</span></span><br><span class="line">my_struct-&gt;c: <span class="number">3213889884</span></span><br><span class="line"></span><br><span class="line">example<span class="number">-4</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">20</span></span><br><span class="line">my_struct-&gt;a: <span class="number">3213889852</span></span><br><span class="line">my_struct-&gt;b: <span class="number">3213889864</span></span><br><span class="line">my_struct-&gt;c: <span class="number">3213889868</span></span><br><span class="line"></span><br><span class="line">example<span class="number">-5</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">24</span></span><br><span class="line">my_struct-&gt;my_test_a  : <span class="number">3213889828</span></span><br><span class="line">my_struct-&gt;my_test_b  : <span class="number">3213889832</span></span><br><span class="line">my_struct-&gt;my_struct_a: <span class="number">3213889836</span></span><br><span class="line">my_struct-&gt;my_struct_b: <span class="number">3213889844</span></span><br><span class="line">my_struct-&gt;my_struct_c: <span class="number">3213889848</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//CYGWIN_NT-6.1 motadou-PC 1.7.20(0.266/5/3) 2013-06-07 11:11 i686 Cygwin</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">char</span>)        = <span class="number">1</span></span><br><span class="line"><span class="keyword">sizeof</span>(short)       = <span class="number">2</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">int</span>)         = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span>)        = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">float</span>)       = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">double</span>)      = <span class="number">8</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>)   = <span class="number">8</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">double</span>) = <span class="number">12</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-1</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">16</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2272336</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2272340</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-2</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">14</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2272322</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2272324</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-3</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">24</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2272296</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2272304</span></span><br><span class="line">my_struct-&gt;c: <span class="number">2272312</span></span><br><span class="line"></span><br><span class="line">example<span class="number">-4</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">20</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2272276</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2272288</span></span><br><span class="line">my_struct-&gt;c: <span class="number">2272292</span></span><br><span class="line"></span><br><span class="line">example<span class="number">-5</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">24</span></span><br><span class="line">my_struct-&gt;my_test_a  : <span class="number">2272248</span></span><br><span class="line">my_struct-&gt;my_test_b  : <span class="number">2272252</span></span><br><span class="line">my_struct-&gt;my_struct_a: <span class="number">2272256</span></span><br><span class="line">my_struct-&gt;my_struct_b: <span class="number">2272264</span></span><br><span class="line">my_struct-&gt;my_struct_c: <span class="number">2272268</span></span><br></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">结构体对齐 C</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="2014/12/01/结构体对齐/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-CPP程序的内存结构" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="2014/11/21/CPP程序的内存结构/">C++程序的内存结构</a>
+    </h1>
+  
+
+        
+        <a href="2014/11/21/CPP程序的内存结构/" class="archive-article-date">
+  	<time datetime="2014-11-21T04:34:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-11-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="五大内存分区"><a href="#五大内存分区" class="headerlink" title="五大内存分区"></a>五大内存分区</h2><p>在C++中，内存分成5个区，他们分别是 <code>堆</code>、<code>栈</code>、<code>自由存储区</code>、<code>全局/静态存储区</code>和<code>常量存储区</code>。</p>
+<ul>
+<li><p>栈区(stack): 由编译器在需要的时候分配，在不需要的时候自动清除的变量的存储区。里面的变量通常是局部变量、函数参数等。由编译器自动分配释放 ，存放函数的参数值，局部变量的值等。其操作方式类似于数据结构中的栈。</p>
+</li>
+<li><p>堆区(heap): 操作系统层面的术语。就是那些由malloc等分配的内存块，用free来结束自己的生命的。一般由程序员分配释放， 若程序员不释放，程序结束时可能由OS回收 。注意它与数据结构中的堆是两回事，分配方式倒是类似于链表。</p>
+</li>
+<li><p>自由存储区: C++层面上的术语，就是那些由new分配的内存块，他们的释放编译器不去管，由我们的应用程序去控制，一般一个new就要对应一个delete。如果程序员没有释放掉，那么在程序结束后，操作系统会自动回收。new的申请是调用的malloc，自由存储区就和堆类似，但不等价，可参考该文章<a href="https://www.cnblogs.com/QG-whz/p/5060894.html" target="_blank" rel="noopener">C++ 自由存储区是否等价于堆？</a></p>
+</li>
+<li><p>全局区(静态区)(static): 全局变量和静态变量被分配到同一块内存中，在以前的C语言中，全局变量又分为初始化的和未初始化的，在C++里面没有这个区分了，他们共同占用同一块内存区。全局变量和静态变量的存储是放在一块的，初始化的全局变量和静态变量在一块区域， 未初始化的全局变量和未初始化的静态变量在相邻的另一块区域。 - 程序结束后有系统释放</p>
+</li>
+<li><p>常量存储区: 这是一块比较特殊的存储区，他们里面存放的是常量，不允许修改</p>
+</li>
+</ul>
+<hr>
+<ul>
+<li>文字常量区: 常量字符串就是放在这里的。 程序结束后由系统释放。</li>
+<li>程序代码区: 存放函数体的二进制代码。</li>
+</ul>
+<p><strong>事例:</strong></p>
+<pre><code class="c"><span class="comment">//main.cpp </span>
+<span class="keyword">int</span> a = <span class="number">0</span>; <span class="comment">// 全局初始化区 </span>
+<span class="keyword">char</span> *p1; <span class="comment">// 全局未初始化区 </span>
+<span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>
+<span class="function"></span>{ 
+    <span class="keyword">int</span> b; <span class="comment">// 栈 </span>
+    <span class="keyword">char</span> s[] = <span class="string">"abc"</span>; <span class="comment">// 栈 </span>
+    <span class="keyword">char</span> *p2; <span class="comment">// 栈 </span>
+    <span class="keyword">char</span> *p3 = <span class="string">"123456"</span>; <span class="comment">// 123456\0在常量区，p3在栈上。 </span>
+    <span class="keyword">static</span> <span class="keyword">int</span> c =<span class="number">0</span>； <span class="comment">// 全局（静态）初始化区 </span>
+    p1 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>); 
+    p2 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">20</span>); <span class="comment">// 分配得来得10和20字节的区域就在堆区。 </span>
+    <span class="built_in">strcpy</span>(p1, <span class="string">"123456"</span>); <span class="comment">// 123456\0放在常量区，编译器可能会将它与p3所指向的"123456"优化成一个地方。</span>
+} </code></pre>
+<p>注：</p>
+<p>1.一般，我们说堆栈的时候，其实指的就是栈而已。所以这里说他们2个是一个意思也是对的。</p>
+<p>2.堆栈中的堆是向高地址扩展的数据结构，是不连续的内存区域。这是由于系统是用链表来存储的空闲内存地址的，自然是不连续的，而链表的遍历方向是由低地址向高地址。堆的大小受限于计算机系统中有效的虚拟内存。</p>
+<p>堆分配的时候首先应该知道操作系统有一个记录空闲内存地址的链表，当系统收到程序的申请时，会遍历该链表，寻找第一个空间大于所申请空间的堆结点，然后将该结点从空闲结点链表中删除，并将该结点的空间分配给程序。</p>
+<p>这点和数据结构中的出堆很像，还有有一定的联系的</p>
+<p>3.因为”abc” 在编译的时候，编译器认为它是一个常量，把他分配到了数据区中。而char p2[]=“bbb”，是在程序运行的时候临时在栈中分配空间存放的。</p>
+<hr>
+<p>自由存储是C++中通过new与delete动态分配和释放对象的抽象概念，而堆（heap）是C语言和操作系统的术语，是操作系统维护的一块动态分配内存。</p>
+<p>new所申请的内存区域在C++中称为自由存储区。藉由堆实现的自由存储，可以说new所申请的内存区域在堆上。</p>
+<p>堆与自由存储区还是有区别的，它们并非等价。</p>
+<p>假如你来自C语言，从没接触过C++；或者说你一开始就熟悉C++的自由储存概念，而从没听说过C语言的malloc，可能你就不会陷入“自由存储区与堆好像一样，好像又不同”这样的迷惑之中。这就像Bjarne Stroustrup所说的：</p>
+<p>usually because they come from a different language background.</p>
+<p>大概只是语言背景不同罢了。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>这方面需要区别 c 和 c++。面试要问到还是要慎重。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">内存区域 内存结构 C++</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="2014/11/21/CPP程序的内存结构/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-C程序的内存结构" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -834,451 +1315,9 @@
 
 
   
-    <article id="post-版本控制之SVN" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="2014/07/27/版本控制之SVN/">版本控制之SVN</a>
-    </h1>
-  
-
-        
-        <a href="2014/07/27/版本控制之SVN/" class="archive-article-date">
-  	<time datetime="2014-07-27T13:05:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-07-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>本人开始最先是接触到的SVN。多人共同开发一个软件，是借助SVN实现的。大大的减少了代码的拷贝。</p>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Apache Subversion 通常被缩写成 SVN，是一个开放源代码的版本控制系统，Subversion 在 2000 年由 CollabNet Inc 开发，现在发展成为 Apache 软件基金会的一个项目，同样是一个丰富的开发者和用户社区的一部分。</p>
-<p>SVN相对于的RCS、CVS，采用了分支管理系统，它的设计目标就是取代CVS。互联网上免费的版本控制服务多基于Subversion。</p>
-<h2 id="SVN-的一些概念"><a href="#SVN-的一些概念" class="headerlink" title="SVN 的一些概念"></a>SVN 的一些概念</h2><ul>
-<li>repository（源代码库）:源代码统一存放的地方</li>
-<li>Checkout（提取）:当你手上没有源代码的时候，你需要从repository checkout一份</li>
-<li>Commit（提交）:当你已经修改了代码，你就需要Commit到repository</li>
-<li>Update (更新):当你已经Checkout了一份源代码， Update一下你就可以和Repository上的源代码同步，你手上的代码就会有最新的变更<br>日常开发过程其实就是这样的（假设你已经Checkout并且已经工作了几天）：Update(获得最新的代码) –&gt;作出自己的修改并调试成功 –&gt; Commit(大家就可以看到你的修改了) 。</li>
-</ul>
-<p>如果两个程序员同时修改了同一个文件呢, SVN 可以合并这两个程序员的改动，实际上SVN管理源代码是以行为单位的，就是说两个程序员只要不是修改了同一行程序，SVN都会自动合并两种修改。如果是同一行，SVN 会提示文件 Conflict, 冲突，需要手动确认。</p>
-<h2 id="开始项目"><a href="#开始项目" class="headerlink" title="开始项目"></a>开始项目</h2><p>一开始从项目经理那里拿到svn仓库地址。然后在你的办公电脑检出项目。这里需要写入你的用户名和密码，这里需要项目经理现行告知。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn checkout svn://192.168.0.1/<span class="built_in">test</span></span><br></pre></td></tr></table></figure>
-
-<p>检出成功后在当前目录下生成test副本目录。查看检出的内容</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ll <span class="built_in">test</span>/</span><br><span class="line">total 24</span><br><span class="line">drwxr-xr-x 6 root root 4096 Jul 21 19:19 ./</span><br><span class="line">drwxr-xr-x 3 root root 4096 Jul 21 19:10 ../</span><br><span class="line">drwxr-xr-x 2 root root 4096 Jul 21 19:19 branches/</span><br><span class="line">drwxr-xr-x 4 root root 4096 Jul 21 19:19 .svn/</span><br><span class="line">drwxr-xr-x 2 root root 4096 Jul 21 19:19 tags/</span><br><span class="line">drwxr-xr-x 2 root root 4096 Jul 21 19:19 trunk/</span><br></pre></td></tr></table></figure>
-
-<p>你想查看更多关于版本库的信息，执行 info 命令。</p>
-<h2 id="编写项目-常用操作"><a href="#编写项目-常用操作" class="headerlink" title="编写项目,常用操作"></a>编写项目,常用操作</h2><p>也就是开始写代码。我一般拿到项目之后，我先会创建一个分支，在当前分支测试完成后，再合并到我检出的分支上，也就是项目经理给的地址。</p>
-<h3 id="先创建自己的分支，以防污染项目经理给的地址"><a href="#先创建自己的分支，以防污染项目经理给的地址" class="headerlink" title="先创建自己的分支，以防污染项目经理给的地址"></a>先创建自己的分支，以防污染项目经理给的地址</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn copy trunk/ branches/my_branch</span><br></pre></td></tr></table></figure>
-
-<p>切换到自己的分支</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> branches/my_branch/</span><br></pre></td></tr></table></figure>
-
-<h3 id="代码改动之后是提交最新的代码"><a href="#代码改动之后是提交最新的代码" class="headerlink" title="代码改动之后是提交最新的代码"></a>代码改动之后是提交最新的代码</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn commit -m <span class="string">"add my_branch"</span></span><br></pre></td></tr></table></figure>
-
-<p>在项目当中添加了一个文档<code>readme.md</code></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ svn add readme.md</span><br><span class="line">$ svn commit -m <span class="string">"add readme.md"</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="功能测试通过之后，合并代码，把自己分支的代码合并到项目经理给的地址"><a href="#功能测试通过之后，合并代码，把自己分支的代码合并到项目经理给的地址" class="headerlink" title="功能测试通过之后，合并代码，把自己分支的代码合并到项目经理给的地址"></a>功能测试通过之后，合并代码，把自己分支的代码合并到项目经理给的地址</h3><p>先切回到项目经理给的地址</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ../trunk</span><br></pre></td></tr></table></figure>
-
-<p>之后需要执行更新防止没有更新，合并的时候有冲突</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn update</span><br></pre></td></tr></table></figure>
-
-<p>进行合并</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn merge ../branches/my_branch/</span><br></pre></td></tr></table></figure>
-
-<p>将合并好的 trunk 提交到版本库中。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn commit -m <span class="string">"add index.html"</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="如有冲突需要解决冲突然后在进行提交合并"><a href="#如有冲突需要解决冲突然后在进行提交合并" class="headerlink" title="如有冲突需要解决冲突然后在进行提交合并"></a>如有冲突需要解决冲突然后在进行提交合并</h3><blockquote>
-<p>两人的代码被互相覆盖，这样就导致了冲突，解决了代码的相互覆盖就可以了。</p>
-</blockquote>
-<h2 id="SVN-标签（tag）"><a href="#SVN-标签（tag）" class="headerlink" title="SVN 标签（tag）"></a>SVN 标签（tag）</h2><p>版本管理系统支持 tag 选项，通过使用 tag 的概念，我们可以给某一个具体版本的代码一个更加有意义的名字。</p>
-<p>Tags 即标签主要用于项目开发中的里程碑，比如开发到一定阶段可以单独一个版本作为发布等，它往往代表一个可以固定的完整的版本，这跟 VSS 中的 Tag 大致相同。</p>
-<p>我们在本地工作副本创建一个 tag。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ svn copy trunk/ tags/v1.0</span><br><span class="line">$ svn commit -m <span class="string">"tags v1.0"</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>SVN的回退，SVN查看历史提交信息我没有过多的展开。可以看下面的教程学到很多。</p>
-<p><a href="https://www.runoob.com/svn/svn-tutorial.html" target="_blank" rel="noopener">SVN教程</a><br><a href="https://www.runoob.com/svn/tortoisesvn-intro.html" target="_blank" rel="noopener">SVN工具图文教程</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SVN</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="2014/07/27/版本控制之SVN/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-版本管理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="2014/07/25/版本管理/">版本管理</a>
-    </h1>
-  
-
-        
-        <a href="2014/07/25/版本管理/" class="archive-article-date">
-  	<time datetime="2014-07-25T12:12:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-07-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="https://tortoisesvn.net/index.zh.html" target="_blank" rel="noopener">官方链接</a></p>
-<h2 id="为什么需要版本管理"><a href="#为什么需要版本管理" class="headerlink" title="为什么需要版本管理"></a>为什么需要版本管理</h2><p>项目的开发是长期的过程。这个过程里有每个项目的生命周期和各个功能的里程碑。一般会把这些周期和里程碑确定成一个个的版本，以便对整个项目实行历程的管理和阶段目标的控制。那怎样科学地管理项目的版本呢？接下来就讨论这个问题。</p>
-<p>在正式进行介绍前，有必要澄清一下这两个概念：版本管理和版本控制。</p>
-<p>版本管理是指对项目的整体版本的演变过程进行管理，例如，从 1.0 到 1.1，再到 2.0 等。版本控制是借助第三方的版本控制工具，追踪管理项目文档（包括代码）的每一个变更。</p>
-<p>接下来主要介绍的是版本管理，而不是版本控制，请读者注意区分版本管理和版本控制。</p>
-<h2 id="版本管理关系"><a href="#版本管理关系" class="headerlink" title="版本管理关系"></a>版本管理关系</h2><p>在项目开发过程中，团队内部会随着项目的进展发布最新的快照版本。但是开发到一定的阶段，需要将快照版本定位成一个发布版本对团队外部进行发布，同时，在这个定位版本的基础上进行二次开发，开发过程中又形成新的快照，到一定阶段后，再发布一个定位的发布版本，以此重复进行，直到最后项目完成。</p>
-<p>这个过程中快照版本和发布版本的切换管理就是版本管理。也就是说，版本管理关系的一个核心问题就是要科学地解决快照版本和发布版本之间的切换问题。</p>
-<p>理想的发布版本，应该是在项目进展到一个比较稳定的状态。这种稳定状态包括源代码的状态和构件的状态，所以一般构建一个稳定版本的条件有以下几个方面。</p>
-<ul>
-<li><p>所有的测试案例应该全部通过。这点可以理解，自己的测试案例都不能通过，说明有漏洞。发布这种带有明显漏洞的版本是没有意义的。</p>
-</li>
-<li><p>项目中没有配置任何快照版本的依赖。发布版本与快照版本最显著的区别就是稳定。如果自己包含有对快照构件的依赖，依赖的基础都不稳定，怎么能谈得上自己的稳定呢？</p>
-</li>
-<li><p>项目中没有配置任何快照版本的插件。同上面的道理一样。</p>
-</li>
-<li><p>项目中所有的文档（包含代码）都要提交到版本控制系统。一个稳定版本的发布，不仅表示项目进入到了一个相对稳定的阶段，而且还必须保证相关的文档能齐备，以便以后能准确返回到这个阶段。</p>
-</li>
-</ul>
-<p>如果要发布的文档没有全部集中提交到版本控制系统中，意味着一不小心文档就会残缺，这样的版本就没法回滚。</p>
-<h2 id="版本号的约定"><a href="#版本号的约定" class="headerlink" title="版本号的约定"></a>版本号的约定</h2><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;主版本&gt;.&lt;次版本&gt;.&lt;增量版本&gt;-&lt;里程碑版本&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>主版本：表示项目重大架构的变更。比如 Struts1 和 Struts2，它们的架构体系都不同；JUnit4 和 JUnit3，一个全面支持注解，另一个就不支持。</li>
-<li>次版本：表示有较大的功能增加和变化，或者全面系统地修复漏洞。</li>
-<li>增量版本：表示有重大漏洞的修复。</li>
-<li>里程碑版本：表明一个版本的里程碑（版本内部）。这样的版本同下一个正式版本相比，相对来说不是很稳定，有待更多的测试。</li>
-</ul>
-<p>需要注意的是，不是每个版本号都必须由这四个部分组成，有些版本号就可以没有增量版本和里程碑版本。</p>
-<h2 id="主干、分支、标签"><a href="#主干、分支、标签" class="headerlink" title="主干、分支、标签"></a>主干、分支、标签</h2><ul>
-<li><p>主干：项目开发的主体，也是主线、关键历程。从这里可以获取项目的最新代码和绝大部分的变更历史。</p>
-</li>
-<li><p>分支：从主线某个点分离出去的一段分支。在一个特别时间点的时候，既要保持项目的总体（主线）进度，又要同步修改某些重要漏洞、或实现特殊功能、或实验性开发，就可以创建一个分支独立进行。分支达到预期效果后，需要将分支里面的变更合并到主线中去。</p>
-</li>
-<li><p>标签：用来标记分支和主干进展到某个状态的点，代表项目进展到某个阶段或某个相对比较稳定的状态。实际项目中，这种状态往往就是版本发布的状态。</p>
-</li>
-</ul>
-<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>既然制定了版本管理规范，那要怎么完成规范，这就要需要借助版本控制。既然有版本控制也就有版本控制工具。</p>
-<p>在接下来的文章会介绍版本控制工具  </p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">版本管理</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="2014/07/25/版本管理/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Markdown" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="2014/07/15/Markdown/">Markdown</a>
-    </h1>
-  
-
-        
-        <a href="2014/07/15/Markdown/" class="archive-article-date">
-  	<time datetime="2014-07-15T13:32:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-07-15</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><blockquote>
-<p>简介: <a href="https://github.com/mattcone/markdown-guide" target="_blank" rel="noopener">Markdown</a>是一种轻量级标记语言，创始人为约翰·格鲁伯（英语：John Gruber）。它允许人们使用易读易写的纯文本格式编写文档，然后转换成有效的XHTML（或者HTML）文档。这种语言吸收了很多在电子邮件中已有的纯文本标记的特性。  </p>
-</blockquote>
-<blockquote>
-<p>由于Markdown的轻量化、易读易写特性，并且对于图片，图表、数学式都有支持，当前许多网站都广泛使用Markdown来撰写帮助文档或是用于论坛上发表消息。如GitHub、Reddit、Diaspora、Stack Exchange、OpenStreetMap 、SourceForge等，甚至还能被使用来撰写电子书。</p>
-</blockquote>
-<h2 id="Markdown-语法"><a href="#Markdown-语法" class="headerlink" title="Markdown 语法"></a>Markdown 语法</h2><h3 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h3><blockquote>
-<p><code>#</code> 数量决定几级标题</p>
-</blockquote>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一级标题</span></span><br><span class="line"><span class="comment">## 二级标题</span></span><br><span class="line"><span class="comment">### 三级标题</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1><h2 id="二级标题"><a href="#二级标题" class="headerlink" title="二级标题"></a>二级标题</h2><h3 id="三级标题"><a href="#三级标题" class="headerlink" title="三级标题"></a>三级标题</h3><h3 id="列表类"><a href="#列表类" class="headerlink" title="列表类"></a>列表类</h3><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">* 无需列表<span class="number">1</span></span><br><span class="line">* 无需列表<span class="number">2</span></span><br><span class="line"><span class="number">1</span>. 有序列表<span class="number">1</span></span><br><span class="line"><span class="number">2</span>. 有序列表<span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>无需列表1</li>
-<li>无需列表2</li>
-</ul>
-<ol>
-<li>有序列表1</li>
-<li>有序列表2</li>
-</ol>
-<h3 id="分割线"><a href="#分割线" class="headerlink" title="分割线"></a>分割线</h3><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">***</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-
-<hr>
-<hr>
-<h3 id="斜体和粗体"><a href="#斜体和粗体" class="headerlink" title="斜体和粗体"></a>斜体和粗体</h3><p>代码: </p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">*斜体*或<span class="number">_</span>斜体<span class="number">_</span></span><br><span class="line">**粗体**</span><br><span class="line">***加粗斜体***</span><br><span class="line">~~删除线~~</span><br></pre></td></tr></table></figure>
-
-<p><em>斜体</em>或<em>斜体</em><br><strong>粗体</strong><br><strong><em>加粗斜体</em></strong><br><del>删除线</del>  </p>
-<h3 id="超链接"><a href="#超链接" class="headerlink" title="超链接"></a>超链接</h3><blockquote>
-<p><code>[]</code>里写链接文字，<code>()</code>里写链接地址, <code>()</code>中的<code>&quot;&quot;</code>中可以为链接指定title属性，title属性可加可不加。title属性的效果是鼠标悬停在链接上会出现指定的 title文字。<code>[链接文字](链接地址 &quot;链接标题&quot;)</code>这样的形式。链接地址与链接标题前有一个<strong>空格</strong>。</p>
-</blockquote>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[github](https:<span class="regexp">//github</span>.com/)</span><br><span class="line">[github](https:<span class="regexp">//github</span>.com/ <span class="string">"github主页"</span>)</span><br></pre></td></tr></table></figure>
-
-<p><a href="https://github.com/" target="_blank" rel="noopener">github</a><br><a href="https://github.com/" target="_blank" rel="noopener" title="github主页">github</a></p>
-<h3 id="插入图像"><a href="#插入图像" class="headerlink" title="插入图像"></a>插入图像</h3><blockquote>
-<p>图片的创建方式与超链接相似，而且和超链接一样也有两种写法，行内式和参考式写法。</p>
-</blockquote>
-<p>语法中图片Alt的意思是如果图片因为某些原因不能显示，就用定义的图片Alt文字来代替图片。 图片Title则和链接中的Title一样，表示鼠标悬停与图片上时出现的文字。 Alt 和 Title 都不是必须的，可以省略。</p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![猫咪](https:<span class="regexp">//github</span>.com/onelcat/Resource/blob/master/images/IMG_1954.JPG?raw=true <span class="string">"可爱的小猫"</span>)</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://github.com/onelcat/Resource/blob/master/images/IMG_1954.JPG?raw=true" alt="猫咪" title="可爱的小猫"></p>
-<h3 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h3><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">姓名|性别|分数</span><br><span class="line">-|-|-</span><br><span class="line">小明|男|<span class="number">75</span></span><br><span class="line">小红|女|<span class="number">79</span></span><br><span class="line">小陆|男|<span class="number">92</span></span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>姓名</th>
-<th>性别</th>
-<th>分数</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>小明</td>
-<td>男</td>
-<td>75</td>
-</tr>
-<tr>
-<td>小红</td>
-<td>女</td>
-<td>79</td>
-</tr>
-<tr>
-<td>小陆</td>
-<td>男</td>
-<td>92</td>
-</tr>
-</tbody></table>
-<p>为表格第二列指定方向</p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">配置|价格</span><br><span class="line">-|-:</span><br><span class="line"><span class="number">512</span>M | $5.<span class="number">00</span>/mo</span><br><span class="line"><span class="number">1</span>G |$1<span class="number">0</span>.<span class="number">00</span>/mo</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>配置</th>
-<th align="right">价格</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>512M</td>
-<td align="right">$5.00/mo</td>
-</tr>
-<tr>
-<td>1G</td>
-<td align="right">$10.00/mo</td>
-</tr>
-</tbody></table>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><strong>代码块</strong></p>
-<div> 
-`printf()`函数输出
-</div>
-
-<p><code>printf()</code>函数输出</p>
-<p><strong>代码片段</strong></p>
-<div>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;&lt;&#x2F;br&gt;</span><br><span class="line">int main(void)&lt;&#x2F;br&gt;</span><br><span class="line">&#123;&lt;&#x2F;br&gt;</span><br><span class="line">    printf(&quot;我是代码块\n&quot;);&lt;&#x2F;br&gt;</span><br><span class="line">&#125;&lt;&#x2F;br&gt;</span><br></pre></td></tr></table></figure>
-</div>
-
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"我是代码块\n"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="TODO-List"><a href="#TODO-List" class="headerlink" title="TODO List"></a>TODO List</h3><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">近期任务安排:</span><br><span class="line"></span><br><span class="line">- [<span class="keyword">x</span>] 项目一</span><br><span class="line">- [ ] 项目二</span><br><span class="line">   - [<span class="keyword">x</span>] 项目二二</span><br></pre></td></tr></table></figure>
-
-<p>近期任务安排:</p>
-<ul>
-<li><input checked="" disabled="" type="checkbox"> 项目一 </li>
-<li><input disabled="" type="checkbox"> 项目二<ul>
-<li><input checked="" disabled="" type="checkbox"> 项目二一</li>
-</ul>
-</li>
-</ul>
-<h3 id="HTML-原始码"><a href="#HTML-原始码" class="headerlink" title="HTML 原始码"></a>HTML 原始码</h3><blockquote>
-<p>在文档中&lt; 和 &gt; 会自动转成 HTML 实体</p>
-</blockquote>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">table</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">th</span>&gt;</span>配置<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">th</span>&gt;</span>512M<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">th</span>&gt;</span>1G<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">th</span>&gt;</span>价格<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>$5.00/mo<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>$10.00/mo<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<table>
-    <tr>
-        <th>配置</th>
-        <th>512M</th>
-        <th>1G</th>
-    </tr>
-    <tr>
-        <th>价格</th>
-        <td>$5.00/mo</td>
-        <td>$10.00/mo</td>
-    </tr>
-</table>
-
-<h3 id="数学公式"><a href="#数学公式" class="headerlink" title="数学公式"></a>数学公式</h3><p><a href="https://zhuanlan.zhihu.com/p/59412540" target="_blank" rel="noopener">数学公式语法</a></p>
-<h3 id="时序图"><a href="#时序图" class="headerlink" title="时序图"></a>时序图</h3><p><a href="https://bramp.github.io/js-sequence-diagrams/" target="_blank" rel="noopener">时序图语法</a></p>
-<h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><p><a href="http://flowchart.js.org/" target="_blank" rel="noopener">流程图语法</a></p>
-<h3 id="甘特图"><a href="#甘特图" class="headerlink" title="甘特图"></a>甘特图</h3><p><a href="https://knsv.github.io/mermaid/#gant-diagrams" target="_blank" rel="noopener">甘特图语法</a></p>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><blockquote>
-<p>还有很多语法等待你的发觉。个人在常用的部分进行了展开说明。如有指教请联系我。</p>
-</blockquote>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Markdown</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="2014/07/15/Markdown/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="">&amp;laquo; Prev</a><a class="page-number" href="">1</a><span class="page-number current">2</span>
+      <a class="extend prev" rel="prev" href="">&amp;laquo; Prev</a><a class="page-number" href="">1</a><span class="page-number current">2</span><a class="page-number" href="page/3/">3</a><a class="extend next" rel="next" href="page/3/">Next &amp;raquo;</a>
     </nav>
   
 
@@ -1430,6 +1469,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">HTTP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">HTTP 网络</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法 动态规划</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">iOS 性能优化</a>
               </li>
             
             <div class="clearfix"></div>
