@@ -253,6 +253,172 @@
 <h2 id="初级技巧"><a href="#初级技巧" class="headerlink" title="初级技巧"></a>初级技巧</h2><h3 id="使用复用机制"><a href="#使用复用机制" class="headerlink" title="使用复用机制"></a>使用复用机制</h3><p>在我们使用 UITableView 和 UICollectionView 时我们通常会遇到「复用 Cell」这个提法，所谓「复用 Cell」就是指当需要展示的数据条目较多时，只创建较少数量的 Cell 对象（一般是屏幕可显示的 Cell 数再加一）并通过复用它们的方式来展示数据的机制。这种机制不会为每一条数据都创建一个 Cell，所以可以节省内存，提升程序的效率和交互流畅性。</p>
 <p>从 iOS 6 以后，我们在 UITableView 和 UICollectionView 中不光可以复用 Cell，还可以复用各个 Section 的 Header 和 Footer。</p>
 <p>在 UITableView 做复用的时候，会用到的 API：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> <span class="function"><span class="keyword">func</span> <span class="title">dequeueReusableCell</span><span class="params">(withIdentifier identifier: String)</span></span> -&gt; <span class="type">UITableViewCell?</span> <span class="comment">// Used by the delegate to acquire an already allocated cell, in lieu of allocating a new one.</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@available</span>(iOS <span class="number">6.0</span>, *)</span><br><span class="line"><span class="keyword">open</span> <span class="function"><span class="keyword">func</span> <span class="title">dequeueReusableCell</span><span class="params">(withIdentifier identifier: String, <span class="keyword">for</span> indexPath: IndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> <span class="comment">// newer dequeue method guarantees a cell is returned and resized properly, assuming identifier is registered</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@available</span>(iOS <span class="number">6.0</span>, *)</span><br><span class="line"><span class="keyword">open</span> <span class="function"><span class="keyword">func</span> <span class="title">dequeueReusableHeaderFooterView</span><span class="params">(withIdentifier identifier: String)</span></span> -&gt; <span class="type">UITableViewHeaderFooterView?</span> <span class="comment">// like dequeueReusableCellWithIdentifier:, but for headers/footers</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Beginning in iOS 6, clients can register a nib or class for each cell.</span></span><br><span class="line"><span class="comment">// If all reuse identifiers are registered, use the newer -dequeueReusableCellWithIdentifier:forIndexPath: to guarantee that a cell instance is returned.</span></span><br><span class="line"><span class="comment">// Instances returned from the new dequeue method will also be properly sized when they are returned.</span></span><br><span class="line"><span class="meta">@available</span>(iOS <span class="number">5.0</span>, *)</span><br><span class="line"><span class="keyword">open</span> <span class="function"><span class="keyword">func</span> <span class="title">register</span><span class="params">(<span class="number">_</span> nib: UINib?, forCellReuseIdentifier identifier: String)</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">@available</span>(iOS <span class="number">6.0</span>, *)</span><br><span class="line"><span class="keyword">open</span> <span class="function"><span class="keyword">func</span> <span class="title">register</span><span class="params">(<span class="number">_</span> cellClass: AnyClass?, forCellReuseIdentifier identifier: String)</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">@available</span>(iOS <span class="number">6.0</span>, *)</span><br><span class="line"><span class="keyword">open</span> <span class="function"><span class="keyword">func</span> <span class="title">register</span><span class="params">(<span class="number">_</span> nib: UINib?, forHeaderFooterViewReuseIdentifier identifier: String)</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">@available</span>(iOS <span class="number">6.0</span>, *)</span><br><span class="line"><span class="keyword">open</span> <span class="function"><span class="keyword">func</span> <span class="title">register</span><span class="params">(<span class="number">_</span> aClass: AnyClass?, forHeaderFooterViewReuseIdentifier identifier: String)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>复用机制是一个很好的机制，但是不正确的使用却会给我们的程序带来很多问题。下面拿 UITableView 复用 Cell 来举例：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(<span class="number">_</span> tableView: UITableView, cellForRowAt indexPath: IndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> cell: <span class="type">UITableViewCell</span></span><br><span class="line">    <span class="keyword">let</span> identifier = <span class="string">"cellIdentifier"</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> cl = tableView.dequeueReusableCell(withIdentifier: identifier) &#123;</span><br><span class="line">        cell = cl</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        cell = tableView.dequeueReusableCell(withIdentifier: identifier, <span class="keyword">for</span>: indexPath)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> indexPath.row % <span class="number">2</span> == <span class="number">0</span> &#123;</span><br><span class="line">        cell.backgroundColor = <span class="type">UIColor</span>.red</span><br><span class="line">        cell.detailTextLabel?.text = <span class="string">"Detail"</span></span><br><span class="line">    &#125;</span><br><span class="line">    cell.textLabel?.text = <span class="string">"Title"</span></span><br><span class="line">    <span class="keyword">return</span> cell</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们本来是希望只有偶数行的 textLabel 的文字颜色为红色，并且显示 Detail 文字，但是当你滑动 TableView 的时候发现不对了，有些奇数行的 textLabel 的文字颜色为红色，而且还显示了 Detail 文字，很奇怪。其实造成这个问题的原因就是「复用」，当一个 Cell 被拿来复用时，它所有被设置的属性（包括样式和内容）都会被拿来复用，如果刚好某一个的 Cell 你没有显式地设置它的属性，那么它这些属性就直接复用别的 Cell 的了。就如上面的代码中，我们并没有显式地设置奇数行的 Cell 的 textLabel 的文字颜色以及 detailTextLabel 的文字，那么它就有可能复用别的 Cell 的这些属性了。此外，还有个问题，对偶数行 Cell 的 textLabel 的文字颜色的设置放在了初始一个 Cell 的 if 代码块里，这样在复用的时候，逻辑走不到这里去，那么也会出现复用问题。所以，上面的代码需要改成这样：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(<span class="number">_</span> tableView: UITableView, cellForRowAt indexPath: IndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> cell: <span class="type">UITableViewCell</span></span><br><span class="line">    <span class="keyword">let</span> identifier = <span class="string">"cellIdentifier"</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> cl = tableView.dequeueReusableCell(withIdentifier: identifier) &#123;</span><br><span class="line">        cell = cl</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        cell = tableView.dequeueReusableCell(withIdentifier: identifier, <span class="keyword">for</span>: indexPath)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> indexPath.row % <span class="number">2</span> == <span class="number">0</span> &#123;</span><br><span class="line">        cell.backgroundColor = <span class="type">UIColor</span>.red</span><br><span class="line">        cell.detailTextLabel?.text = <span class="string">"Detail"</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        cell.backgroundColor = <span class="type">UIColor</span>.black</span><br><span class="line">        cell.detailTextLabel?.text = <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">    cell.textLabel?.text = <span class="string">"Title"</span></span><br><span class="line">    <span class="keyword">return</span> cell</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>总之在复用的时候需要记住：</p>
+<ul>
+<li><strong>设置 Cell 的存在差异性的那些属性（包括样式和内容）时，有了 if 最好就要有 else，要显式的覆盖所有可能性。</strong></li>
+<li><strong>设置 Cell 的存在差异性的那些属性时，代码要放在初始化代码块的外部。</strong></li>
+</ul>
+<p>上面的代码中，我们展示了<code>tableView.dequeueReusableCell(withIdentifier: identifier);</code> 的用法。下面看看另几个 API 的用法：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TBViewController</span>: <span class="title">UIViewController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> tableView = <span class="type">UITableView</span>(frame: <span class="type">CGRect</span>.zero)</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">let</span> identifier = <span class="string">"cellIdentifier"</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">        tableView.frame = <span class="keyword">self</span>.view.frame</span><br><span class="line">        tableView.dataSource = <span class="keyword">self</span></span><br><span class="line">        tableView.delegate = <span class="keyword">self</span></span><br><span class="line">        tableView.register(<span class="type">UITableViewCell</span>.<span class="keyword">self</span>, forCellReuseIdentifier: identifier)</span><br><span class="line">        <span class="comment">// Do any additional setup after loading the view.</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">TBViewController</span>: <span class="title">UITableViewDelegate</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">TBViewController</span>: <span class="title">UITableViewDataSource</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(<span class="number">_</span> tableView: UITableView, numberOfRowsInSection section: Int)</span></span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(<span class="number">_</span> tableView: UITableView, cellForRowAt indexPath: IndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> cell = tableView.dequeueReusableCell(withIdentifier: identifier, <span class="keyword">for</span>: indexPath)</span><br><span class="line">        <span class="keyword">if</span> indexPath.row % <span class="number">2</span> == <span class="number">0</span> &#123;</span><br><span class="line">            cell.backgroundColor = <span class="type">UIColor</span>.red</span><br><span class="line">            cell.detailTextLabel?.text = <span class="string">"Detail"</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            cell.backgroundColor = <span class="type">UIColor</span>.black</span><br><span class="line">            cell.detailTextLabel?.text = <span class="literal">nil</span></span><br><span class="line">        &#125;</span><br><span class="line">        cell.textLabel?.text = <span class="string">"Title"</span></span><br><span class="line">        <span class="keyword">return</span> cell</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，<code>tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath);</code> 必须搭配 <code>tableView.register(UITableViewCell.self, forCellReuseIdentifier: identifier);</code> 或者 <code>register(_ nib: UINib?, forCellReuseIdentifier identifier: String)</code>; 使用。当有可重用的 Cell 时，前者直接拿来复用，并调用 - [UITableViewCell prepareForReuse] 方法；当没有时，前者会调用 <code>Identifier</code> 对应的那个注册的 <code>UITableViewCell</code> 类的 <code>UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)</code> 方法来初始化一个，这里省去了你自己初始化的步骤。当你自定义了一个 <code>UITableViewCell</code> 的子类时，你可以这样来用。</p>
+<h3 id="尽可能设置-View-为不透明"><a href="#尽可能设置-View-为不透明" class="headerlink" title="尽可能设置 View 为不透明"></a>尽可能设置 View 为不透明</h3><p>UIView 有一个 <code>opaque</code> 属性，在你不需要透明效果时，你应该尽量设置它为 YES 可以提高绘图过程的效率。</p>
+<p>在一个静态的视图里，这点可能影响不大，但是当在一个可以滚动的 Scroll View 中或是一个复杂的动画中，透明的效果可能会对程序的性能有较大的影响。</p>
+<h3 id="避免臃肿的-XIB-文件"><a href="#避免臃肿的-XIB-文件" class="headerlink" title="避免臃肿的 XIB 文件"></a>避免臃肿的 XIB 文件</h3><p>如果你压根不用 XIB，那就不需要看了。</p>
+<p>在你需要重用某些自定义 View 或者因为历史兼容原因用到 XIB 的时候，你需要注意：当你加载一个 XIB 时，它的所有内容都会被加载，如果这个 XIB 里面有个 View 你不会马上就用到，你其实就是在浪费宝贵的内存。而加载 StoryBoard 时并不会把所有的 ViewController 都加载，只会按需加载。</p>
+<h3 id="不要阻塞主线程"><a href="#不要阻塞主线程" class="headerlink" title="不要阻塞主线程"></a>不要阻塞主线程</h3><p>基本上 UIKit 会把它所有的工作都放在主线程执行，比如：绘制界面、管理手势、响应输入等等。当你把所有代码逻辑都放在主线程时，有可能因为耗时太长卡住主线程造成程序无法响应、流畅性太差等问题。造成这种问题的大多数场景是因为你的程序把 I/O 操作放在了主线程，比如从硬盘或者网络读写数据等等。</p>
+<p>你可以通过后台的方式来进行这些操作，把他们放在别的线程中处理。</p>
+<p>当你做一些耗时比较长的操作时，你可以使用 GCD、NSOperation、NSOperationQueue。比如 GCD 的常见使用方式：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DispatchQueue</span>.global(qos: .<span class="keyword">default</span>).async &#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">    <span class="type">DispatchQueue</span>.main.async &#123;</span><br><span class="line">        <span class="comment">// do something</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>关于 GCD 更多的知识，你可以看看这篇文章：<a href="http://www.samirchen.com/ios-gcd/" target="_blank" rel="noopener">GCD</a>。</p>
+<h3 id="图片尺寸匹配-UIImageView"><a href="#图片尺寸匹配-UIImageView" class="headerlink" title="图片尺寸匹配 UIImageView"></a>图片尺寸匹配 UIImageView</h3><p>当你从 App bundle 中加载图片到 UIImageView 中显示时，最好确保图片的尺寸能够和 UIImageView 的尺寸想匹配（当然，需要考虑 @2x @3x 的情况），否则会使得 UIImageView 在显示图片时需要做拉伸，这样会影响性能，尤其是在一个 UIScrollView 的容器里。</p>
+<p>有时候，你的图片是从网络加载的，这时候你并不能控制图片的尺寸，不过你可以在图片下载下来后去手动 scale 一下它，当然，最好是在一个后台线程做这件事，然后在 UIImageView 中使用 resize 后的图片。</p>
+<h3 id="选择合适的数据容器"><a href="#选择合适的数据容器" class="headerlink" title="选择合适的数据容器"></a>选择合适的数据容器</h3><p>我们经常需要用到容器来转载多个对象，我们通常用到的包括：<code>Array</code>、<code>Dictionary</code>、<code>Set</code>，它们的特性如下：</p>
+<ul>
+<li>Array：数组。有序的，通过 index 查找很快，通过 value 查找很慢，插入和删除较慢。</li>
+<li>Dictionary：字典。存储键值对，通过键查找很快。</li>
+<li>Set：集合。无序的，通过 value 查找很快，插入和删除较快。</li>
+</ul>
+<p>根据以上特性，在编程中需要选择适合的容器。更多内容请看：<a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Collections/Collections.html" target="_blank" rel="noopener">Collections Programming Topics</a>。</p>
+<h3 id="启用-GZIP-数据压缩"><a href="#启用-GZIP-数据压缩" class="headerlink" title="启用 GZIP 数据压缩"></a>启用 GZIP 数据压缩</h3><p>现在越来越多的应用需要跟服务器进行数据交互，当交互的数据量较大时，网络传输的时延就会较长，通过启动数据压缩功能，尤其是对于文本信息，可以降低网络传输的数据量，从而减短网络交互的时间。</p>
+<p>一个好消息是当你使用 NSURLConnection 或者基于此的一些网络交互类库（比如 AFNetworking）时 iOS 已经默认支持 GZIP 压缩。并且，很多服务器已经支持发送压缩数据。</p>
+<p>通过在服务器和客户端程序中启用对网络交互数据的压缩，是一条提高应用程序性能的途径。</p>
+<h3 id="中级技巧"><a href="#中级技巧" class="headerlink" title="中级技巧"></a>中级技巧</h3><p>在上面的内容里我们介绍了一些显而易见的优化程序性能的途径，但是有时候，有些优化程序性能的方案并不是那么明显，这些方案是否适用取决于你的代码情况。但是，如果在正确的场景下，这些方案能起到很显著的作用。</p>
+<h3 id="View-的复用和懒加载机制"><a href="#View-的复用和懒加载机制" class="headerlink" title="View 的复用和懒加载机制"></a>View 的复用和懒加载机制</h3><p>当你的程序中需要展示很多的 View 的时候，这就意味着需要更多的 CPU 处理时间和内存空间，这个情况对程序性能的影响在你使用 UIScrollView 来装载和呈现界面时会变得尤为显著。</p>
+<p>处理这种情况的一种方案就是向 UITableView 和 UICollectionView 学习，不要一次性把所有的 subviews 都创建出来，而是在你需要他们的时候创建，并且用复用机制去复用他们。这样减少了内存分配的开销，节省了内存空间。</p>
+<p>「懒加载机制」就是把创建对象的时机延后到不得不需要它们的时候。这个机制常常用在对一个类的属性的初始化上，比如：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">lazy</span> <span class="keyword">var</span> tableView: <span class="type">UITableView</span> = &#123; [<span class="keyword">unowned</span> <span class="keyword">self</span>] <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">let</span> tableView = <span class="type">UITableView</span>(frame: <span class="keyword">self</span>.view.frame)</span><br><span class="line">    tableView.dataSource = <span class="keyword">self</span></span><br><span class="line">    tableView.delegate = <span class="keyword">self</span></span><br><span class="line">    tableView.register(<span class="type">UITableViewCell</span>.<span class="keyword">self</span>, forCellReuseIdentifier: identifier)</span><br><span class="line">    <span class="keyword">return</span> tableView</span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure>
+
+<p>只有当我们第一次用到 self.tableView 的时候采取初始化和创建它。</p>
+<p>但是，存在这样一种场景：你点击一个按钮的时候，你需要显示一个 View，这时候你有两种实现方案：</p>
+<ol>
+<li>在当前界面第一次加载的时候就创建出这个 View，只是把它隐藏起来，当你需要它的时候，只用显示它就行了。</li>
+<li>使用<em>懒加载机制</em>，在你需要这个 View 的时候才创建它，并展示它。<br>这两种方案都各有利弊。采用方案一，你在不需要这个 View 的时候显然白白地占用了更多的内存，但是当你点击按钮展示它的时候，你的程序能响应地相对较快，因为你只需要改变它的 hidden 属性。采用方案二，那么你得到的效果相反，你更准确的使用了内存，但是如果对这个 View 的初始化和创建比较耗时，那么响应性相对就没那么好了。</li>
+</ol>
+<p>所以当你考虑使用何种方案时，你需要根据现实的情况来参考，去权衡到底哪个因素才是影响性能的瓶颈，然后再做出选择。</p>
+<h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>在开发我们的程序时，一个很重要的经验法则就是：对那些更新频度低，访问频度高的内容做缓存。</p>
+<p>有哪些东西使我们可以缓存的呢？比如下面这些：</p>
+<ul>
+<li>服务器的响应信息（response）。</li>
+<li>图片。</li>
+<li>计算值。比如：UITableView 的 row heights。</li>
+</ul>
+<p>NSURLConnection 可以根据 HTTP 头部的设置来决定把资源内容缓存在磁盘或者内存，你甚至可以设置让它只加载缓存里的内容：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">imageRequestWithURL</span><span class="params">(<span class="number">_</span> url: URL)</span></span> -&gt; <span class="type">URLRequest</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> request = <span class="type">URLRequest</span>.<span class="keyword">init</span>(url: url)</span><br><span class="line">    request.cachePolicy =  <span class="type">NSURLRequest</span>.<span class="type">CachePolicy</span>.returnCacheDataElseLoad</span><br><span class="line">    request.httpShouldHandleCookies = <span class="literal">true</span></span><br><span class="line">    request.httpShouldUsePipelining = <span class="literal">true</span></span><br><span class="line">    request.addValue(<span class="string">"image/*"</span>, forHTTPHeaderField: <span class="string">"Accept"</span>)</span><br><span class="line">    <span class="keyword">return</span> request</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>关于 HTTP 缓存的更多内容可以关注 NSURLCache。关于缓存其他非 HTTP 请求的内容，可以关注 NSCache。对于图片缓存，可以关注一个第三方库 <a href="https://github.com/onevcat/Kingfisher" target="_blank" rel="noopener">Kingfisher</a>。</p>
+<h3 id="关于图形绘制"><a href="#关于图形绘制" class="headerlink" title="关于图形绘制"></a>关于图形绘制</h3><p>当我们为一个 UIButton 设置背景图片时，对于这个背景图片的处理，我们有很多种方案，你可以使用全尺寸图片直接设置，还可以用 resizable images，或者使用 CALayer、CoreGraphics 甚至 OpenGL 来绘制。</p>
+<p>当然，不同的方案的编码复杂度不一样，性能也不一样。关于图形绘制的不同方案的性能问题，可以看看：<a href="https://robots.thoughtbot.com/designing-for-ios-graphics-performance" target="_blank" rel="noopener">Designing for iOS: Graphics Performance</a>。</p>
+<p>简而言之，使用 pre-rendered 的图片会更快，因为这样就不需要在程序中去创建一个图像，并在上面绘制各种形状了（Offscreen Rendering，离屏渲染）。但是缺点是你必须把这些图片资源打包到代码包，从而需要增加程序包的体积。这就是为什么 resizable images 是一个很棒的选择：不需要全尺寸图，让 iOS 为你绘制图片中那些可以拉伸的部分，从而减小了图片体积；并且你不需要为不同大小的控件准备不同尺寸的图片。比如两个按钮的大小不一样，但是他们的背景图样式是一样的，你只需要准备一个对应样式的 resizable image，然后在设置这两个按钮的背景图的时候分别做拉伸就可以了。</p>
+<p>但是一味的使用使用预置的图片也会有一些缺点，比如你做一些简单的动画的时候各个帧都用图片叠加，这样就可能要使用大量图片。</p>
+<p>总之，你需要去在图形绘制的性能和应用程序包的大小上做权衡，找到最合适的性能优化方案。</p>
+<h3 id="处理-Memory-Warnings"><a href="#处理-Memory-Warnings" class="headerlink" title="处理 Memory Warnings"></a>处理 Memory Warnings</h3><p>关于内存警告，苹果的官方文档是这样说的：</p>
+<blockquote>
+<p>If your app receives this warning, it must free up as much memory as possible. The best way to do this is to remove strong references to caches, image objects, and other data objects that can be recreated later.</p>
+</blockquote>
+<p>我们可以通过这些方式来获得内存警告：</p>
+<ul>
+<li><p>在 <code>AppDelegate</code> 中实现<code>applicationDidReceiveMemoryWarning(_:)</code>代理方法。</p>
+</li>
+<li><p>在 UIViewController 中重载 <code>didReceiveMemoryWarning</code> 方法。</p>
+</li>
+<li><p>监听 <code>UIApplicationDidReceiveMemoryWarningNotification</code> 通知。</p>
+</li>
+</ul>
+<p>当通过这些方式监听到内存警告时，你需要马上释放掉不需要的内存从而避免程序被系统杀掉。</p>
+<p>比如，在一个 UIViewController 中，你可以清除那些当前不显示的 View，同时可以清除这些 View 对应的内存中的数据，而有图片缓存机制的话也可以在这时候释放掉不显示在屏幕上的图片资源。</p>
+<p>但是需要注意的是，你这时清除的数据，必须是可以在重新获取到的，否则可能因为必要数据为空，造成程序出错。在开发的时候，可以使用 iOS Simulator 的 <code>Simulate memory warning</code> 的功能来测试你处理内存警告的代码。</p>
+<h3 id="复用高开销的对象"><a href="#复用高开销的对象" class="headerlink" title="复用高开销的对象"></a>复用高开销的对象</h3><p>在 Objective-C 中有些对象的初始化过程很缓慢，比如：<code>DateFormatter</code> 和 <code>Calendar</code>，但是有些时候，你也不得不使用它们。为了这样的高开销的对象成为影响程序性能的重要因素，我们可以复用它们。</p>
+<p>比如，我们在一个类里添加一个 <code>DateFormatter</code> 的对象，并使用懒加载机制来使用它，整个类只用到一个这样的对象，并只初始化一次。</p>
+<p>需要注意的是：设置 <code>DateFormatter</code> 的 date format 跟创建一个新的 <code>DateFormatter</code> 对象一样慢，因此当你的程序中要用到多种格式的 date format，而每种又会用到多次的时候，你可以尝试为每种 date format 创建一个可复用的 <code>DateFormatter</code> 对象来提供程序的性能。</p>
+<h3 id="在游戏中使用-Sprite-Sheet"><a href="#在游戏中使用-Sprite-Sheet" class="headerlink" title="在游戏中使用 Sprite Sheet"></a>在游戏中使用 Sprite Sheet</h3><p>如果你是游戏开发者，使用 Sprite Sheet 可以帮助你比标准的绘图方法更快地绘制场景，甚至占用更少的内存。</p>
+<p>当然这里有些地方也可以参考上面已经提到过的性能优化方案，比如你的游戏有很多 Sprites 时，你可以参考 UITableViewCell 的复用机制，而不是每次都创建它们。</p>
+<h3 id="避免倒腾数据"><a href="#避免倒腾数据" class="headerlink" title="避免倒腾数据"></a>避免倒腾数据</h3><p>在我们开发应用时，经常会遇到要从服务器获取 JSON 或者 XML 数据来处理的情况，这时我们通常都需要解析这些数据，一般会解析为 Array、Dictionary 的对象。但是在我们实际的开发中，我们通常会为在界面上展示的那些数据定义一些数据结构（ViewModel）。这时候问题就来了，我们需要把解析出来的 Array、Dictionary 对象再倒腾成我们定义的那些数据结构，从程序性能的角度来考虑，这是一项开销较大的操作。</p>
+<p>为了避免这样的情况成为影响程序性能的瓶颈，在设计客户端应用程序对应的数据结构时就需要做更细致的考虑，尽量用 Array 去承接 Array，用 Dictionary 去承接 Dictionary，避免倒腾数据造成开销。</p>
+<h3 id="选择正确的数据格式"><a href="#选择正确的数据格式" class="headerlink" title="选择正确的数据格式"></a>选择正确的数据格式</h3><p>我们的 iOS 应用程序与服务器进行交互时，通常采用的数据格式就是 JSON 和 XML 两种。那么在选择哪一种时，需要考虑到它们的优缺点。</p>
+<p>JSON 文件的优点是：</p>
+<ul>
+<li>能够更快的被解析。</li>
+<li>在承载相同的数据时，通常体积比 XML 更小，这意味着传输的数据量更小。</li>
+</ul>
+<p>缺点是：</p>
+<ul>
+<li>需要整个 JSON 数据全部加载完成后才能开始解析。</li>
+</ul>
+<p>而 XML 文件的优缺点则刚好反过来。 XML 的一个优点就是它可以使用 SAX 来解析数据，从而可以边加载边解析，不用等所有数据都读取完成了才解析。这样在处理很大的数据集的时提高性能和降低内存消耗。</p>
+<p>所以，你需要根据具体的应用场景来权衡使用何种数据格式。</p>
+<h3 id="优化-WebView"><a href="#优化-WebView" class="headerlink" title="优化 WebView"></a>优化 WebView</h3><p>UIWebView 在我们的应用程序中非常有用，它可以便捷的展示 Web 的内容，甚至做到你用标准的 UIKit 控件较难做到的视觉效果。但是，你应该注意到你在应用程序里使用的 UIWebView 组件不会比苹果的 Safari 更快。这是首先于 Webkit 的 Nitro Engine 引擎。所以，为了得到更好的性能，你需要优化你的网页内容。</p>
+<p>优化第一步就是避免过量使用 Javascript，例如避免使用较大的 Javascript 框架，比如 jQuery。一般使用原生的 Javascript 而不是依赖于 Javascript 框架可以获得更好的性能。</p>
+<p>优化第二步，如果可能的话，可以异步加载那些不影响页面行为的 Javascript 脚本，比如一些数据统计脚本。</p>
+<p>优化第三步，总是关注你在页面中所使用的图片，根据具体的场景来显示正确尺寸的图片，同时也可以使用上面提到的「使用 Sprites Sheets」的方案来在某些地方减少内存消耗和提高速度。</p>
+<h3 id="减少离屏渲染"><a href="#减少离屏渲染" class="headerlink" title="减少离屏渲染"></a>减少离屏渲染</h3><p>什么是「离屏渲染」？离屏渲染，即 Off-Screen Rendering。与之相对的是 On-Screen Rendering，即在当前屏幕渲染，意思是渲染操作是用于在当前屏幕显示的缓冲区进行。那么离屏渲染则是指图层在被显示之前是在当前屏幕缓冲区以外开辟的一个缓冲区进行渲染操作。</p>
+<p>离屏渲染需要多次切换上下文环境：先是从当前屏幕（On-Screen）切换到离屏（Off-Screen）；等到离屏渲染结束以后，将离屏缓冲区的渲染结果显示到屏幕上又需要将上下文环境从离屏切换到当前屏幕，而上下文环境的切换是一项高开销的动作。</p>
+<p>通常图层的以下属性将会触发离屏渲染：</p>
+<ul>
+<li>阴影（UIView.layer.shadowOffset/shadowRadius/…）</li>
+<li>圆角（当 UIView.layer.cornerRadius 和 UIView.layer.maskToBounds 一起使用时）</li>
+<li>图层蒙板</li>
+</ul>
+<p>在 iOS 开发中要给一个 View 添加阴影效果，有很简单快捷的做法：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> imageView = <span class="type">UIImageView</span>(frame: <span class="type">CGRect</span>.zero)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Setup the shadow ...</span></span><br><span class="line">imageView.layer.shouldRasterize = <span class="type">CGSize</span>(width: <span class="number">5.0</span>, height: <span class="number">5.0</span>)</span><br><span class="line">imageView.layer.shadowRadius = <span class="number">5.0</span></span><br><span class="line">imageView.layer.shadowOpacity = <span class="number">0.6</span></span><br></pre></td></tr></table></figure>
+
+<p>但是上面这样的做法有一个坏处是：将触发 Core Animation 做离屏渲染造成开销。</p>
+<p>那要做到阴影图层效果，又想减少离屏渲染、提高性能的话要怎么做呢？一个好的建议是：设置 ShadowPath 属性。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> imageView = <span class="type">UIImageView</span>(frame: <span class="type">CGRect</span>.zero)</span><br><span class="line"> </span><br><span class="line"><span class="comment">// Setup the shadow ...</span></span><br><span class="line">imageView.layer.shadowPath = <span class="type">UIBezierPath</span>(rect: <span class="type">CGRect</span>(x: imageView.frame.origin.x + <span class="number">5.0</span>, y: imageView.frame.origin.y + <span class="number">5.0</span>, width: imageView.bounds.width + <span class="number">5</span>, height: imageView.bounds.height + <span class="number">5</span>)).cgPath</span><br><span class="line">imageView.layer.shadowOpacity = <span class="number">0.6</span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果图层是一个简单几何图形如矩形或者圆角矩形（假设不包含任何透明部分或者子图层），通过设置 ShadowPath 属性来创建出一个对应形状的阴影路径就比较容易，而且 Core Animation 绘制这个阴影也相当简单，不会触发离屏渲染，这对性能来说很有帮助。如果你的图层是一个更复杂的图形，生成正确的阴影路径可能就比较难了，这样子的话你可以考虑用绘图软件预先生成一个阴影背景图。</p>
+<h3 id="光栅化"><a href="#光栅化" class="headerlink" title="光栅化"></a>光栅化</h3><p>CALayer 有一个属性是 shouldRasterize 通过设置这个属性为 YES 可以将图层绘制到一个屏幕外的图像，然后这个图像将会被缓存起来并绘制到实际图层的 contents 和子图层，如果很很多的子图层或者有复杂的效果应用，这样做就会比重绘所有事务的所有帧来更加高效。但是光栅化原始图像需要时间，而且会消耗额外的内存。这是需要根据实际场景权衡的地方。</p>
+<p>当我们使用得当时，光栅化可以提供很大的性能优势，但是一定要避免在内容不断变动的图层上使用，否则它缓存方面的好处就会消失，而且会让性能变的更糟。</p>
+<p>为了检测你是否正确地使用了光栅化方式，可以用 Instrument 的 Core Animation Template 查看一下 Color Hits Green and Misses Red 项目，看看是否已光栅化图像被频繁地刷新（这样就说明图层并不是光栅化的好选择，或则你无意间触发了不必要的改变导致了重绘行为）。</p>
+<p>如果你最后设置了 shouldRasterize 为 YES，那也要记住设置 rasterizationScale 为合适的值。在我们使用 UITableView 和 UICollectionView 时经常会遇到各个 Cell 的样式是一样的，这时候我们可以使用这个属性提高性能：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cell.layer.shouldRasterize = <span class="literal">true</span></span><br><span class="line">cell.layer.rasterizationScale = <span class="type">UIScreen</span>.main.scale</span><br></pre></td></tr></table></figure>
+
+<p>但是，如果你的 Cell 是样式不一样，比如高度不定，排版多变，那就要慎重了。</p>
+<h3 id="优化-UITableView"><a href="#优化-UITableView" class="headerlink" title="优化 UITableView"></a>优化 UITableView</h3><p><code>UITableView</code> 是我们最常用来展示数据的控件之一，并且通常需要 <code>UITableView</code> 在承载较多内容的同时保证交互的流畅性，对 <code>UITableView</code> 的性能优化是我们开发应用程序必备的技巧之一。</p>
+<p>在前文「使用复用机制」一节，已经提到了 UITableView 的复用机制。现在就来看看 UITableView 在复用时最主要的两个回调方法：<code>func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -&gt; UITableViewCell</code> 和 <code>func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -&gt; CGFloat``。UITableView</code> 是继承自 <code>UIScrollView，所以在渲染的过程中它会先确定它的</code> <code>contentSize</code> 及每个 <code>Cell</code> 的位置，然后才会把复用的 <code>Cell</code> 放置到对应的位置。比如现在一共有 50 个 <code>Cell</code>，当前屏幕上显示 5 个。那么在第一次创建或 <code>reloadData</code> 的时候， <code>UITableView</code> 会先调用 50 次 <code>func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -&gt; CGFloat</code> 确定 <code>contentSize</code> 及每个 <code>Cell</code> 的位置，然后再调用 5 次 <code>func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -&gt; UITableViewCell</code> 来渲染当前屏幕的 Cell。在滑动屏幕的时候，每当一个 Cell 进入屏幕时，都需要调用一次 <code>func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -&gt; UITableViewCell</code> 和 <code>func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -&gt; CGFloat</code> 方法。</p>
+<p>了解了 UITableView 的复用机制以及相关回调方法的调用次序，这里就对 UITableView 的性能优化方案做一个总结：</p>
+<ul>
+<li>通过正确的设置 reuseIdentifier 来重用 Cell。</li>
+<li>尽量减少不必要的透明 View。</li>
+<li>尽量避免渐变效果、图片拉伸和离屏渲染。</li>
+<li>当不同的行的高度不一样时，尽量缓存它们的高度值。</li>
+<li>如果 Cell 展示的内容来自网络，确保用异步加载的方式来获取数据，并且缓存服务器的 response。</li>
+<li>使用 shadowPath 来设置阴影效果。</li>
+<li>尽量减少 subview 的数量，对于 subview 较多并且样式多变的 Cell，可以考虑用异步绘制或重写 drawRect。</li>
+<li>尽量优化 <code>func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -&gt; UITableViewCell</code> 方法中的处理逻辑，如果- 确实要做一些处理，可以考虑做一次，缓存结果。</li>
+<li>选择合适的数据结构来承载数据，不同的数据结构对不同操作的开销是存在差异的。</li>
+<li>对于 rowHeight、sectionFooterHeight、sectionHeaderHeight 尽量使用常量。</li>
+</ul>
+<h3 id="选择合适的数据存储方式"><a href="#选择合适的数据存储方式" class="headerlink" title="选择合适的数据存储方式"></a>选择合适的数据存储方式</h3><p>在 iOS 中可以用来进行数据持有化的方案包括：</p>
+<ul>
+<li>UserDefaults。只适合用来存小数据。</li>
+<li>XML、JSON、Plist 等文件。JSON 和 XML 文件的差异在「选择正确的数据格式」已经说过了。</li>
+<li>使用 NSCoding 来存档。NSCoding 同样是对文件进行读写，所以它也会面临必须加载整个文件才能继续的问题。</li>
+<li>使用 SQLite 数据库。可以配合 <a href="https://github.com/ccgus/fmdb" target="_blank" rel="noopener">FMDB</a> 使用。数据的相对文件来说还是好处很多的，比如可以按需取数据、不用暴力查找等等。</li>
+<li>使用 CoreData。也是数据库技术，跟 SQLite 的性能差异比较小。但是 CoreData 是一个对象图谱模型，显得更面向对象；SQLite 就是常规的 DBMS。</li>
+</ul>
+<h2 id="高级技巧"><a href="#高级技巧" class="headerlink" title="高级技巧"></a>高级技巧</h2><h3 id="减少应用启动时间"><a href="#减少应用启动时间" class="headerlink" title="减少应用启动时间"></a>减少应用启动时间</h3><p>快速启动应用对于用户来说可以留下很好的印象。尤其是第一次使用时。</p>
+<p>保证应用快速启动的指导原则：</p>
+<p>尽量将启动过程中的处理分拆成各个异步处理流，比如：网络请求、数据库访问、数据解析等等。<br>避免臃肿的 XIB 文件，因为它们会在你的主线程中进行加载。重申：Storyboard 没这个问题，放心使用。<br>注意：在测试程序启动性能的时候，最好用与 Xcode 断开连接的设备进行测试。因为 watchdog 在使用 Xcode 进行调试的时候是不会启动的。</p>
+<h3 id="imageNamed-和-imageWithContentsOfFile"><a href="#imageNamed-和-imageWithContentsOfFile" class="headerlink" title="imageNamed 和 imageWithContentsOfFile"></a>imageNamed 和 imageWithContentsOfFile</h3><p>在 iOS 应用中加载图片通常有 <code>UIImage(named: String)</code>和 <code>UIImage(contentsOfFile: String)</code> 两种方式。它们的不同在于前者会对图片进行缓存，而后者只是简单的从文件加载文件。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> image0 = <span class="type">UIImage</span>(named: <span class="string">"image"</span>) <span class="comment">// caching</span></span><br><span class="line"><span class="keyword">let</span> image1 = <span class="type">UIImage</span>(contentsOfFile: <span class="string">"image"</span>) <span class="comment">// // no caching</span></span><br></pre></td></tr></table></figure>
+
+<p>在整个程序运行的过程中，当你需要加载一张较大的图片，并且只会使用它一次，那么你就没必要缓存这个图片，这时你可以使用 <code>UIImage(contentsOfFile: &quot;image&quot;)</code>，这样系统也不会浪费内存来做缓存了。当然，如果你会多次使用到一张图时，用 <code>UIImage(named: &quot;image&quot;)</code> 就会高效很多，因为这样就不用每次都从硬盘上加载图片了。</p>
+<h3 id="避免使用-NSDateFormatter"><a href="#避免使用-NSDateFormatter" class="headerlink" title="避免使用 NSDateFormatter"></a>避免使用 NSDateFormatter</h3><p>在前文中，我们已经讲到了通过复用或者单例来提高 NSDateFormatter 这个高开销对象的使用效率。但是如果你要追求更快的速度，你可以直接使用 C 语言替代 NSDateFormatter 来解析 date，你可以看看这篇文章：<a href="http://blog.soff.es/how-to-drastically-improve-your-app-with-an-afternoon-and-instruments" target="_blank" rel="noopener">link</a>，其中展示了解析 ISO-8601 date string 的代码，你可以根据你的需求改写。完成的代码见：<a href="https://github.com/samsoffes/sstoolkit/blob/master/SSToolkit/NSDate%2BSSToolkitAdditions.m" target="_blank" rel="noopener">SSToolkit/NSDate+SSToolkitAdditions.m</a>。</p>
+<p>当然，如果你能够控制你接受到的 date 的参数的格式，你一定要尽量选择<code>Unix timestamps</code> 格式，这样你可以使用：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">dateFromUnixTimestamp</span><span class="params">(<span class="number">_</span> timestamp: TimeInterval)</span></span> -&gt; <span class="type">Date</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="type">Date</span>(timeIntervalSince1970: timestamp)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样你可以轻松的将时间戳转化为 <code>Date</code> 对象，并且效率甚至高于上面提到的 C 函数。</p>
+<p>需要注意的是，很多 web API 返回的时间戳是以毫秒为单位的，因为这更利于 Javascript 去处理，但是上面代码用到的方法中 NSTimeInterval 的单位是秒，所以当你传参的时候，记得先除以 1000。</p>
 
       
 
@@ -313,13 +479,13 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="2015/03/20/动态规划/">动态规划</a>
+      <a class="article-title" href="2015/04/15/动态规划/">动态规划</a>
     </h1>
   
 
         
-        <a href="2015/03/20/动态规划/" class="archive-article-date">
-  	<time datetime="2015-03-20T12:50:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-20</time>
+        <a href="2015/04/15/动态规划/" class="archive-article-date">
+  	<time datetime="2015-04-15T12:50:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-04-15</time>
 </a>
         
       </header>
@@ -349,7 +515,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="2015/03/20/动态规划/">展开全文 >></a>
+          <a class="article-more-a" href="2015/04/15/动态规划/">展开全文 >></a>
         </p>
       
 
@@ -572,6 +738,7 @@
 <p>记住“最快的请求是不发请求”。举个极端的例子，拿一个请求来说，哪怕你有最好的网络，请求的数据量极小，有超快的服务器，你也不大可能在 50ms 内拿到请求的响应。这还只是一个请求。想想吧，如果有可能在本地创建相同的数据，而且耗时小于 50ms，那就不要发这样的请求。</p>
 <p>针对已请求的资源，只要服务器上对应的资源具备在一定时间内不发生变化特性，建议在本地缓存起来。注意检查 header 中缓存过期的相关属性，也可以直接利用 <code>NSURLSession</code> 中的 <code>NSURLRequestUseProtocolCachePolicy</code> 策略。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>利用 NSURLSession 发 HTTP 请求是非常简单便捷的。但是请求背后有很多技术点做支撑。只有知晓和理解其中的细节和内涵才能更好的去优化 HTTP 请求。用户期望的是我们的 app 时时刻刻都是好用的。只有深刻理解 IP，TCP 和 HTTP 的工作原理才能更好的去满足用户的期望。</p>
+<p>我的Github用socket实现了一个http请求<a href="https://github.com/onelcat/soc_http" target="_blank" rel="noopener">实例</a></p>
 
       
 

@@ -17,7 +17,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/f/f6/Tcp_state_diagram_fixed_new.svg">
 <meta property="article:published_time" content="2015-03-16T13:30:12.000Z">
-<meta property="article:modified_time" content="2020-03-12T06:28:22.990Z">
+<meta property="article:modified_time" content="2020-03-16T04:38:38.156Z">
 <meta property="article:author" content="Haoshuai">
 <meta property="article:tag" content="HTTP 网络">
 <meta name="twitter:card" content="summary">
@@ -342,6 +342,7 @@
 <p>记住“最快的请求是不发请求”。举个极端的例子，拿一个请求来说，哪怕你有最好的网络，请求的数据量极小，有超快的服务器，你也不大可能在 50ms 内拿到请求的响应。这还只是一个请求。想想吧，如果有可能在本地创建相同的数据，而且耗时小于 50ms，那就不要发这样的请求。</p>
 <p>针对已请求的资源，只要服务器上对应的资源具备在一定时间内不发生变化特性，建议在本地缓存起来。注意检查 header 中缓存过期的相关属性，也可以直接利用 <code>NSURLSession</code> 中的 <code>NSURLRequestUseProtocolCachePolicy</code> 策略。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>利用 NSURLSession 发 HTTP 请求是非常简单便捷的。但是请求背后有很多技术点做支撑。只有知晓和理解其中的细节和内涵才能更好的去优化 HTTP 请求。用户期望的是我们的 app 时时刻刻都是好用的。只有深刻理解 IP，TCP 和 HTTP 的工作原理才能更好的去满足用户的期望。</p>
+<p>我的Github用socket实现了一个http请求<a href="https://github.com/onelcat/soc_http" target="_blank" rel="noopener">实例</a></p>
 
       
 
@@ -374,7 +375,7 @@
   
 <nav id="article-nav">
   
-    <a href="2015/03/20/动态规划/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="2015/04/15/动态规划/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
