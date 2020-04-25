@@ -164,79 +164,27 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-版本控制之git" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-MemoryMgmt" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="2014/07/29/版本控制之git/">版本控制之git</a>
+      <a class="article-title" href="2017/04/10/MemoryMgmt/">Advanced Memory Management Programming Guide</a>
     </h1>
   
 
         
-        <a href="2014/07/29/版本控制之git/" class="archive-article-date">
-  	<time datetime="2014-07-29T12:16:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-07-29</time>
+        <a href="2017/04/10/MemoryMgmt/" class="archive-article-date">
+  	<time datetime="2017-04-10T14:12:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-10</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="https://git-scm.com/" target="_blank" rel="noopener">官方链接</a></p>
-<h2 id="牛逼的大神"><a href="#牛逼的大神" class="headerlink" title="牛逼的大神"></a>牛逼的大神</h2><p>自2002年开始，林纳斯·托瓦兹决定使用BitKeeper作为Linux内核主要的版本控制系统用以维护代码。因为BitKeeper为专有软件，这个决定在社群中长期遭受质疑。在Linux社群中，特别是理查德·斯托曼与自由软件基金会的成员，主张应该使用开放源代码的软件来作为Linux内核的版本控制系统。林纳斯·托瓦兹曾考虑过采用现成软件作为版本控制系统（例如Monotone），但这些软件都存在一些问题，特别是性能不佳。现成的方案，如CVS的架构，受到林纳斯·托瓦兹的批评。</p>
-<p>2005年，安德鲁·垂鸠写了一个简单程序，可以连接BitKeeper的存储库，BitKeeper著作权拥有者拉里·麦沃伊认为安德鲁·垂鸠对BitKeeper内部使用的协议进行逆向工程，决定收回无偿使用BitKeeper的许可。Linux内核开发团队与BitMover公司进行磋商，但无法解决他们之间的歧见。林纳斯·托瓦兹决定自行开发版本控制系统替代BitKeeper，以十天的时间编写出git第一个版本。</p>
-<h2 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a>主要功能</h2><p>git是用于Linux内核开发的版本控制工具。与CVS、Subversion一类的<strong>集中式版本控制</strong>工具不同，它采用了<strong>分布式版本库</strong>的作法，不需要服务器端软件，就可以运作版本控制，使得源代码的发布和交流极其方便。git的速度很快，这对于诸如Linux内核这样的大项目来说自然很重要。git最为出色的是它的合并追踪（merge tracing）能力。</p>
-<p>实际上内核开发团队决定开始开发和使用git来作为内核开发的版本控制系统的时候，世界上开源社群的反对声音不少，最大的理由是git太艰涩难懂，从git的内部工作机制来说，的确是这样。但是随着开发的深入，git的正常使用都由一些友善的命令来执行，使git变得非常好用。现在，越来越多的著名项目采用git来管理项目开发，例如：wine、U-boot等。</p>
-<p>作为开源自由原教旨主义项目，git没有对版本库的浏览和修改做任何的权限限制，通过其他工具也可以达到有限的权限控制，比如：gitosis、CodeBeamer MR。原本git的使用范围只适用于Linux/Unix平台，但在Windows平台下的使用也日渐成熟，这主要归功于Cygwin、msysgit环境，以及TortoiseGit这样易用的GUI工具。git的源代码中也已经加入了对Cygwin与MinGW编译环境的支持且逐渐完善，为Windows用户带来福音。</p>
-<h3 id="集中式版本控制"><a href="#集中式版本控制" class="headerlink" title="集中式版本控制"></a>集中式版本控制</h3><p>集中化的版本控制系统（Centralized Version Control Systems，简称 CVCS）应运而生。 这类系统，诸如 CVS、Subversion 以及 Perforce 等，都有一个单一的集中管理的服务器，保存所有文件的修订版本，而协同工作的人们都通过客户端连到这台服务器，取出最新的文件或者提交更新。 多年以来，这已成为版本控制系统的标准做法。</p>
-<p><img src="../images/centralized.png" alt="集中化的版本控制"><br>集中化的版本控制.</p>
-<p>这种做法带来了许多好处，特别是相较于老式的本地 VCS 来说。 现在，每个人都可以在一定程度上看到项目中的其他人正在做些什么。 而管理员也可以轻松掌控每个开发者的权限，并且管理一个 CVCS 要远比在各个客户端上维护本地数据库来得轻松容易。</p>
-<p>事分两面，有好有坏。 这么做最显而易见的缺点是中央服务器的单点故障。 如果宕机一小时，那么在这一小时内，谁都无法提交更新，也就无法协同工作。 如果中心数据库所在的磁盘发生损坏，又没有做恰当备份，毫无疑问你将丢失所有数据——包括项目的整个变更历史，只剩下人们在各自机器上保留的单独快照。 本地版本控制系统也存在类似问题，只要整个项目的历史记录被保存在单一位置，就有丢失所有历史更新记录的风险。</p>
-<h3 id="分布式版本控制"><a href="#分布式版本控制" class="headerlink" title="分布式版本控制"></a>分布式版本控制</h3><p>于是分布式版本控制系统（Distributed Version Control System，简称 DVCS）面世了。 在这类系统中，像 Git、Mercurial、Bazaar 以及 Darcs 等，客户端并不只提取最新版本的文件快照，而是把代码仓库完整地镜像下来。 这么一来，任何一处协同工作用的服务器发生故障，事后都可以用任何一个镜像出来的本地仓库恢复。 因为每一次的克隆操作，实际上都是一次对代码仓库的完整备份。</p>
-<p><img src="../images/distributed.png" alt="布式版本控制"><br>布式版本控制</p>
-<h2 id="库目录"><a href="#库目录" class="headerlink" title="库目录"></a>库目录</h2><ul>
-<li>hooks：存储钩子的文件夹</li>
-<li>logs：存储日志的文件夹</li>
-<li>refs：存储指向各个分支的指针（SHA-1标识）文件</li>
-<li>objects：存放git对象</li>
-<li>config：存放各种设置文档</li>
-<li>HEAD：指向当前所在分支的指针文件路径，一般指向refs下的某文件</li>
-</ul>
-<h2 id="编写项目-常用操作"><a href="#编写项目-常用操作" class="headerlink" title="编写项目,常用操作"></a>编写项目,常用操作</h2><h3 id="获取项目"><a href="#获取项目" class="headerlink" title="获取项目"></a>获取项目</h3><p>直接从服务器克隆分支</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> [需要存储的项目位置]</span><br><span class="line">$ git <span class="built_in">clone</span> [url]</span><br></pre></td></tr></table></figure>
-
-<p>或者创建自己的项目</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> [需要存储的项目位置]</span><br><span class="line">$ git init</span><br></pre></td></tr></table></figure>
-
-<p>这样就可以使用git来管理你的项目</p>
-<h3 id="记得完善-gitignore文件"><a href="#记得完善-gitignore文件" class="headerlink" title="记得完善.gitignore文件"></a>记得完善.gitignore文件</h3><p><code>.gitignore</code>文件是排除项目中不需要进行版本控制的文件，也就是忽略提交。<br><a href="https://git-scm.com/docs/gitignore" target="_blank" rel="noopener">官方链接</a><br><a href="https://github.com/github/gitignore" target="_blank" rel="noopener">常用语言的gitignore</a></p>
-<h3 id="提交变更，以及添加新的文件"><a href="#提交变更，以及添加新的文件" class="headerlink" title="提交变更，以及添加新的文件"></a>提交变更，以及添加新的文件</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add *.c</span><br><span class="line">$ git add LICENSE</span><br><span class="line">$ git commit -m <span class="string">'initial project version'</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="创建分支"><a href="#创建分支" class="headerlink" title="创建分支"></a>创建分支</h3><p><strong>1. 查看分支</strong></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git branch</span><br><span class="line">  iss53</span><br><span class="line">* master</span><br><span class="line">  testing</span><br></pre></td></tr></table></figure>
-
-<p><strong>2. 创建分支一个新的分支并且切换到新的分支</strong></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b my_branch</span><br></pre></td></tr></table></figure>
-
-<h3 id="合并"><a href="#合并" class="headerlink" title="合并"></a>合并</h3><p><strong>1. 线切换到住分支</strong></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout master</span><br></pre></td></tr></table></figure>
-
-<p><strong>2. 合并</strong></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge my_branch</span><br></pre></td></tr></table></figure>
-
-<p>稍后填写提交合并提交信息</p>
-<p><strong>3. 出现冲突后线处理冲突后再进行合并。</strong></p>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><ol>
-<li>个人比较喜欢使用git可以随时切换到一个提交点进行修改合并。</li>
-<li>git操作虽然麻烦但是使用得当会比SVN好的多。</li>
-<li>如果公司使用的是SVN，我先把公司的项目放到本地，本地在用git来管理。</li>
-<li>可以适当的了解git-flow</li>
-<li>推荐一款比较好的git管理工具<a href="https://www.sourcetreeapp.com/" target="_blank" rel="noopener">sourcetree</a></li>
-<li>必须要知道<a href="https://github.com/" target="_blank" rel="noopener">github</a>,免费的公共仓库，有很多大牛发布自己的开源项目。</li>
-</ol>
-<p>由于官方的文档很完善也很清楚很多细节部分我也就不展开，可以直接查看<a href="https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-%E5%85%B3%E4%BA%8E%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6" target="_blank" rel="noopener">官方文档</a></p>
+        <p><a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/MemoryMgmt.html#//apple_ref/doc/uid/10000011-SW1" target="_blank" rel="noopener">传送门</a></p>
 
       
 
@@ -250,7 +198,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">git</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Advanced Memory Management</a>
         		</li>
       		
 		</ul>
@@ -260,7 +208,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="2014/07/29/版本控制之git/">展开全文 >></a>
+          <a class="article-more-a" href="2017/04/10/MemoryMgmt/">展开全文 >></a>
         </p>
       
 
@@ -290,76 +238,27 @@
 
 
   
-    <article id="post-版本控制之SVN" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-DatesAndTimes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="2014/07/27/版本控制之SVN/">版本控制之SVN</a>
+      <a class="article-title" href="2017/03/08/DatesAndTimes/">Date and Time Programming Guide</a>
     </h1>
   
 
         
-        <a href="2014/07/27/版本控制之SVN/" class="archive-article-date">
-  	<time datetime="2014-07-27T13:05:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-07-27</time>
+        <a href="2017/03/08/DatesAndTimes/" class="archive-article-date">
+  	<time datetime="2017-03-08T15:00:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-08</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>本人开始最先是接触到的SVN。多人共同开发一个软件，是借助SVN实现的。大大的减少了代码的拷贝。</p>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Apache Subversion 通常被缩写成 SVN，是一个开放源代码的版本控制系统，Subversion 在 2000 年由 CollabNet Inc 开发，现在发展成为 Apache 软件基金会的一个项目，同样是一个丰富的开发者和用户社区的一部分。</p>
-<p>SVN相对于的RCS、CVS，采用了分支管理系统，它的设计目标就是取代CVS。互联网上免费的版本控制服务多基于Subversion。</p>
-<h2 id="SVN-的一些概念"><a href="#SVN-的一些概念" class="headerlink" title="SVN 的一些概念"></a>SVN 的一些概念</h2><ul>
-<li>repository（源代码库）:源代码统一存放的地方</li>
-<li>Checkout（提取）:当你手上没有源代码的时候，你需要从repository checkout一份</li>
-<li>Commit（提交）:当你已经修改了代码，你就需要Commit到repository</li>
-<li>Update (更新):当你已经Checkout了一份源代码， Update一下你就可以和Repository上的源代码同步，你手上的代码就会有最新的变更<br>日常开发过程其实就是这样的（假设你已经Checkout并且已经工作了几天）：Update(获得最新的代码) –&gt;作出自己的修改并调试成功 –&gt; Commit(大家就可以看到你的修改了) 。</li>
-</ul>
-<p>如果两个程序员同时修改了同一个文件呢, SVN 可以合并这两个程序员的改动，实际上SVN管理源代码是以行为单位的，就是说两个程序员只要不是修改了同一行程序，SVN都会自动合并两种修改。如果是同一行，SVN 会提示文件 Conflict, 冲突，需要手动确认。</p>
-<h2 id="开始项目"><a href="#开始项目" class="headerlink" title="开始项目"></a>开始项目</h2><p>一开始从项目经理那里拿到svn仓库地址。然后在你的办公电脑检出项目。这里需要写入你的用户名和密码，这里需要项目经理现行告知。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn checkout svn://192.168.0.1/<span class="built_in">test</span></span><br></pre></td></tr></table></figure>
-
-<p>检出成功后在当前目录下生成test副本目录。查看检出的内容</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ll <span class="built_in">test</span>/</span><br><span class="line">total 24</span><br><span class="line">drwxr-xr-x 6 root root 4096 Jul 21 19:19 ./</span><br><span class="line">drwxr-xr-x 3 root root 4096 Jul 21 19:10 ../</span><br><span class="line">drwxr-xr-x 2 root root 4096 Jul 21 19:19 branches/</span><br><span class="line">drwxr-xr-x 4 root root 4096 Jul 21 19:19 .svn/</span><br><span class="line">drwxr-xr-x 2 root root 4096 Jul 21 19:19 tags/</span><br><span class="line">drwxr-xr-x 2 root root 4096 Jul 21 19:19 trunk/</span><br></pre></td></tr></table></figure>
-
-<p>你想查看更多关于版本库的信息，执行 info 命令。</p>
-<h2 id="编写项目-常用操作"><a href="#编写项目-常用操作" class="headerlink" title="编写项目,常用操作"></a>编写项目,常用操作</h2><p>也就是开始写代码。我一般拿到项目之后，我先会创建一个分支，在当前分支测试完成后，再合并到我检出的分支上，也就是项目经理给的地址。</p>
-<h3 id="先创建自己的分支，以防污染项目经理给的地址"><a href="#先创建自己的分支，以防污染项目经理给的地址" class="headerlink" title="先创建自己的分支，以防污染项目经理给的地址"></a>先创建自己的分支，以防污染项目经理给的地址</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn copy trunk/ branches/my_branch</span><br></pre></td></tr></table></figure>
-
-<p>切换到自己的分支</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> branches/my_branch/</span><br></pre></td></tr></table></figure>
-
-<h3 id="代码改动之后是提交最新的代码"><a href="#代码改动之后是提交最新的代码" class="headerlink" title="代码改动之后是提交最新的代码"></a>代码改动之后是提交最新的代码</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn commit -m <span class="string">"add my_branch"</span></span><br></pre></td></tr></table></figure>
-
-<p>在项目当中添加了一个文档<code>readme.md</code></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ svn add readme.md</span><br><span class="line">$ svn commit -m <span class="string">"add readme.md"</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="功能测试通过之后，合并代码，把自己分支的代码合并到项目经理给的地址"><a href="#功能测试通过之后，合并代码，把自己分支的代码合并到项目经理给的地址" class="headerlink" title="功能测试通过之后，合并代码，把自己分支的代码合并到项目经理给的地址"></a>功能测试通过之后，合并代码，把自己分支的代码合并到项目经理给的地址</h3><p>先切回到项目经理给的地址</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ../trunk</span><br></pre></td></tr></table></figure>
-
-<p>之后需要执行更新防止没有更新，合并的时候有冲突</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn update</span><br></pre></td></tr></table></figure>
-
-<p>进行合并</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn merge ../branches/my_branch/</span><br></pre></td></tr></table></figure>
-
-<p>将合并好的 trunk 提交到版本库中。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn commit -m <span class="string">"add index.html"</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="如有冲突需要解决冲突然后在进行提交合并"><a href="#如有冲突需要解决冲突然后在进行提交合并" class="headerlink" title="如有冲突需要解决冲突然后在进行提交合并"></a>如有冲突需要解决冲突然后在进行提交合并</h3><blockquote>
-<p>两人的代码被互相覆盖，这样就导致了冲突，解决了代码的相互覆盖就可以了。</p>
-</blockquote>
-<h2 id="SVN-标签（tag）"><a href="#SVN-标签（tag）" class="headerlink" title="SVN 标签（tag）"></a>SVN 标签（tag）</h2><p>版本管理系统支持 tag 选项，通过使用 tag 的概念，我们可以给某一个具体版本的代码一个更加有意义的名字。</p>
-<p>Tags 即标签主要用于项目开发中的里程碑，比如开发到一定阶段可以单独一个版本作为发布等，它往往代表一个可以固定的完整的版本，这跟 VSS 中的 Tag 大致相同。</p>
-<p>我们在本地工作副本创建一个 tag。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ svn copy trunk/ tags/v1.0</span><br><span class="line">$ svn commit -m <span class="string">"tags v1.0"</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>SVN的回退，SVN查看历史提交信息我没有过多的展开。可以看下面的教程学到很多。</p>
-<p><a href="https://www.runoob.com/svn/svn-tutorial.html" target="_blank" rel="noopener">SVN教程</a><br><a href="https://www.runoob.com/svn/tortoisesvn-intro.html" target="_blank" rel="noopener">SVN工具图文教程</a></p>
+        <p><a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/DatesAndTimes/Articles/dtDates.html" target="_blank" rel="noopener">传送门</a></p>
 
       
 
@@ -373,7 +272,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SVN</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Date and Time</a>
         		</li>
       		
 		</ul>
@@ -383,7 +282,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="2014/07/27/版本控制之SVN/">展开全文 >></a>
+          <a class="article-more-a" href="2017/03/08/DatesAndTimes/">展开全文 >></a>
         </p>
       
 
@@ -413,64 +312,27 @@
 
 
   
-    <article id="post-版本管理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-DataFormatting" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="2014/07/25/版本管理/">版本管理</a>
+      <a class="article-title" href="2017/02/23/DataFormatting/">Data Formatting Guide</a>
     </h1>
   
 
         
-        <a href="2014/07/25/版本管理/" class="archive-article-date">
-  	<time datetime="2014-07-25T12:12:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-07-25</time>
+        <a href="2017/02/23/DataFormatting/" class="archive-article-date">
+  	<time datetime="2017-02-23T14:48:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-23</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="https://tortoisesvn.net/index.zh.html" target="_blank" rel="noopener">官方链接</a></p>
-<h2 id="为什么需要版本管理"><a href="#为什么需要版本管理" class="headerlink" title="为什么需要版本管理"></a>为什么需要版本管理</h2><p>项目的开发是长期的过程。这个过程里有每个项目的生命周期和各个功能的里程碑。一般会把这些周期和里程碑确定成一个个的版本，以便对整个项目实行历程的管理和阶段目标的控制。那怎样科学地管理项目的版本呢？接下来就讨论这个问题。</p>
-<p>在正式进行介绍前，有必要澄清一下这两个概念：版本管理和版本控制。</p>
-<p>版本管理是指对项目的整体版本的演变过程进行管理，例如，从 1.0 到 1.1，再到 2.0 等。版本控制是借助第三方的版本控制工具，追踪管理项目文档（包括代码）的每一个变更。</p>
-<p>接下来主要介绍的是版本管理，而不是版本控制，请读者注意区分版本管理和版本控制。</p>
-<h2 id="版本管理关系"><a href="#版本管理关系" class="headerlink" title="版本管理关系"></a>版本管理关系</h2><p>在项目开发过程中，团队内部会随着项目的进展发布最新的快照版本。但是开发到一定的阶段，需要将快照版本定位成一个发布版本对团队外部进行发布，同时，在这个定位版本的基础上进行二次开发，开发过程中又形成新的快照，到一定阶段后，再发布一个定位的发布版本，以此重复进行，直到最后项目完成。</p>
-<p>这个过程中快照版本和发布版本的切换管理就是版本管理。也就是说，版本管理关系的一个核心问题就是要科学地解决快照版本和发布版本之间的切换问题。</p>
-<p>理想的发布版本，应该是在项目进展到一个比较稳定的状态。这种稳定状态包括源代码的状态和构件的状态，所以一般构建一个稳定版本的条件有以下几个方面。</p>
-<ul>
-<li><p>所有的测试案例应该全部通过。这点可以理解，自己的测试案例都不能通过，说明有漏洞。发布这种带有明显漏洞的版本是没有意义的。</p>
-</li>
-<li><p>项目中没有配置任何快照版本的依赖。发布版本与快照版本最显著的区别就是稳定。如果自己包含有对快照构件的依赖，依赖的基础都不稳定，怎么能谈得上自己的稳定呢？</p>
-</li>
-<li><p>项目中没有配置任何快照版本的插件。同上面的道理一样。</p>
-</li>
-<li><p>项目中所有的文档（包含代码）都要提交到版本控制系统。一个稳定版本的发布，不仅表示项目进入到了一个相对稳定的阶段，而且还必须保证相关的文档能齐备，以便以后能准确返回到这个阶段。</p>
-</li>
-</ul>
-<p>如果要发布的文档没有全部集中提交到版本控制系统中，意味着一不小心文档就会残缺，这样的版本就没法回滚。</p>
-<h2 id="版本号的约定"><a href="#版本号的约定" class="headerlink" title="版本号的约定"></a>版本号的约定</h2><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;主版本&gt;.&lt;次版本&gt;.&lt;增量版本&gt;-&lt;里程碑版本&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>主版本：表示项目重大架构的变更。比如 Struts1 和 Struts2，它们的架构体系都不同；JUnit4 和 JUnit3，一个全面支持注解，另一个就不支持。</li>
-<li>次版本：表示有较大的功能增加和变化，或者全面系统地修复漏洞。</li>
-<li>增量版本：表示有重大漏洞的修复。</li>
-<li>里程碑版本：表明一个版本的里程碑（版本内部）。这样的版本同下一个正式版本相比，相对来说不是很稳定，有待更多的测试。</li>
-</ul>
-<p>需要注意的是，不是每个版本号都必须由这四个部分组成，有些版本号就可以没有增量版本和里程碑版本。</p>
-<h2 id="主干、分支、标签"><a href="#主干、分支、标签" class="headerlink" title="主干、分支、标签"></a>主干、分支、标签</h2><ul>
-<li><p>主干：项目开发的主体，也是主线、关键历程。从这里可以获取项目的最新代码和绝大部分的变更历史。</p>
-</li>
-<li><p>分支：从主线某个点分离出去的一段分支。在一个特别时间点的时候，既要保持项目的总体（主线）进度，又要同步修改某些重要漏洞、或实现特殊功能、或实验性开发，就可以创建一个分支独立进行。分支达到预期效果后，需要将分支里面的变更合并到主线中去。</p>
-</li>
-<li><p>标签：用来标记分支和主干进展到某个状态的点，代表项目进展到某个阶段或某个相对比较稳定的状态。实际项目中，这种状态往往就是版本发布的状态。</p>
-</li>
-</ul>
-<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>既然制定了版本管理规范，那要怎么完成规范，这就要需要借助版本控制。既然有版本控制也就有版本控制工具。</p>
-<p>在接下来的文章会介绍版本控制工具  </p>
+        <p><a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/DataFormatting/DataFormatting.html#//apple_ref/doc/uid/10000029-CJBCGJCJ" target="_blank" rel="noopener">传送门</a></p>
 
       
 
@@ -484,7 +346,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">版本管理</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Data Formatting</a>
         		</li>
       		
 		</ul>
@@ -494,7 +356,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="2014/07/25/版本管理/">展开全文 >></a>
+          <a class="article-more-a" href="2017/02/23/DataFormatting/">展开全文 >></a>
         </p>
       
 
@@ -524,161 +386,27 @@
 
 
   
-    <article id="post-Markdown" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-CoreVideo" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="2014/07/15/Markdown/">Markdown</a>
+      <a class="article-title" href="2017/01/02/CoreVideo/">Core Video Programming Guide</a>
     </h1>
   
 
         
-        <a href="2014/07/15/Markdown/" class="archive-article-date">
-  	<time datetime="2014-07-15T13:32:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-07-15</time>
+        <a href="2017/01/02/CoreVideo/" class="archive-article-date">
+  	<time datetime="2017-01-02T02:27:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-02</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><blockquote>
-<p>简介: <a href="https://github.com/mattcone/markdown-guide" target="_blank" rel="noopener">Markdown</a>是一种轻量级标记语言，创始人为约翰·格鲁伯（英语：John Gruber）。它允许人们使用易读易写的纯文本格式编写文档，然后转换成有效的XHTML（或者HTML）文档。这种语言吸收了很多在电子邮件中已有的纯文本标记的特性。  </p>
-</blockquote>
-<blockquote>
-<p>由于Markdown的轻量化、易读易写特性，并且对于图片，图表、数学式都有支持，当前许多网站都广泛使用Markdown来撰写帮助文档或是用于论坛上发表消息。如GitHub、Reddit、Diaspora、Stack Exchange、OpenStreetMap 、SourceForge等，甚至还能被使用来撰写电子书。</p>
-</blockquote>
-<h2 id="Markdown-语法"><a href="#Markdown-语法" class="headerlink" title="Markdown 语法"></a>Markdown 语法</h2><h3 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h3><blockquote>
-<p><code>#</code> 数量决定几级标题</p>
-</blockquote>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一级标题</span></span><br><span class="line"><span class="comment">## 二级标题</span></span><br><span class="line"><span class="comment">### 三级标题</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1><h2 id="二级标题"><a href="#二级标题" class="headerlink" title="二级标题"></a>二级标题</h2><h3 id="三级标题"><a href="#三级标题" class="headerlink" title="三级标题"></a>三级标题</h3><h3 id="列表类"><a href="#列表类" class="headerlink" title="列表类"></a>列表类</h3><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">* 无需列表<span class="number">1</span></span><br><span class="line">* 无需列表<span class="number">2</span></span><br><span class="line"><span class="number">1</span>. 有序列表<span class="number">1</span></span><br><span class="line"><span class="number">2</span>. 有序列表<span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>无需列表1</li>
-<li>无需列表2</li>
-</ul>
-<ol>
-<li>有序列表1</li>
-<li>有序列表2</li>
-</ol>
-<h3 id="分割线"><a href="#分割线" class="headerlink" title="分割线"></a>分割线</h3><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">***</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-
-<hr>
-<hr>
-<h3 id="斜体和粗体"><a href="#斜体和粗体" class="headerlink" title="斜体和粗体"></a>斜体和粗体</h3><p>代码: </p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">*斜体*或<span class="number">_</span>斜体<span class="number">_</span></span><br><span class="line">**粗体**</span><br><span class="line">***加粗斜体***</span><br><span class="line">~~删除线~~</span><br></pre></td></tr></table></figure>
-
-<p><em>斜体</em>或<em>斜体</em><br><strong>粗体</strong><br><strong><em>加粗斜体</em></strong><br><del>删除线</del>  </p>
-<h3 id="超链接"><a href="#超链接" class="headerlink" title="超链接"></a>超链接</h3><blockquote>
-<p><code>[]</code>里写链接文字，<code>()</code>里写链接地址, <code>()</code>中的<code>&quot;&quot;</code>中可以为链接指定title属性，title属性可加可不加。title属性的效果是鼠标悬停在链接上会出现指定的 title文字。<code>[链接文字](链接地址 &quot;链接标题&quot;)</code>这样的形式。链接地址与链接标题前有一个<strong>空格</strong>。</p>
-</blockquote>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[github](https:<span class="regexp">//github</span>.com/)</span><br><span class="line">[github](https:<span class="regexp">//github</span>.com/ <span class="string">"github主页"</span>)</span><br></pre></td></tr></table></figure>
-
-<p><a href="https://github.com/" target="_blank" rel="noopener">github</a><br><a href="https://github.com/" target="_blank" rel="noopener" title="github主页">github</a></p>
-<h3 id="插入图像"><a href="#插入图像" class="headerlink" title="插入图像"></a>插入图像</h3><blockquote>
-<p>图片的创建方式与超链接相似，而且和超链接一样也有两种写法，行内式和参考式写法。</p>
-</blockquote>
-<p>语法中图片Alt的意思是如果图片因为某些原因不能显示，就用定义的图片Alt文字来代替图片。 图片Title则和链接中的Title一样，表示鼠标悬停与图片上时出现的文字。 Alt 和 Title 都不是必须的，可以省略。</p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![猫咪](https:<span class="regexp">//github</span>.com/onelcat/Resource/blob/master/images/IMG_1954.JPG?raw=true <span class="string">"可爱的小猫"</span>)</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://github.com/onelcat/Resource/blob/master/images/IMG_1954.JPG?raw=true" alt="猫咪" title="可爱的小猫"></p>
-<h3 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h3><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">姓名|性别|分数</span><br><span class="line">-|-|-</span><br><span class="line">小明|男|<span class="number">75</span></span><br><span class="line">小红|女|<span class="number">79</span></span><br><span class="line">小陆|男|<span class="number">92</span></span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>姓名</th>
-<th>性别</th>
-<th>分数</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>小明</td>
-<td>男</td>
-<td>75</td>
-</tr>
-<tr>
-<td>小红</td>
-<td>女</td>
-<td>79</td>
-</tr>
-<tr>
-<td>小陆</td>
-<td>男</td>
-<td>92</td>
-</tr>
-</tbody></table>
-<p>为表格第二列指定方向</p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">配置|价格</span><br><span class="line">-|-:</span><br><span class="line"><span class="number">512</span>M | $5.<span class="number">00</span>/mo</span><br><span class="line"><span class="number">1</span>G |$1<span class="number">0</span>.<span class="number">00</span>/mo</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>配置</th>
-<th align="right">价格</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>512M</td>
-<td align="right">$5.00/mo</td>
-</tr>
-<tr>
-<td>1G</td>
-<td align="right">$10.00/mo</td>
-</tr>
-</tbody></table>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><strong>代码块</strong></p>
-<div> 
-`printf()`函数输出
-</div>
-
-<p><code>printf()</code>函数输出</p>
-<p><strong>代码片段</strong></p>
-<div>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;&lt;&#x2F;br&gt;</span><br><span class="line">int main(void)&lt;&#x2F;br&gt;</span><br><span class="line">&#123;&lt;&#x2F;br&gt;</span><br><span class="line">    printf(&quot;我是代码块\n&quot;);&lt;&#x2F;br&gt;</span><br><span class="line">&#125;&lt;&#x2F;br&gt;</span><br></pre></td></tr></table></figure>
-</div>
-
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"我是代码块\n"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="TODO-List"><a href="#TODO-List" class="headerlink" title="TODO List"></a>TODO List</h3><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">近期任务安排:</span><br><span class="line"></span><br><span class="line">- [<span class="keyword">x</span>] 项目一</span><br><span class="line">- [ ] 项目二</span><br><span class="line">   - [<span class="keyword">x</span>] 项目二二</span><br></pre></td></tr></table></figure>
-
-<p>近期任务安排:</p>
-<ul>
-<li><input checked="" disabled="" type="checkbox"> 项目一 </li>
-<li><input disabled="" type="checkbox"> 项目二<ul>
-<li><input checked="" disabled="" type="checkbox"> 项目二一</li>
-</ul>
-</li>
-</ul>
-<h3 id="HTML-原始码"><a href="#HTML-原始码" class="headerlink" title="HTML 原始码"></a>HTML 原始码</h3><blockquote>
-<p>在文档中&lt; 和 &gt; 会自动转成 HTML 实体</p>
-</blockquote>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">table</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">th</span>&gt;</span>配置<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">th</span>&gt;</span>512M<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">th</span>&gt;</span>1G<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">th</span>&gt;</span>价格<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>$5.00/mo<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>$10.00/mo<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<table>
-    <tr>
-        <th>配置</th>
-        <th>512M</th>
-        <th>1G</th>
-    </tr>
-    <tr>
-        <th>价格</th>
-        <td>$5.00/mo</td>
-        <td>$10.00/mo</td>
-    </tr>
-</table>
-
-<h3 id="数学公式"><a href="#数学公式" class="headerlink" title="数学公式"></a>数学公式</h3><p><a href="https://zhuanlan.zhihu.com/p/59412540" target="_blank" rel="noopener">数学公式语法</a></p>
-<h3 id="时序图"><a href="#时序图" class="headerlink" title="时序图"></a>时序图</h3><p><a href="https://bramp.github.io/js-sequence-diagrams/" target="_blank" rel="noopener">时序图语法</a></p>
-<h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><p><a href="http://flowchart.js.org/" target="_blank" rel="noopener">流程图语法</a></p>
-<h3 id="甘特图"><a href="#甘特图" class="headerlink" title="甘特图"></a>甘特图</h3><p><a href="https://knsv.github.io/mermaid/#gant-diagrams" target="_blank" rel="noopener">甘特图语法</a></p>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><blockquote>
-<p>还有很多语法等待你的发觉。个人在常用的部分进行了展开说明。如有指教请联系我。</p>
-</blockquote>
+        <p><a href="https://developer.apple.com/library/archive/documentation/GraphicsImaging/Conceptual/CoreVideo/CVProg_Intro/CVProg_Intro.html#//apple_ref/doc/uid/TP40001536-CH201-DontLinkElementID_27" target="_blank" rel="noopener">传送门</a></p>
 
       
 
@@ -692,7 +420,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Markdown</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Core Video</a>
         		</li>
       		
 		</ul>
@@ -702,7 +430,303 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="2014/07/15/Markdown/">展开全文 >></a>
+          <a class="article-more-a" href="2017/01/02/CoreVideo/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-CollectionViewPGforIOS" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="2016/12/19/CollectionViewPGforIOS/">Collection View Programming Guide for iOS</a>
+    </h1>
+  
+
+        
+        <a href="2016/12/19/CollectionViewPGforIOS/" class="archive-article-date">
+  	<time datetime="2016-12-19T10:22:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://developer.apple.com/library/archive/documentation/WindowsViews/Conceptual/CollectionViewPGforIOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40012334-CH1-SW1" target="_blank" rel="noopener">传送门</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Collection View</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="2016/12/19/CollectionViewPGforIOS/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Collections" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="2016/11/01/Collections/">Collections Programming Topics</a>
+    </h1>
+  
+
+        
+        <a href="2016/11/01/Collections/" class="archive-article-date">
+  	<time datetime="2016-11-01T15:36:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-11-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Collections/Collections.html#//apple_ref/doc/uid/10000034i" target="_blank" rel="noopener">传送门</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Collections</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="2016/11/01/Collections/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Kernel" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="2016/10/14/Kernel/">Kernel Programming Guide</a>
+    </h1>
+  
+
+        
+        <a href="2016/10/14/Kernel/" class="archive-article-date">
+  	<time datetime="2016-10-14T10:36:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-10-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://developer.apple.com/library/archive/documentation/Darwin/Conceptual/KernelProgramming/About/About.html#//apple_ref/doc/uid/TP30000905" target="_blank" rel="noopener">传送门</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Kernel</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="2016/10/14/Kernel/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-MachO" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="2016/09/27/MachO/">Mach-O Programming Topics</a>
+    </h1>
+  
+
+        
+        <a href="2016/09/27/MachO/" class="archive-article-date">
+  	<time datetime="2016-09-27T12:00:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-09-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/MachOTopics/0-Introduction/introduction.html#//apple_ref/doc/uid/TP40001519" target="_blank" rel="noopener">传送门</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mach-O</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="2016/09/27/MachO/">展开全文 >></a>
         </p>
       
 
@@ -734,7 +758,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="page/2/">&amp;laquo; Prev</a><a class="page-number" href="">1</a><a class="page-number" href="page/2/">2</a><span class="page-number current">3</span>
+      <a class="extend prev" rel="prev" href="page/2/">&amp;laquo; Prev</a><a class="page-number" href="">1</a><a class="page-number" href="page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="page/4/">4</a><a class="page-number" href="page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="page/8/">8</a><a class="extend next" rel="next" href="page/4/">Next &amp;raquo;</a>
     </nav>
   
 
@@ -894,6 +918,162 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">网络</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">KVO</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Concurrency 多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">KVC</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Threading 多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">算法 排序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Apple Pay</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Image I/O</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Location Maps</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Core Data Formatting</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Attributed String</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Animation Types and Timing</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Audio Session</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Camera</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Core Strings</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Cocoa Drawing</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Cocoa Text ArchitectureGuide</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Cocoa View</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Collection View</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Core Animation</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">CoreImage</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Core String</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Core Text</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Data Formatting</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Date and Time</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Drawing and Printing</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kernel</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Mach-O</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Advanced Memory Management</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Core Video</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Objective-C Runtime</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Quartz 2D</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">String</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Text Attribute</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Text Layout</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Scroll View</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">View Controller</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Weibo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Weobo</a>
               </li>
             
             <div class="clearfix"></div>
