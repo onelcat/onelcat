@@ -164,6 +164,94 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-iOSDrawText" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="2020/05/08/iOSDrawText/">iOS文本绘制</a>
+    </h1>
+  
+
+        
+        <a href="2020/05/08/iOSDrawText/" class="archive-article-date">
+  	<time datetime="2020-05-08T15:09:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="iOS文本绘制"><a href="#iOS文本绘制" class="headerlink" title="iOS文本绘制"></a>iOS文本绘制</h2><blockquote>
+<ul>
+<li>删除之前的文章，并且总结经常用到的功能。</li>
+<li>这里可以推荐 YYText 裤对文本绘制比较友好。</li>
+</ul>
+</blockquote>
+<h3 id="富文本"><a href="#富文本" class="headerlink" title="富文本"></a>富文本</h3><ul>
+<li><p><strong>富文本这一块现在根本不用去考虑，直接复制UI给出的样式代码就可以。达到要求</strong>，这样我们就不用去查文字属性相关的API，是不是非常的方便。</p>
+</li>
+<li><p>这里唯一需要注意的点就是，找出需要添加属性的文字。</p>
+</li>
+</ul>
+<h3 id="图文混排"><a href="#图文混排" class="headerlink" title="图文混排"></a>图文混排</h3><blockquote>
+<p>直接上代码不过多的解释</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> attrString = <span class="type">NSMutableAttributedString</span>(string: <span class="string">"我要展示一个LOGO"</span>)</span><br><span class="line"><span class="keyword">let</span> attachment = <span class="type">NSTextAttachment</span>(image: <span class="type">UIImage</span>(named: <span class="string">"logo"</span>)!)</span><br><span class="line">attrString.append(<span class="type">NSAttributedString</span>(attachment: attachment))</span><br></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Text NSAttributedString CoreText</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="2020/05/08/iOSDrawText/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-WeiboCancel" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -815,80 +903,6 @@
 
 
   
-    <article id="post-Camera" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="2018/01/18/Camera/">Camera Programming Topics for iOS</a>
-    </h1>
-  
-
-        
-        <a href="2018/01/18/Camera/" class="archive-article-date">
-  	<time datetime="2018-01-18T14:15:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-18</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/CameraAndPhotoLib_TopicsForIOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010400" target="_blank" rel="noopener">传送门</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Camera</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="2018/01/18/Camera/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="page/2/">2</a><a class="page-number" href="page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="page/8/">8</a><a class="extend next" rel="next" href="page/2/">Next &amp;raquo;</a>
@@ -1138,10 +1152,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Core String</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Core Text</a>
               </li>
              
@@ -1182,14 +1192,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">String</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Text Attribute</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Text Layout</a>
               </li>
              
@@ -1207,6 +1209,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Weobo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Text NSAttributedString CoreText</a>
               </li>
             
             <div class="clearfix"></div>
