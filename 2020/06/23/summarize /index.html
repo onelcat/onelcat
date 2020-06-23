@@ -6,19 +6,36 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="//litten.me">
-  <title>C++程序的内存结构 | 凡间</title>
+  <title>总结 | 凡间</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="五大内存分区在C++中，内存分成5个区，他们分别是 堆、栈、自由存储区、全局&#x2F;静态存储区和常量存储区。  栈区(stack): 由编译器在需要的时候分配，在不需要的时候自动清除的变量的存储区。里面的变量通常是局部变量、函数参数等。由编译器自动分配释放 ，存放函数的参数值，局部变量的值等。其操作方式类似于数据结构中的栈。  堆区(heap): 操作系统层面的术语。就是那些由malloc等分配的内存块">
+  <meta name="description" content="5年IT工作者的工作总结今年是一个特殊的年份，疫情遍布全国这影响了大部分的公司。导致今年的工作特别的不好找。 自己在去年的时候辞去了深圳工作，准备回老家发展。然而遇上了今年这个特别的时间段。 扯远了。 毕业建议 毕业之后一定要去IT的大公司。 最好全面发展，如果自己能力不行，最好往服务器，web这方面走。 毕业之后定一个自己的软件，自己完成这一个软件。  要养成良好的习惯 定时去更新自己的技术博客">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++程序的内存结构">
-<meta property="og:url" content="2014/11/21/CPP%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/index.html">
+<meta property="og:title" content="总结">
+<meta property="og:url" content="2020/06/23/summarize%20/index.html">
 <meta property="og:site_name" content="凡间">
-<meta property="og:description" content="五大内存分区在C++中，内存分成5个区，他们分别是 堆、栈、自由存储区、全局&#x2F;静态存储区和常量存储区。  栈区(stack): 由编译器在需要的时候分配，在不需要的时候自动清除的变量的存储区。里面的变量通常是局部变量、函数参数等。由编译器自动分配释放 ，存放函数的参数值，局部变量的值等。其操作方式类似于数据结构中的栈。  堆区(heap): 操作系统层面的术语。就是那些由malloc等分配的内存块">
+<meta property="og:description" content="5年IT工作者的工作总结今年是一个特殊的年份，疫情遍布全国这影响了大部分的公司。导致今年的工作特别的不好找。 自己在去年的时候辞去了深圳工作，准备回老家发展。然而遇上了今年这个特别的时间段。 扯远了。 毕业建议 毕业之后一定要去IT的大公司。 最好全面发展，如果自己能力不行，最好往服务器，web这方面走。 毕业之后定一个自己的软件，自己完成这一个软件。  要养成良好的习惯 定时去更新自己的技术博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2014-11-21T04:34:30.000Z">
-<meta property="article:modified_time" content="2020-02-27T05:21:32.000Z">
+<meta property="article:published_time" content="2020-06-23T04:39:22.000Z">
+<meta property="article:modified_time" content="2020-06-23T05:01:49.247Z">
 <meta property="article:author" content="Haoshuai">
-<meta property="article:tag" content="内存区域 内存结构 C++">
+<meta property="article:tag" content="iOS">
+<meta property="article:tag" content="Swift">
+<meta property="article:tag" content="OC">
+<meta property="article:tag" content="Objective-C">
+<meta property="article:tag" content="开发者">
+<meta property="article:tag" content="程序猿">
+<meta property="article:tag" content="程序媛">
+<meta property="article:tag" content="极客">
+<meta property="article:tag" content="编程">
+<meta property="article:tag" content="代码">
+<meta property="article:tag" content="开源">
+<meta property="article:tag" content="IT网站">
+<meta property="article:tag" content="Developer">
+<meta property="article:tag" content="Programmer">
+<meta property="article:tag" content="Coder">
+<meta property="article:tag" content="Geek">
+<meta property="article:tag" content="html">
+<meta property="article:tag" content="用户体验">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="凡间" type="application/atom+xml">
@@ -147,73 +164,56 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-CPP程序的内存结构" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-summarize " class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      C++程序的内存结构
+      总结
     </h1>
   
 
         
-        <a href="2014/11/21/CPP程序的内存结构/" class="archive-article-date">
-  	<time datetime="2014-11-21T04:34:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-11-21</time>
+        <a href="2020/06/23/summarize /" class="archive-article-date">
+  	<time datetime="2020-06-23T04:39:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-23</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="五大内存分区"><a href="#五大内存分区" class="headerlink" title="五大内存分区"></a>五大内存分区</h2><p>在C++中，内存分成5个区，他们分别是 <code>堆</code>、<code>栈</code>、<code>自由存储区</code>、<code>全局/静态存储区</code>和<code>常量存储区</code>。</p>
-<ul>
-<li><p>栈区(stack): 由编译器在需要的时候分配，在不需要的时候自动清除的变量的存储区。里面的变量通常是局部变量、函数参数等。由编译器自动分配释放 ，存放函数的参数值，局部变量的值等。其操作方式类似于数据结构中的栈。</p>
-</li>
-<li><p>堆区(heap): 操作系统层面的术语。就是那些由malloc等分配的内存块，用free来结束自己的生命的。一般由程序员分配释放， 若程序员不释放，程序结束时可能由OS回收 。注意它与数据结构中的堆是两回事，分配方式倒是类似于链表。</p>
-</li>
-<li><p>自由存储区: C++层面上的术语，就是那些由new分配的内存块，他们的释放编译器不去管，由我们的应用程序去控制，一般一个new就要对应一个delete。如果程序员没有释放掉，那么在程序结束后，操作系统会自动回收。new的申请是调用的malloc，自由存储区就和堆类似，但不等价，可参考该文章<a href="https://www.cnblogs.com/QG-whz/p/5060894.html" target="_blank" rel="noopener">C++ 自由存储区是否等价于堆？</a></p>
-</li>
-<li><p>全局区(静态区)(static): 全局变量和静态变量被分配到同一块内存中，在以前的C语言中，全局变量又分为初始化的和未初始化的，在C++里面没有这个区分了，他们共同占用同一块内存区。全局变量和静态变量的存储是放在一块的，初始化的全局变量和静态变量在一块区域， 未初始化的全局变量和未初始化的静态变量在相邻的另一块区域。 - 程序结束后有系统释放</p>
-</li>
-<li><p>常量存储区: 这是一块比较特殊的存储区，他们里面存放的是常量，不允许修改</p>
-</li>
-</ul>
-<hr>
-<ul>
-<li>文字常量区: 常量字符串就是放在这里的。 程序结束后由系统释放。</li>
-<li>程序代码区: 存放函数体的二进制代码。</li>
-</ul>
-<p><strong>事例:</strong></p>
-<pre><code class="c"><span class="comment">//main.cpp </span>
-<span class="keyword">int</span> a = <span class="number">0</span>; <span class="comment">// 全局初始化区 </span>
-<span class="keyword">char</span> *p1; <span class="comment">// 全局未初始化区 </span>
-<span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>
-<span class="function"></span>{ 
-    <span class="keyword">int</span> b; <span class="comment">// 栈 </span>
-    <span class="keyword">char</span> s[] = <span class="string">"abc"</span>; <span class="comment">// 栈 </span>
-    <span class="keyword">char</span> *p2; <span class="comment">// 栈 </span>
-    <span class="keyword">char</span> *p3 = <span class="string">"123456"</span>; <span class="comment">// 123456\0在常量区，p3在栈上。 </span>
-    <span class="keyword">static</span> <span class="keyword">int</span> c =<span class="number">0</span>； <span class="comment">// 全局（静态）初始化区 </span>
-    p1 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>); 
-    p2 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">20</span>); <span class="comment">// 分配得来得10和20字节的区域就在堆区。 </span>
-    <span class="built_in">strcpy</span>(p1, <span class="string">"123456"</span>); <span class="comment">// 123456\0放在常量区，编译器可能会将它与p3所指向的"123456"优化成一个地方。</span>
-} </code></pre>
-<p>注：</p>
-<p>1.一般，我们说堆栈的时候，其实指的就是栈而已。所以这里说他们2个是一个意思也是对的。</p>
-<p>2.堆栈中的堆是向高地址扩展的数据结构，是不连续的内存区域。这是由于系统是用链表来存储的空闲内存地址的，自然是不连续的，而链表的遍历方向是由低地址向高地址。堆的大小受限于计算机系统中有效的虚拟内存。</p>
-<p>堆分配的时候首先应该知道操作系统有一个记录空闲内存地址的链表，当系统收到程序的申请时，会遍历该链表，寻找第一个空间大于所申请空间的堆结点，然后将该结点从空闲结点链表中删除，并将该结点的空间分配给程序。</p>
-<p>这点和数据结构中的出堆很像，还有有一定的联系的</p>
-<p>3.因为”abc” 在编译的时候，编译器认为它是一个常量，把他分配到了数据区中。而char p2[]=“bbb”，是在程序运行的时候临时在栈中分配空间存放的。</p>
-<hr>
-<p>自由存储是C++中通过new与delete动态分配和释放对象的抽象概念，而堆（heap）是C语言和操作系统的术语，是操作系统维护的一块动态分配内存。</p>
-<p>new所申请的内存区域在C++中称为自由存储区。藉由堆实现的自由存储，可以说new所申请的内存区域在堆上。</p>
-<p>堆与自由存储区还是有区别的，它们并非等价。</p>
-<p>假如你来自C语言，从没接触过C++；或者说你一开始就熟悉C++的自由储存概念，而从没听说过C语言的malloc，可能你就不会陷入“自由存储区与堆好像一样，好像又不同”这样的迷惑之中。这就像Bjarne Stroustrup所说的：</p>
-<p>usually because they come from a different language background.</p>
-<p>大概只是语言背景不同罢了。</p>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>这方面需要区别 c 和 c++。面试要问到还是要慎重。</p>
+        <h1 id="5年IT工作者的工作总结"><a href="#5年IT工作者的工作总结" class="headerlink" title="5年IT工作者的工作总结"></a>5年IT工作者的工作总结</h1><p>今年是一个特殊的年份，疫情遍布全国这影响了大部分的公司。导致今年的工作特别的不好找。</p>
+<p>自己在去年的时候辞去了深圳工作，准备回老家发展。然而遇上了今年这个特别的时间段。 扯远了。</p>
+<h2 id="毕业建议"><a href="#毕业建议" class="headerlink" title="毕业建议"></a>毕业建议</h2><ol>
+<li>毕业之后一定要去IT的大公司。</li>
+<li>最好全面发展，如果自己能力不行，最好往服务器，web这方面走。</li>
+<li>毕业之后定一个自己的软件，自己完成这一个软件。</li>
+</ol>
+<h2 id="要养成良好的习惯"><a href="#要养成良好的习惯" class="headerlink" title="要养成良好的习惯"></a>要养成良好的习惯</h2><ol>
+<li>定时去更新自己的技术博客。</li>
+<li>有自己的github,并且要定期保持自己的活跃度。</li>
+<li>有能力的可以定一个目标刷leetcode来提升自己的算法能力。提升自己的逻辑思维。</li>
+<li>必须要定一个自己的软件目标。</li>
+</ol>
+<h2 id="算法方面"><a href="#算法方面" class="headerlink" title="算法方面"></a>算法方面</h2><ol>
+<li>记得刷leetcode上面的题目。</li>
+<li>熟知常见的数据结构的优缺点。(链表，数组，字典，hash表，树，图)</li>
+<li>排序算法。</li>
+<li>分治算法</li>
+<li>贪心算法。</li>
+<li>动态规划。</li>
+</ol>
+<h2 id="对未来的展望"><a href="#对未来的展望" class="headerlink" title="对未来的展望"></a>对未来的展望</h2><ol>
+<li>服务器开发</li>
+<li>web开发</li>
+<li>大数据方面</li>
+<li>人工智能方面</li>
+<li>机器学习方面</li>
+</ol>
+<p>对于只针对移动端开发个人是非常不建议的！！！！！</p>
+<h2 id="个人说明"><a href="#个人说明" class="headerlink" title="个人说明"></a>个人说明</h2><p>对于之前的博客进行大部分的删除，自己写的太差了，单纯的聊技术，是不对的。</p>
 
       
 
@@ -222,17 +222,6 @@
     <div class="article-info article-info-index">
       
       
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">内存区域 内存结构 C++</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
       
 
       
@@ -246,18 +235,9 @@
   
 <nav id="article-nav">
   
-    <a href="2014/12/01/结构体对齐/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          结构体对齐
-        
-      </div>
-    </a>
   
-  
-    <a href="2014/10/26/C程序的内存结构/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">C程序的内存结构</div>
+    <a href="2020/05/08/iOSDrawText/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS文本绘制</div>
       <i class="icon-circle-right"></i>
     </a>
   

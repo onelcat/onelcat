@@ -8,15 +8,15 @@
   <link rel="dns-prefetch" href="//litten.me">
   <title>iOS文本绘制 | 凡间</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="iOS文本绘制  删除之前的文章，并且总结经常用到的功能。 这里可以推荐 YYText 裤对文本绘制比较友好。   富文本 富文本这一块现在根本不用去考虑，直接复制UI给出的样式代码就可以。达到要求，这样我们就不用去查文字属性相关的API，是不是非常的方便。  这里唯一需要注意的点就是，找出需要添加属性的文字。   图文混排 直接上代码不过多的解释  123let attrString &#x3D; NSM">
+  <meta name="description" content="iOS文本绘制  删除之前的文章，并且总结经常用到的功能。 这里可以推荐 YYText 裤对文本绘制比较友好。   富文本 简单的说，附带有每一个文字属性的字符串，就是富文本。在iOS中，我们有一个专门的类来处理富文本 AttributeString。   富文本这一块现在根本不用去考虑，直接复制UI给出的样式代码就可以。达到要求，这样我们就不用去查文字属性相关的API，是不是非常的方便。  这里">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS文本绘制">
 <meta property="og:url" content="2020/05/08/iOSDrawText/index.html">
 <meta property="og:site_name" content="凡间">
-<meta property="og:description" content="iOS文本绘制  删除之前的文章，并且总结经常用到的功能。 这里可以推荐 YYText 裤对文本绘制比较友好。   富文本 富文本这一块现在根本不用去考虑，直接复制UI给出的样式代码就可以。达到要求，这样我们就不用去查文字属性相关的API，是不是非常的方便。  这里唯一需要注意的点就是，找出需要添加属性的文字。   图文混排 直接上代码不过多的解释  123let attrString &#x3D; NSM">
+<meta property="og:description" content="iOS文本绘制  删除之前的文章，并且总结经常用到的功能。 这里可以推荐 YYText 裤对文本绘制比较友好。   富文本 简单的说，附带有每一个文字属性的字符串，就是富文本。在iOS中，我们有一个专门的类来处理富文本 AttributeString。   富文本这一块现在根本不用去考虑，直接复制UI给出的样式代码就可以。达到要求，这样我们就不用去查文字属性相关的API，是不是非常的方便。  这里">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-05-08T15:09:12.000Z">
-<meta property="article:modified_time" content="2020-05-08T15:28:35.972Z">
+<meta property="article:modified_time" content="2020-05-08T15:53:30.695Z">
 <meta property="article:author" content="Haoshuai">
 <meta property="article:tag" content="Text NSAttributedString CoreText">
 <meta name="twitter:card" content="summary">
@@ -173,7 +173,10 @@
 <li>这里可以推荐 YYText 裤对文本绘制比较友好。</li>
 </ul>
 </blockquote>
-<h3 id="富文本"><a href="#富文本" class="headerlink" title="富文本"></a>富文本</h3><ul>
+<h3 id="富文本"><a href="#富文本" class="headerlink" title="富文本"></a>富文本</h3><blockquote>
+<p>简单的说，附带有每一个文字属性的字符串，就是富文本。<br>在iOS中，我们有一个专门的类来处理富文本 AttributeString。</p>
+</blockquote>
+<ul>
 <li><p><strong>富文本这一块现在根本不用去考虑，直接复制UI给出的样式代码就可以。达到要求</strong>，这样我们就不用去查文字属性相关的API，是不是非常的方便。</p>
 </li>
 <li><p>这里唯一需要注意的点就是，找出需要添加属性的文字。</p>
@@ -183,6 +186,11 @@
 <p>直接上代码不过多的解释</p>
 </blockquote>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> attrString = <span class="type">NSMutableAttributedString</span>(string: <span class="string">"我要展示一个LOGO"</span>)</span><br><span class="line"><span class="keyword">let</span> attachment = <span class="type">NSTextAttachment</span>(image: <span class="type">UIImage</span>(named: <span class="string">"logo"</span>)!)</span><br><span class="line">attrString.append(<span class="type">NSAttributedString</span>(attachment: attachment))</span><br></pre></td></tr></table></figure>
+
+<h2 id="CoreText"><a href="#CoreText" class="headerlink" title="CoreText"></a>CoreText</h2><blockquote>
+<p>唯一可以值得介绍的就是这了。接近底层性能也是最优的。<br><a href="https://developer.apple.com/library/archive/documentation/StringsTextFonts/Conceptual/CoreText_Programming/Introduction/Introduction.html#//apple_ref/doc/uid/TP40005533" target="_blank" rel="noopener">官方链接</a></p>
+</blockquote>
+
       
 
       
@@ -213,6 +221,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="2020/06/23/summarize /" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          总结
+        
+      </div>
+    </a>
   
   
     <a href="2020/04/25/WeiboCancel/" id="article-nav-older" class="article-nav-link-wrap">
@@ -414,135 +431,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Concurrency 多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">KVC</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Threading 多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">算法 排序</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Apple Pay</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Image I/O</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Location Maps</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Core Data Formatting</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Attributed String</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Animation Types and Timing</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Audio Session</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Camera</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Core Strings</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Cocoa Drawing</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Cocoa Text ArchitectureGuide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Cocoa View</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Collection View</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Core Animation</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">CoreImage</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Core Text</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Data Formatting</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Date and Time</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Drawing and Printing</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kernel</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Mach-O</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Advanced Memory Management</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Core Video</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Objective-C Runtime</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Quartz 2D</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Text Layout</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Scroll View</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">View Controller</a>
               </li>
              
               <li class="article-tag-list-item">

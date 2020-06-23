@@ -164,27 +164,214 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-UIScrollView_pg" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-结构体对齐" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="2017/05/01/UIScrollView_pg/">Scroll View Programming Guide for iOS</a>
+      <a class="article-title" href="2014/12/01/结构体对齐/">结构体对齐</a>
     </h1>
   
 
         
-        <a href="2017/05/01/UIScrollView_pg/" class="archive-article-date">
-  	<time datetime="2017-05-01T01:26:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-01</time>
+        <a href="2014/12/01/结构体对齐/" class="archive-article-date">
+  	<time datetime="2014-12-01T04:34:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-12-01</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="https://developer.apple.com/library/archive/documentation/WindowsViews/Conceptual/UIScrollView_pg/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008179" target="_blank" rel="noopener">传送门</a></p>
+        <h2 id="结构体数据成员对齐的意义"><a href="#结构体数据成员对齐的意义" class="headerlink" title="结构体数据成员对齐的意义"></a>结构体数据成员对齐的意义</h2><blockquote>
+<p>许多实际的计算机系统对基本类型数据在内存中存放的位置有限制，它们会要求这些数据的起始地址的值是某个数k的倍数，这就是所谓的内存对齐，而这个k则被称为该数据类型的对齐模数(alignment modulus)。这种强制的要求一来简化了处理器与内存之间传输系统的设计，二来可以提升读取数据的速度。<br>比如这么一种处理器，它每次读写内存的时候都从某个8倍数的地址开始，一次读出或写入8个字节的数据，假如软件能保证double类型的数据都从8倍数地址开始，那么读或写一个double类型数据就只需要一次内存操作。否则，我们就可能需要两次内存操作才能完成这个动作，因为数据或许恰好横跨在两个符合对齐要求的8字节内存块上。</p>
+</blockquote>
+<h2 id="结构体对齐包括两个方面的含义"><a href="#结构体对齐包括两个方面的含义" class="headerlink" title="结构体对齐包括两个方面的含义"></a>结构体对齐包括两个方面的含义</h2><ul>
+<li>结构体总长度；</li>
+<li>结构体内各数据成员的内存对齐，即该数据成员相对结构体的起始位置；</li>
+</ul>
+<h2 id="结构体大小的计算方法和步骤"><a href="#结构体大小的计算方法和步骤" class="headerlink" title="结构体大小的计算方法和步骤"></a>结构体大小的计算方法和步骤</h2><ol>
+<li>将结构体内所有数据成员的长度值相加，记为sum_a；</li>
+<li>将各数据成员为了内存对齐，按各自对齐模数而填充的字节数累加到和sum_a上，记为sum_b。<code>对齐模数是#pragma pack</code> 指定的数值以及该数据成员自身长度中数值较小者。该数据相对起始位置应该是对齐模式的整数倍；</li>
+<li>将和sum_b向结构体模数对齐，该模数是 <code>#pragma pack指定的数值</code> 、 <code>未指定#pragma pack时，系统默认的对齐模数（32位系统为4字节，64位为8字节）</code> 和 <code>结构体内部最大的基本数据类型成员</code> 长度中数值较小者。结构体的长度应该是该模数的整数倍。</li>
+</ol>
+<h2 id="结构体大小计算举例"><a href="#结构体大小计算举例" class="headerlink" title="结构体大小计算举例"></a>结构体大小计算举例</h2><p>在计算之前，我们首先需要明确的是各个数据成员的对齐模数，对齐模数和数据成员本身的长度以及pragma pack编译参数有关，其值是二者中最小数。如果程序没有明确指出，就需要知道编译器默认的对齐模数值。下表是Windows XP/DEV-C++和Linux/GCC中基本数据类型的长度和默认对齐模数。</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="center">char</th>
+<th align="center">short</th>
+<th align="center">int</th>
+<th align="center">long</th>
+<th align="center">float</th>
+<th align="center">double</th>
+<th align="left">long long</th>
+<th align="right">long double</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Win-32长度</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">8</td>
+<td align="left">8</td>
+<td align="right">8</td>
+</tr>
+<tr>
+<td align="left">模数</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">8</td>
+<td align="left">8</td>
+<td align="right">8</td>
+</tr>
+<tr>
+<td align="left">Linux-32长度</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">8</td>
+<td align="left">8</td>
+<td align="right">12</td>
+</tr>
+<tr>
+<td align="left">模数</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="left">4</td>
+<td align="right">4</td>
+</tr>
+<tr>
+<td align="left">Linux-64长度</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">8</td>
+<td align="center">4</td>
+<td align="center">8</td>
+<td align="left">8</td>
+<td align="right">16</td>
+</tr>
+<tr>
+<td align="left">模数</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">8</td>
+<td align="center">4</td>
+<td align="center">8</td>
+<td align="left">8</td>
+<td align="right">16</td>
+</tr>
+</tbody></table>
+<h3 id="例子1"><a href="#例子1" class="headerlink" title="例子1:"></a>例子1:</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">char</span> a;</span><br><span class="line">    <span class="keyword">long</span> <span class="keyword">double</span> b;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>此例子Windows和Linux计算方法有些许不一致。</p>
+<p><strong>在Windows中计算步骤如下:</strong></p>
+<ol>
+<li><p>所有数据成员自身长度和：1B + 8B = 9B –&gt; sum_a = 9B</p>
+</li>
+<li><p>数据成员a放在相对偏移0处，之前不需要填充字节；数据成员b为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是8，之前需填充7个字节，sum_a + 7 = 16B –&gt; sum_b = 16 B</p>
+</li>
+<li><p>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma pack中较小者，前者为8后者为4，所以结构体对齐模数是4。sum_b是4的4倍，不需再次对齐。</p>
+<p>综上3步，可知结构体的长度是16B，各数据成员在内存中的分布如图1-1所示。</p>
+</li>
+</ol>
+<p><strong>在Linux中计算步骤如下:</strong></p>
+<ol>
+<li>所有数据成员自身长度和：1B + 12B = 13B –&gt; sum_a = 13B</li>
+<li>数据成员a放在相对偏移0处，之前不需要填充字节；数据成员b为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是4，之前需填充3个字节，sum_a + 3 = 16B –&gt; sum_b = 16 B</li>
+<li>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma pack中较小者，前者为12后者为4，所以结构体对齐模数是4。sum_b是4的4倍，不需再次对齐。</li>
+</ol>
+<p>综上3步，可知结构体的长度是16B，各数据成员在内存中的分布如图1-2所示。</p>
+<p><img src="../images/1_thumb.jpg" alt="1"></p>
+<h3 id="例子2"><a href="#例子2" class="headerlink" title="例子2:"></a>例子2:</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> pack(2)</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">char</span> a;</span><br><span class="line">    <span class="keyword">long</span> <span class="keyword">double</span> b;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> pack()</span></span><br></pre></td></tr></table></figure>
+
+<p>例子1和例子2不同之处在于例子2中使用了 <code>#pragma pack(2)</code> 编译参数，它强制指定对齐模数是2。此例子Windows和Linux计算方法有些许不一致。</p>
+<p><strong>在Windows中计算步骤如下:</strong></p>
+<ol>
+<li>所有数据成员自身长度和：1B + 8B = 13B –&gt; sum_a = 9B</li>
+<li>数据成员a放在相对偏移0处，之前不需要填充字节；数据成员b为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是2，之前需填充1个字节，sum_a + 1 = 10B –&gt; sum_b = 10 B</li>
+<li>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma pack中较小者，前者为8后者为2，所以结构体对齐模数是2。sum_b是2的5倍，不需再次对齐。</li>
+</ol>
+<p>综上3步，可知结构体的长度是10B，各数据成员在内存中的分布如图2-1所示。</p>
+<p><strong>在Linux中计算步骤如下:</strong></p>
+<ol>
+<li><p>所有数据成员自身长度和：1B + 12B = 13B –&gt; sum_a = 13B</p>
+</li>
+<li><p>数据成员a放在相对偏移0处，之前不需要填充字节；数据成员b为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是2，之前需填充1个字节，sum_a + 1 = 14B –&gt; sum_b = 14 B</p>
+</li>
+<li><p>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma pack中较小者，前者为8后者为2，所以结构体对齐模数是2。sum_b是2的7倍，不需再次对齐。</p>
+<p>综上3步，可知结构体的长度是14B，各数据成员在内存中的分布如图2-2所示。</p>
+</li>
+</ol>
+<p><img src="../images/2_thumb.jpg" alt="2"></p>
+<h3 id="例子3"><a href="#例子3" class="headerlink" title="例子3:"></a>例子3:</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">char</span> a;</span><br><span class="line">    <span class="keyword">double</span> b;</span><br><span class="line">    <span class="keyword">char</span> c;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>前两例中，数据成员在Linux和Windows下都相同，例3中double的对齐模数在Linux中是4，在Windows下是8，针对这种模数不相同的情况加以分析。</p>
+<p><strong>在Windows中计算步骤如下:</strong></p>
+<ol>
+<li>所有数据成员自身长度和：1B + 8B + 1B = 10B –&gt; sum_a = 10B </li>
+<li>数据成员a放在相对偏移0处，之前不需要填充字节；数据成员b为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是8，之前需填充7个字节，sum_a + 7 = 17B –&gt; sum_b = 17B</li>
+<li>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma pack中较小者，前者为8后者为8，所以结构体对齐模数是8。sum_b应该是8的整数倍，所以要在结构体后填充8*3 - 17 = 7个字节。</li>
+</ol>
+<p>综上3步，可知结构体的长度是24B，各数据成员在内存中的分布如图3-1所示。</p>
+<p><strong>在Linux中计算步骤如下:</strong></p>
+<ol>
+<li>所有数据成员自身长度和：1B + 8B + 1B = 10B，sum_a = 10B</li>
+<li>数据成员a放在相对偏移0处，之前不需要填充字节；数据成员b为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是4，之前需填充3个字节，sum_b = sum_a + 3 = 13B</li>
+<li>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma<br>pack中较小者，前者为8后者为4，所以结构体对齐模数是4。sum_b应该是4的整数倍，所以要在结构体后填充4*4 - 13 = 3个字节。</li>
+</ol>
+<p>综上3步，可知结构体的长度是16B，各数据成员在内存中的分布如图3-2所示。</p>
+<p><img src="../images/3_thumb.jpg" alt="3"></p>
+<h3 id="例子4"><a href="#例子4" class="headerlink" title="例子4:"></a>例子4:</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">char</span> a[<span class="number">11</span>];</span><br><span class="line">    <span class="keyword">int</span> b;</span><br><span class="line">    <span class="keyword">char</span> c;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>此例子Windows和Linux计算方法一样，如下：</strong></p>
+<ol>
+<li>所有数据成员自身长度和：11B + 4B + 1B = 16B –&gt; sum_a = 16B</li>
+<li>数据成员a放在相对偏移0处，之前不需要填充字节；数据成员b为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是4，之前需填充3个字节，sum_a + 1 = 17B –&gt; sum_b = 17B</li>
+<li>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma pack中较小者，前者为4后者为4，所以结构体对齐模数是4。sum_b是4的整数倍，需在结构体后填充4*5 - 17 = 1个字节。</li>
+</ol>
+<p>综上3步，可知结构体的长度是20B，各数据成员在内存中的分布如图4所示。</p>
+<p><img src="../images/4_thumb.jpg" alt="4"></p>
+<h3 id="例子5"><a href="#例子5" class="headerlink" title="例子5:"></a>例子5:</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_test</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> my_test_a;</span><br><span class="line">    <span class="keyword">char</span> my_test_b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">my_test</span> <span class="title">a</span>;</span></span><br><span class="line">    <span class="keyword">double</span> my_struct_a;</span><br><span class="line">    <span class="keyword">int</span> my_struct_b;</span><br><span class="line">    <span class="keyword">char</span> my_struct_c;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>例子5和前几个例子均不同，在此例子中我们要计算struct my_struct的大小，而my_struct中嵌套了一个my_test结构体。这种结构体应该如何计算呢？原则是将my_test在my_struct中先展开，然后再计算，即是展开成如下结构体：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> my_test_a;</span><br><span class="line">    <span class="keyword">char</span> my_test_b;</span><br><span class="line">    <span class="keyword">double</span> my_struct_a;</span><br><span class="line">    <span class="keyword">int</span> my_struct_b;</span><br><span class="line">    <span class="keyword">char</span> my_struct_c;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>此例子Windows中的计算方法如下:</strong></p>
+<ol>
+<li>所有数据成员自身长度和：4B + 1B + 8B + 4B + 1B= 18B –&gt; sum_a = 18B</li>
+<li>数据成员my_struct_a为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是8，之前需填充3个字节：sum_a + 3 = 21B –&gt; sum_b = 21B</li>
+<li>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma pack中较小者，前者为8后者为8，所以结构体对齐模数是8。sum_b是8的整数倍，需在结构体后填充3*8 - 21 = 3个字节。</li>
+</ol>
+<p>综上3步，可知结构体的长度是24B，各数据成员在内存中的分布如图5所示。</p>
+<p><strong>此例子Linux中的计算方法如下:</strong></p>
+<ol>
+<li>所有数据成员自身长度和：4B + 1B + 8B + 4B + 1B= 18B，sum_a = 18B</li>
+<li>数据成员my_struct_a为了内存对齐，根据“结构体大小的计算方法和步骤”中第二条原则，其对齐模数是4，之前需填充3个字节，sum_b = sum_a + 3 = 21B</li>
+<li>按照定义，结构体对齐模数是结构体内部最大数据成员长度和pragma<br>pack中较小者，前者为4后者为4，所以结构体对齐模数是4。sum_b是4的整数倍，需在结构体后填充6*4 - 21 = 3个字节。</li>
+</ol>
+<p>综上3步，可知结构体的长度是24B，各数据成员在内存中的分布如图5所示。</p>
+<p><img src="../images/5_thumb.jpg" alt="5"></p>
+<h2 id="源代码附录"><a href="#源代码附录" class="headerlink" title="源代码附录"></a>源代码附录</h2><p>上面的例子均在Windows(VC++6.0)和Linux(GCC4.1.0)上测试验证。下面是测试程序。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(char)        = "</span> &lt;&lt; <span class="keyword">sizeof</span>(<span class="keyword">char</span>) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(short)       = "</span> &lt;&lt; <span class="keyword">sizeof</span>(short) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(int)         = "</span> &lt;&lt; <span class="keyword">sizeof</span>(<span class="keyword">int</span>) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(long)        = "</span> &lt;&lt; <span class="keyword">sizeof</span>(<span class="keyword">long</span>) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(float)       = "</span> &lt;&lt; <span class="keyword">sizeof</span>(<span class="keyword">float</span>) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(double)      = "</span> &lt;&lt; <span class="keyword">sizeof</span>(<span class="keyword">double</span>) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(long long)   = "</span> &lt;&lt; <span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sizeof(long double) = "</span> &lt;&lt; <span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">double</span>) &lt;&lt; <span class="built_in">endl</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 例子1</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">        &#123;</span></span><br><span class="line">            <span class="keyword">char</span> a;</span><br><span class="line">            <span class="keyword">long</span> <span class="keyword">double</span> b;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"exapmle-1: sizeof(my_struct) = "</span> &lt;&lt; <span class="keyword">sizeof</span>(my_struct) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">  </span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span> <span class="title">data</span>;</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"my_struct-&gt;a: %u\nmy_struct-&gt;b: %u\n\n"</span>, &amp;data.a, &amp;data.b);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 例子2</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="meta">#<span class="meta-keyword">pragma</span> pack(2)</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">        &#123;</span></span><br><span class="line">            <span class="keyword">char</span> a;</span><br><span class="line">            <span class="keyword">long</span> <span class="keyword">double</span> b;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="meta">#<span class="meta-keyword">pragma</span> pack()</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span> <span class="title">data</span>;</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"exapmle-2: sizeof(my_struct) = "</span> &lt;&lt; <span class="keyword">sizeof</span>(my_struct) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">  </span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"my_struct-&gt;a: %u\nmy_struct-&gt;b: %u\n\n"</span>, &amp;data.a, &amp;data.b);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 例子3</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">        &#123;</span></span><br><span class="line">            <span class="keyword">char</span> a;</span><br><span class="line">            <span class="keyword">double</span> b;</span><br><span class="line">            <span class="keyword">char</span> c;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span> <span class="title">data</span>;</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"exapmle-3: sizeof(my_struct) = "</span> &lt;&lt; <span class="keyword">sizeof</span>(my_struct) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">  </span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"my_struct-&gt;a: %u\nmy_struct-&gt;b: %u\nmy_struct-&gt;c: %u\n\n"</span>, &amp;data.a, &amp;data.b, &amp;data.c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 例子4</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">        &#123;</span>  </span><br><span class="line">            <span class="keyword">char</span> a[<span class="number">11</span>];  </span><br><span class="line">            <span class="keyword">int</span> b;  </span><br><span class="line">            <span class="keyword">char</span> c;  </span><br><span class="line">        &#125;;</span><br><span class="line">  </span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"example-4: sizeof(my_struct) = "</span> &lt;&lt; <span class="keyword">sizeof</span>(struct my_struct) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">  </span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span> <span class="title">data</span>;</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"my_struct-&gt;a: %u\nmy_struct-&gt;b: %u\nmy_struct-&gt;c: %u\n\n"</span>, &amp;data, &amp;data.b, &amp;data.c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 例子5</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_test</span></span></span><br><span class="line"><span class="class">        &#123;</span></span><br><span class="line">            <span class="keyword">int</span> my_test_a;</span><br><span class="line">            <span class="keyword">char</span> my_test_b;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span></span></span><br><span class="line"><span class="class">        &#123;</span></span><br><span class="line">            <span class="class"><span class="keyword">struct</span> <span class="title">my_test</span> <span class="title">a</span>;</span></span><br><span class="line">            <span class="keyword">double</span> my_struct_a;</span><br><span class="line">            <span class="keyword">int</span> my_struct_b;</span><br><span class="line">            <span class="keyword">char</span> my_struct_c;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"example-5: sizeof(my_struct) = "</span> &lt;&lt; <span class="keyword">sizeof</span>(struct my_struct) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">  </span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">my_struct</span> <span class="title">data</span>;</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"my_struct-&gt;my_test_a  : %u\n"</span></span><br><span class="line">            <span class="string">"my_struct-&gt;my_test_b  : %u\n"</span></span><br><span class="line">            <span class="string">"my_struct-&gt;my_struct_a: %u\n"</span></span><br><span class="line">            <span class="string">"my_struct-&gt;my_struct_b: %u\n"</span></span><br><span class="line">            <span class="string">"my_struct-&gt;my_struct_c: %u\n"</span>, &amp;data.a.my_test_a, &amp;data.a.my_test_b, </span><br><span class="line">            &amp;data.my_struct_a, &amp;data.my_struct_b, &amp;data.my_struct_c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="执行结果"><a href="#执行结果" class="headerlink" title="执行结果"></a>执行结果</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Linux localhost 3.4.6-2.10-desktop #1 SMP PREEMPT Thu Jul 28 19:20:26 UTC 2012 (641c197) x86_64 x86_64 x86_64 GNU/Linux</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">char</span>)        = <span class="number">1</span></span><br><span class="line"><span class="keyword">sizeof</span>(short)       = <span class="number">2</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">int</span>)         = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span>)        = <span class="number">8</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">float</span>)       = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">double</span>)      = <span class="number">8</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>)   = <span class="number">8</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">double</span>) = <span class="number">16</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-1</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">32</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2163695552</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2163695568</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-2</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">18</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2163695680</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2163695682</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-3</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">24</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2163695648</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2163695656</span></span><br><span class="line">my_struct-&gt;c: <span class="number">2163695664</span></span><br><span class="line"></span><br><span class="line">example<span class="number">-4</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">20</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2163695616</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2163695628</span></span><br><span class="line">my_struct-&gt;c: <span class="number">2163695632</span></span><br><span class="line"></span><br><span class="line">example<span class="number">-5</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">24</span></span><br><span class="line">my_struct-&gt;my_test_a  : <span class="number">2163695584</span></span><br><span class="line">my_struct-&gt;my_test_b  : <span class="number">2163695588</span></span><br><span class="line">my_struct-&gt;my_struct_a: <span class="number">2163695592</span></span><br><span class="line">my_struct-&gt;my_struct_b: <span class="number">2163695600</span></span><br><span class="line">my_struct-&gt;my_struct_c: <span class="number">2163695604</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//Linux localhost 3.4.6-2.10-desktop #1 SMP PREEMPT Thu Jul 26 09:36:26 UTC 2012 (641c197) i686 i686 i386 GNU/Linux</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">char</span>)        = <span class="number">1</span></span><br><span class="line"><span class="keyword">sizeof</span>(short)       = <span class="number">2</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">int</span>)         = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span>)        = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">float</span>)       = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">double</span>)      = <span class="number">8</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>)   = <span class="number">8</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">double</span>) = <span class="number">12</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-1</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">16</span></span><br><span class="line">my_struct-&gt;a: <span class="number">3213889904</span></span><br><span class="line">my_struct-&gt;b: <span class="number">3213889908</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-2</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">14</span></span><br><span class="line">my_struct-&gt;a: <span class="number">3213889890</span></span><br><span class="line">my_struct-&gt;b: <span class="number">3213889892</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-3</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">16</span></span><br><span class="line">my_struct-&gt;a: <span class="number">3213889872</span></span><br><span class="line">my_struct-&gt;b: <span class="number">3213889876</span></span><br><span class="line">my_struct-&gt;c: <span class="number">3213889884</span></span><br><span class="line"></span><br><span class="line">example<span class="number">-4</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">20</span></span><br><span class="line">my_struct-&gt;a: <span class="number">3213889852</span></span><br><span class="line">my_struct-&gt;b: <span class="number">3213889864</span></span><br><span class="line">my_struct-&gt;c: <span class="number">3213889868</span></span><br><span class="line"></span><br><span class="line">example<span class="number">-5</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">24</span></span><br><span class="line">my_struct-&gt;my_test_a  : <span class="number">3213889828</span></span><br><span class="line">my_struct-&gt;my_test_b  : <span class="number">3213889832</span></span><br><span class="line">my_struct-&gt;my_struct_a: <span class="number">3213889836</span></span><br><span class="line">my_struct-&gt;my_struct_b: <span class="number">3213889844</span></span><br><span class="line">my_struct-&gt;my_struct_c: <span class="number">3213889848</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//CYGWIN_NT-6.1 motadou-PC 1.7.20(0.266/5/3) 2013-06-07 11:11 i686 Cygwin</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">char</span>)        = <span class="number">1</span></span><br><span class="line"><span class="keyword">sizeof</span>(short)       = <span class="number">2</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">int</span>)         = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span>)        = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">float</span>)       = <span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">double</span>)      = <span class="number">8</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>)   = <span class="number">8</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">double</span>) = <span class="number">12</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-1</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">16</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2272336</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2272340</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-2</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">14</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2272322</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2272324</span></span><br><span class="line"></span><br><span class="line">exapmle<span class="number">-3</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">24</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2272296</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2272304</span></span><br><span class="line">my_struct-&gt;c: <span class="number">2272312</span></span><br><span class="line"></span><br><span class="line">example<span class="number">-4</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">20</span></span><br><span class="line">my_struct-&gt;a: <span class="number">2272276</span></span><br><span class="line">my_struct-&gt;b: <span class="number">2272288</span></span><br><span class="line">my_struct-&gt;c: <span class="number">2272292</span></span><br><span class="line"></span><br><span class="line">example<span class="number">-5</span>: <span class="keyword">sizeof</span>(my_struct) = <span class="number">24</span></span><br><span class="line">my_struct-&gt;my_test_a  : <span class="number">2272248</span></span><br><span class="line">my_struct-&gt;my_test_b  : <span class="number">2272252</span></span><br><span class="line">my_struct-&gt;my_struct_a: <span class="number">2272256</span></span><br><span class="line">my_struct-&gt;my_struct_b: <span class="number">2272264</span></span><br><span class="line">my_struct-&gt;my_struct_c: <span class="number">2272268</span></span><br></pre></td></tr></table></figure>
 
       
 
@@ -198,7 +385,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Scroll View</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">结构体对齐 C</a>
         		</li>
       		
 		</ul>
@@ -208,7 +395,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="2017/05/01/UIScrollView_pg/">展开全文 >></a>
+          <a class="article-more-a" href="2014/12/01/结构体对齐/">展开全文 >></a>
         </p>
       
 
@@ -238,27 +425,73 @@
 
 
   
-    <article id="post-MemoryMgmt" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-CPP程序的内存结构" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="2017/04/10/MemoryMgmt/">Advanced Memory Management Programming Guide</a>
+      <a class="article-title" href="2014/11/21/CPP程序的内存结构/">C++程序的内存结构</a>
     </h1>
   
 
         
-        <a href="2017/04/10/MemoryMgmt/" class="archive-article-date">
-  	<time datetime="2017-04-10T14:12:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-10</time>
+        <a href="2014/11/21/CPP程序的内存结构/" class="archive-article-date">
+  	<time datetime="2014-11-21T04:34:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-11-21</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/MemoryMgmt.html#//apple_ref/doc/uid/10000011-SW1" target="_blank" rel="noopener">传送门</a></p>
+        <h2 id="五大内存分区"><a href="#五大内存分区" class="headerlink" title="五大内存分区"></a>五大内存分区</h2><p>在C++中，内存分成5个区，他们分别是 <code>堆</code>、<code>栈</code>、<code>自由存储区</code>、<code>全局/静态存储区</code>和<code>常量存储区</code>。</p>
+<ul>
+<li><p>栈区(stack): 由编译器在需要的时候分配，在不需要的时候自动清除的变量的存储区。里面的变量通常是局部变量、函数参数等。由编译器自动分配释放 ，存放函数的参数值，局部变量的值等。其操作方式类似于数据结构中的栈。</p>
+</li>
+<li><p>堆区(heap): 操作系统层面的术语。就是那些由malloc等分配的内存块，用free来结束自己的生命的。一般由程序员分配释放， 若程序员不释放，程序结束时可能由OS回收 。注意它与数据结构中的堆是两回事，分配方式倒是类似于链表。</p>
+</li>
+<li><p>自由存储区: C++层面上的术语，就是那些由new分配的内存块，他们的释放编译器不去管，由我们的应用程序去控制，一般一个new就要对应一个delete。如果程序员没有释放掉，那么在程序结束后，操作系统会自动回收。new的申请是调用的malloc，自由存储区就和堆类似，但不等价，可参考该文章<a href="https://www.cnblogs.com/QG-whz/p/5060894.html" target="_blank" rel="noopener">C++ 自由存储区是否等价于堆？</a></p>
+</li>
+<li><p>全局区(静态区)(static): 全局变量和静态变量被分配到同一块内存中，在以前的C语言中，全局变量又分为初始化的和未初始化的，在C++里面没有这个区分了，他们共同占用同一块内存区。全局变量和静态变量的存储是放在一块的，初始化的全局变量和静态变量在一块区域， 未初始化的全局变量和未初始化的静态变量在相邻的另一块区域。 - 程序结束后有系统释放</p>
+</li>
+<li><p>常量存储区: 这是一块比较特殊的存储区，他们里面存放的是常量，不允许修改</p>
+</li>
+</ul>
+<hr>
+<ul>
+<li>文字常量区: 常量字符串就是放在这里的。 程序结束后由系统释放。</li>
+<li>程序代码区: 存放函数体的二进制代码。</li>
+</ul>
+<p><strong>事例:</strong></p>
+<pre><code class="c"><span class="comment">//main.cpp </span>
+<span class="keyword">int</span> a = <span class="number">0</span>; <span class="comment">// 全局初始化区 </span>
+<span class="keyword">char</span> *p1; <span class="comment">// 全局未初始化区 </span>
+<span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>
+<span class="function"></span>{ 
+    <span class="keyword">int</span> b; <span class="comment">// 栈 </span>
+    <span class="keyword">char</span> s[] = <span class="string">"abc"</span>; <span class="comment">// 栈 </span>
+    <span class="keyword">char</span> *p2; <span class="comment">// 栈 </span>
+    <span class="keyword">char</span> *p3 = <span class="string">"123456"</span>; <span class="comment">// 123456\0在常量区，p3在栈上。 </span>
+    <span class="keyword">static</span> <span class="keyword">int</span> c =<span class="number">0</span>； <span class="comment">// 全局（静态）初始化区 </span>
+    p1 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>); 
+    p2 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">20</span>); <span class="comment">// 分配得来得10和20字节的区域就在堆区。 </span>
+    <span class="built_in">strcpy</span>(p1, <span class="string">"123456"</span>); <span class="comment">// 123456\0放在常量区，编译器可能会将它与p3所指向的"123456"优化成一个地方。</span>
+} </code></pre>
+<p>注：</p>
+<p>1.一般，我们说堆栈的时候，其实指的就是栈而已。所以这里说他们2个是一个意思也是对的。</p>
+<p>2.堆栈中的堆是向高地址扩展的数据结构，是不连续的内存区域。这是由于系统是用链表来存储的空闲内存地址的，自然是不连续的，而链表的遍历方向是由低地址向高地址。堆的大小受限于计算机系统中有效的虚拟内存。</p>
+<p>堆分配的时候首先应该知道操作系统有一个记录空闲内存地址的链表，当系统收到程序的申请时，会遍历该链表，寻找第一个空间大于所申请空间的堆结点，然后将该结点从空闲结点链表中删除，并将该结点的空间分配给程序。</p>
+<p>这点和数据结构中的出堆很像，还有有一定的联系的</p>
+<p>3.因为”abc” 在编译的时候，编译器认为它是一个常量，把他分配到了数据区中。而char p2[]=“bbb”，是在程序运行的时候临时在栈中分配空间存放的。</p>
+<hr>
+<p>自由存储是C++中通过new与delete动态分配和释放对象的抽象概念，而堆（heap）是C语言和操作系统的术语，是操作系统维护的一块动态分配内存。</p>
+<p>new所申请的内存区域在C++中称为自由存储区。藉由堆实现的自由存储，可以说new所申请的内存区域在堆上。</p>
+<p>堆与自由存储区还是有区别的，它们并非等价。</p>
+<p>假如你来自C语言，从没接触过C++；或者说你一开始就熟悉C++的自由储存概念，而从没听说过C语言的malloc，可能你就不会陷入“自由存储区与堆好像一样，好像又不同”这样的迷惑之中。这就像Bjarne Stroustrup所说的：</p>
+<p>usually because they come from a different language background.</p>
+<p>大概只是语言背景不同罢了。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>这方面需要区别 c 和 c++。面试要问到还是要慎重。</p>
 
       
 
@@ -272,7 +505,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Advanced Memory Management</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">内存区域 内存结构 C++</a>
         		</li>
       		
 		</ul>
@@ -282,7 +515,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="2017/04/10/MemoryMgmt/">展开全文 >></a>
+          <a class="article-more-a" href="2014/11/21/CPP程序的内存结构/">展开全文 >></a>
         </p>
       
 
@@ -312,27 +545,73 @@
 
 
   
-    <article id="post-DatesAndTimes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-C程序的内存结构" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="2017/03/08/DatesAndTimes/">Date and Time Programming Guide</a>
+      <a class="article-title" href="2014/10/26/C程序的内存结构/">C程序的内存结构</a>
     </h1>
   
 
         
-        <a href="2017/03/08/DatesAndTimes/" class="archive-article-date">
-  	<time datetime="2017-03-08T15:00:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-08</time>
+        <a href="2014/10/26/C程序的内存结构/" class="archive-article-date">
+  	<time datetime="2014-10-26T04:02:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-10-26</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/DatesAndTimes/Articles/dtDates.html" target="_blank" rel="noopener">传送门</a></p>
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>一般情况下，一个可执行C程序在内存中主要包含5个区域，分别是代码段（text），数据段（data），BSS段，堆段（heap）和栈段（stack）。<strong>其中前三个段（text，data，bss）是程序编译完成就存在的</strong>，此时程序并未载入内存进行执行。<strong>后两个段（heap，stack）是程序被加载到内存中时，才存在的</strong>。下面分别介绍：</p>
+<p>本文的参考示例代码（test.c）如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> gDataA = <span class="number">10</span>; </span><br><span class="line"><span class="keyword">int</span> gDataB;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> gDataC = <span class="number">20</span>; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> z)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (x + y + z + gDataC);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> DataA = <span class="number">4</span>;</span><br><span class="line">    gDataB = func(x,DataA,gDataA);</span><br><span class="line">    DataA = gDataB - DataA;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译：  </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gcc test.c -o <span class="built_in">test</span> -O2 -fno-inline</span><br></pre></td></tr></table></figure>
+
+<h2 id="代码段"><a href="#代码段" class="headerlink" title="代码段"></a>代码段</h2><p>代码段（text）：就是C程序编译后的机器指令，也就是我们常见的汇编代码，汇编代码可以<br>通过objdump查看，如下图所示：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ objdump - <span class="built_in">test</span> &gt; test.hex</span><br><span class="line">$ vi test.hex</span><br></pre></td></tr></table></figure>
+
+<p><img src="../images/c_code1.png" alt="图片"></p>
+<p>其中:  </p>
+<blockquote>
+<p>红框表示该段是text段；<br>绿框表示的是程序的虚拟地址；<br>蓝框表示的是text段的实际内容，也就是一些连续的二进制机器码；<br>黄框的汇编内容实际上并不存在于text段中，它只是<code>objdump</code>程序根据蓝框中机器码解析出来的汇编信息，提高可读性。 </p>
+</blockquote>
+<p>通过<code>objdump -h test</code>，读取text段的信息，可见text段是READONLY的，这也防止其他程序恶意修改程序</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ objdump -h <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="../images/c_code2.png" alt="图片"></p>
+<h2 id="数据段"><a href="#数据段" class="headerlink" title="数据段"></a>数据段</h2><p>数据段（data）：用来存放显式初始化的全局变量或者静态（全局）变量。  </p>
+<p><strong>例如以下反汇编代码片段:</strong></p>
+<p><img src="../images/c_code3.png" alt="图片"></p>
+<p>其中DataA.1804可以理解为DataA的一个别名，与编译器有关，在此不再深入分析。<br>可见gDataA和DataA两个显式初始化的全局变量都存储在data段中。其值分别是0x000a和0x0004。（x86_64小端处理器）</p>
+<hr>
+<p><img src="../images/c_code4.png" alt="图片"></p>
+<p>上图红框中的内容是在二进制文件中实际存储的内容，而黄框中的内容是对应二进制解析出来的，对于数据段中内容解析出来后是没有意义的，因为它们是数据，不是指令。可以理解为<code>objdump</code>工具的“过度解析”（下同，不再累述）。</p>
+<h2 id="BSS段"><a href="#BSS段" class="headerlink" title="BSS段"></a>BSS段</h2><p>BSS段（Block Started by Symbol）:存储未初始化的全局变量或者静态（全局）变量。  </p>
+<p><strong>例如以下反汇编代码片段：</strong></p>
+<p><img src="../images/c_code5.png" alt="图片"></p>
+<p>gData是未被初始化的全局变量，因此存放在bss段，其值默认是0。</p>
+<h2 id="栈段（stack）"><a href="#栈段（stack）" class="headerlink" title="栈段（stack）"></a>栈段（stack）</h2><p><strong>我们很多时候习惯统一来说“堆栈”，但是堆和栈是两个不同的区域，对于我们程序员来说还是要搞清楚的（下一节我会详细说明<code>栈</code>）。</strong></p>
+<p>栈段(stack)：存放函数调用相关的参数、局部变量的值，以及在任务切换的上下文信息。为了更便于说明问题，使用下面的示例代码（本代码仅仅是为了说明问题，风格不值得借鉴）：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span> a1,<span class="keyword">int</span> a2,<span class="keyword">int</span> a3,<span class="keyword">int</span> a4,<span class="keyword">int</span> a5,<span class="keyword">int</span> a6,<span class="keyword">int</span> a7,<span class="keyword">int</span> a8,<span class="keyword">int</span> a9)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> a1,a2,a3,a4,a5,a6,a7,a8,a9;</span><br><span class="line">        <span class="keyword">int</span> sum;</span><br><span class="line">        a1 = <span class="number">0x11</span>;</span><br><span class="line">        a2 = <span class="number">0x22</span>;</span><br><span class="line">        a3 = <span class="number">0x33</span>;</span><br><span class="line">        a4 = <span class="number">0x44</span>;</span><br><span class="line">        a5 = <span class="number">0x55</span>;</span><br><span class="line">        a6 = <span class="number">0x66</span>;</span><br><span class="line">        a7 = <span class="number">0x77</span>;</span><br><span class="line">        a8 = <span class="number">0x88</span>;</span><br><span class="line">        a9 = <span class="number">0x99</span>;</span><br><span class="line">        sum = func(a1,a2,a3,a4,a5,a6,a7,a8,a9);</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>编译并objdump：</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ gcc stack.c -o stack -O2 -fno-inline　　// 使用-fno-inline的目的是为了禁止内联，便于展现函数调用及参数传递过程。感兴趣的同学可以不加该参数编译下。</span><br><span class="line"></span><br><span class="line">$ objdump -M intel -D stack &gt; stack.hex</span><br></pre></td></tr></table></figure>
+<p>查看main函数和func函数的反汇编代码：</p>
+<p><img src="../images/c_code6.png" alt="图片"><br><img src="../images/c_code7.png" alt="图片"></p>
+<p>对于main函数中，为何有的使用<code>mov</code>，有的使用<code>push</code>可以参考函数调用过程中的参数传递规则（简言之就是x86_64可以使用6个寄存器(分别是<code>edi</code>，<code>esi</code>，<code>edx</code>，<code>ecx</code>，<code>r8d</code>，<code>r9d</code>)直接传递参数，而不用压栈和出栈，提高性能）。</p>
+<p>后面的参数都使用压栈的方式传递给被调用函数func。</p>
+<p>从这里也可以知道，在我们自己写函数的情况的时候，参数个数最好控制在6个以内，否则就需要用堆栈，而堆栈的访问速度是没有寄存器快的，性能就会下降。这是x86_64架构的情况，其它的如x86、ARM、ARM64、MIPS传参的规则是不一样的，就需要根据实际情况考虑了。</p>
+<p>对于func函数，直接使用<code>edi</code>、<code>esi</code>、<code>edx</code>、<code>ecx</code>、<code>r8d</code>和<code>r9d</code>获得前6个参数值，后面的参数就需要从stack上获取。</p>
+<p>栈区是由操作系统分配和管理的区域。</p>
+<h2 id="堆段（heap）"><a href="#堆段（heap）" class="headerlink" title="堆段（heap）"></a>堆段（heap）</h2><p>动态内存分配的区域，也就是malloc申请的内存区。注意malloc申请的内存不用的时候必须free，并指向NULL。</p>
+<p>堆区是由程序员显示分配与管理的。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>下面来自经典书籍《UNIX环境高级编程》中对此有如下描述：<br><img src="../images/c_code8.png" alt="图片"><br>对于C代码编译出来的二进制，代码段（text）、数据段（data）和BSS段是代码编译后就确定了，但是编译后的程序存储在硬盘中，当要执行的的时候，操作系统负责将该程序load到内存中。<br>在程序运行的之后，就会涉及到堆区和栈区的操作。一般情况下，堆区是向上生长的，栈区是向下生长的，当然不同的处理器架构是不同的。</p>
+<p><a href="https://www.cnblogs.com/helloworld8102/p/9682592.html" target="_blank" rel="noopener">转载</a></p>
 
       
 
@@ -346,7 +625,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Date and Time</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">内存区域 内存结构 C</a>
         		</li>
       		
 		</ul>
@@ -356,7 +635,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="2017/03/08/DatesAndTimes/">展开全文 >></a>
+          <a class="article-more-a" href="2014/10/26/C程序的内存结构/">展开全文 >></a>
         </p>
       
 
@@ -386,27 +665,147 @@
 
 
   
-    <article id="post-DataFormatting" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-汇编入门" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="2017/02/23/DataFormatting/">Data Formatting Guide</a>
+      <a class="article-title" href="2014/09/15/汇编入门/">汇编入门</a>
     </h1>
   
 
         
-        <a href="2017/02/23/DataFormatting/" class="archive-article-date">
-  	<time datetime="2017-02-23T14:48:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-23</time>
+        <a href="2014/09/15/汇编入门/" class="archive-article-date">
+  	<time datetime="2014-09-15T03:25:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-09-15</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/DataFormatting/DataFormatting.html#//apple_ref/doc/uid/10000029-CJBCGJCJ" target="_blank" rel="noopener">传送门</a></p>
+        <blockquote>
+<p>学习编程其实就是学高级语言，即那些为人类设计的计算机语言。<br>但是，计算机不理解高级语言，必须通过编译器转成二进制代码，才能运行。学会高级语言，并不等于理解计算机实际的运行步骤。</p>
+</blockquote>
+<p><img src="../images/bg2018012204.png" alt="图一"></p>
+<p>计算机真正能够理解的是低级语言，它专门用来控制硬件。汇编语言就是低级语言，直接描述/控制 CPU 的运行。如果你想了解 CPU 到底干了些什么，以及代码的运行步骤，就一定要学习汇编语言。</p>
+<p>汇编语言不容易学习，就连简明扼要的介绍都很难找到。下面我尝试写一篇最好懂的汇编语言教程，解释 CPU 如何执行代码。</p>
+<p><img src="../images/bg2018012202.jpg" alt="图"></p>
+<h2 id="汇编语言是什么？"><a href="#汇编语言是什么？" class="headerlink" title="汇编语言是什么？"></a>汇编语言是什么？</h2><p>我们知道，CPU 只负责计算，本身不具备智能。你输入一条指令（instruction），它就运行一次，然后停下来，等待下一条指令。</p>
+<p>这些指令都是二进制的，称为操作码（opcode），比如加法指令就是<code>00000011</code>。编译器的作用，就是将高级语言写好的程序，翻译成一条条操作码。</p>
+<p>对于人类来说，二进制程序是不可读的，根本看不出来机器干了什么。为了解决可读性的问题，以及偶尔的编辑需求，就诞生了汇编语言。</p>
+<p><img src="../images/bg2018012203.jpg" alt="图"></p>
+<p><em>汇编语言是二进制指令的文本形式</em>，与指令是一一对应的关系。比如，加法指令<code>00000011</code>写成汇编语言就是 ADD。只要还原成二进制，汇编语言就可以被 CPU 直接执行，所以它是最底层的低级语言。</p>
+<h2 id="来历"><a href="#来历" class="headerlink" title="来历"></a>来历</h2><p>最早的时候，编写程序就是手写二进制指令，然后通过各种开关输入计算机，比如要做加法了，就按一下加法开关。后来，发明了纸带打孔机，通过在纸带上打孔，将二进制指令自动输入计算机。</p>
+<p>为了解决二进制指令的可读性问题，工程师将那些指令写成了八进制。二进制转八进制是轻而易举的，但是八进制的可读性也不行。很自然地，最后还是用文字表达，加法指令写成 ADD。内存地址也不再直接引用，而是用标签表示。</p>
+<p>这样的话，就多出一个步骤，要把这些文字指令翻译成二进制，这个步骤就称为 assembling，完成这个步骤的程序就叫做 assembler。它处理的文本，自然就叫做 aseembly code。标准化以后，称为 assembly language，缩写为 asm，中文译为汇编语言。<br><img src="../images/bg2018012205.jpg" alt="图"><br>每一种 CPU 的机器指令都是不一样的，因此对应的汇编语言也不一样。本文介绍的是目前最常见的 x86 汇编语言，即 Intel 公司的 CPU 使用的那一种。</p>
+<blockquote>
+<p>以上全部是由来，下面是需要理解的。也是必须知道的。</p>
+</blockquote>
+<h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><p>学习汇编语言，首先必须了解两个知识点：<strong>寄存器</strong>和<strong>内存模型</strong>。</p>
+<p>先来看寄存器。CPU 本身只负责运算，不负责储存数据。数据一般都储存在内存之中，CPU 要用的时候就去内存读写数据。但是，CPU 的运算速度远高于内存的读写速度，为了避免被拖慢，CPU 都自带一级缓存和二级缓存。基本上，CPU 缓存可以看作是读写速度较快的内存。</p>
+<p>但是，CPU 缓存还是不够快，另外数据在缓存里面的地址是不固定的，CPU 每次读写都要寻址也会拖慢速度。因此，除了缓存之外，CPU 还自带了寄存器（register），用来储存最常用的数据。也就是说，那些最频繁读写的数据（比如循环变量），都会放在寄存器里面，CPU 优先读写寄存器，再由寄存器跟内存交换数据。</p>
+<p><img src="../images/bg2018012206.png" alt="图"></p>
+<p>寄存器不依靠地址区分数据，而依靠名称。每一个寄存器都有自己的名称，我们告诉 CPU 去具体的哪一个寄存器拿数据，这样的速度是最快的。有人比喻寄存器是 CPU 的零级缓存。</p>
+<h2 id="寄存器的种类"><a href="#寄存器的种类" class="headerlink" title="寄存器的种类"></a>寄存器的种类</h2><p>早期的 x86 CPU 只有8个寄存器，而且每个都有不同的用途。现在的寄存器已经有100多个了，都变成通用寄存器，不特别指定用途了，但是早期寄存器的名字都被保存了下来。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- EAX</span><br><span class="line">- EBX</span><br><span class="line">- ECX</span><br><span class="line">- EDX</span><br><span class="line">- EDI</span><br><span class="line">- ESI</span><br><span class="line">- EBP</span><br><span class="line">- ESP</span><br></pre></td></tr></table></figure>
+
+<p>上面这8个寄存器之中，前面七个都是通用的。ESP 寄存器有特定用途，保存当前 Stack 的地址（详见下一节）。</p>
+<p><img src="../images/bg2018012207.png" alt="图"></p>
+<p>我们常常看到 32位 CPU、64位 CPU 这样的名称，其实指的就是寄存器的大小。32 位 CPU 的寄存器大小就是4个字节。</p>
+<h2 id="内存模型：Heap"><a href="#内存模型：Heap" class="headerlink" title="内存模型：Heap"></a>内存模型：Heap</h2><p>寄存器只能存放很少量的数据，大多数时候，CPU 要指挥寄存器，直接跟内存交换数据。所以，除了寄存器，还必须了解内存怎么储存数据。</p>
+<p>程序运行的时候，操作系统会给它分配一段内存，用来储存程序和运行产生的数据。这段内存有起始地址和结束地址，比如从<code>0x1000</code>到<code>0x8000</code>，起始地址是较小的那个地址，结束地址是较大的那个地址。</p>
+<p><img src="../images/bg2018012208.png" alt="图"></p>
+<p>程序运行过程中，对于动态的内存占用请求（比如新建对象，或者使用<code>malloc</code>命令），系统就会从预先分配好的那段内存之中，划出一部分给用户，具体规则是从起始地址开始划分（实际上，起始地址会有一段静态数据，这里忽略）。举例来说，用户要求得到10个字节内存，那么从起始地址<code>0x1000</code>开始给他分配，一直分配到地址<code>0x100A</code>，如果再要求得到22个字节，那么就分配到<code>0x1020</code>。</p>
+<p><img src="../images/bg2018012209.png" alt="图"></p>
+<p>这种因为用户主动请求而划分出来的内存区域，叫做 Heap（堆）。它由起始地址开始，从低位（地址）向高位（地址）增长。Heap 的一个重要特点就是不会自动消失，必须手动释放，或者由垃圾回收机制来回收。</p>
+<h2 id="内存模型：Stack"><a href="#内存模型：Stack" class="headerlink" title="内存模型：Stack"></a>内存模型：Stack</h2><blockquote>
+<p><strong>栈帧</strong></p>
+<p><strong>栈低</strong></p>
+<p><strong>栈顶</strong></p>
+</blockquote>
+<p>除了 Heap 以外，其他的内存占用叫做 Stack（栈）。简单说，Stack 是由于函数运行而临时占用的内存区域。</p>
+<p><img src="../images/bg2018012210.png" alt="图"></p>
+<p>请看下面的例子。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">   <span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，系统开始执行<code>main</code>函数时，会为它在内存里面建立一个帧（frame），所有main的内部变量（比如<code>a</code>和<code>b</code>）都保存在这个帧里面。main函数执行结束后，该帧就会被回收，释放所有的内部变量，不再占用空间。</p>
+<p><img src="../images/bg2018012211.png" alt="图"></p>
+<p>如果函数内部调用了其他函数，会发生什么情况？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">   <span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line">   <span class="keyword">return</span> add_a_and_b(a, b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>main</code>函数内部调用了<code>add_a_and_b</code>函数。执行到这一行的时候，系统也会为<code>add_a_and_b</code>新建一个帧，用来储存它的内部变量。也就是说，此时同时存在两个帧：<code>main</code>和<code>add_a_and_b</code>。一般来说，调用栈有多少层，就有多少帧。</p>
+<p><img src="../images/bg2018012212.png" alt="图"></p>
+<p>等到<code>add_a_and_b</code>运行结束，它的帧就会被回收，系统会回到函数<code>main</code>刚才中断执行的地方，继续往下执行。通过这种机制，就实现了函数的层层调用，并且每一层都能使用自己的本地变量。</p>
+<p>所有的帧都存放在 Stack，由于帧是一层层叠加的，所以 Stack 叫做栈。生成新的帧，叫做”入栈”，英文是 push；栈的回收叫做”出栈”，英文是 pop。Stack 的特点就是，最晚入栈的帧最早出栈（因为最内层的函数调用，最先结束运行），这就叫做”后进先出”的数据结构。每一次函数执行结束，就自动释放一个帧，所有函数执行结束，整个 Stack 就都释放了。</p>
+<p><img src="../images/bg2018012213.jpg" alt="图"></p>
+<p><img src="../images/bg2018012214.jpg" alt="图"></p>
+<p>Stack 是由内存区域的结束地址开始，从高位（地址）向低位（地址）分配。比如，内存区域的结束地址是<code>0x8000</code>，第一帧假定是16字节，那么下一次分配的地址就会从<code>0x7FF0</code>开始；第二帧假定需要64字节，那么地址就会移动到<code>0x7FB0</code>。</p>
+<p><img src="../images/bg2018012215.png" alt="图"></p>
+<h2 id="CPU-指令"><a href="#CPU-指令" class="headerlink" title="CPU 指令"></a>CPU 指令</h2><h3 id="一个实例"><a href="#一个实例" class="headerlink" title="一个实例"></a>一个实例</h3><p>了解寄存器和内存模型以后，就可以来看汇编语言到底是什么了。下面是一个简单的程序<code>example.c。</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add_a_and_b</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> add_a_and_b(<span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>gcc 将这个程序转成汇编语言。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -S example.c</span><br></pre></td></tr></table></figure>
+
+<p>上面的命令执行以后，会生成一个文本文件<code>example.s</code>，里面就是汇编语言，包含了几十行指令。这么说吧，一个高级语言的简单操作，底层可能由几个，甚至几十个 CPU 指令构成。CPU 依次执行这些指令，完成这一步操作。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">	.section	__TEXT,__text,regular,pure_instructions</span><br><span class="line">	.build_version macos, <span class="number">10</span>, <span class="number">14</span>	sdk_version <span class="number">10</span>, <span class="number">14</span></span><br><span class="line">	.globl	_add_a_and_b            ## -- Begin function add_a_and_b</span><br><span class="line">	.p2align	<span class="number">4</span>, <span class="number">0x90</span></span><br><span class="line">_add_a_and_b:                           ## @add_a_and_b</span><br><span class="line">	.cfi_startproc</span><br><span class="line">## %bb<span class="number">.0</span>:</span><br><span class="line">	pushq	%rbp</span><br><span class="line">	.cfi_def_cfa_offset <span class="number">16</span></span><br><span class="line">	.cfi_offset %rbp, <span class="number">-16</span></span><br><span class="line">	movq	%rsp, %rbp</span><br><span class="line">	.cfi_def_cfa_register %rbp</span><br><span class="line">	movl	%edi, <span class="number">-4</span>(%rbp)</span><br><span class="line">	movl	%esi, <span class="number">-8</span>(%rbp)</span><br><span class="line">	movl	<span class="number">-4</span>(%rbp), %esi</span><br><span class="line">	addl	<span class="number">-8</span>(%rbp), %esi</span><br><span class="line">	movl	%esi, %eax</span><br><span class="line">	popq	%rbp</span><br><span class="line">	retq</span><br><span class="line">	.cfi_endproc</span><br><span class="line">                                        ## -- End function</span><br><span class="line">	.globl	_main                   ## -- Begin function main</span><br><span class="line">	.p2align	<span class="number">4</span>, <span class="number">0x90</span></span><br><span class="line">_main:                                  ## @main</span><br><span class="line">	.cfi_startproc</span><br><span class="line">## %bb<span class="number">.0</span>:</span><br><span class="line">	pushq	%rbp</span><br><span class="line">	.cfi_def_cfa_offset <span class="number">16</span></span><br><span class="line">	.cfi_offset %rbp, <span class="number">-16</span></span><br><span class="line">	movq	%rsp, %rbp</span><br><span class="line">	.cfi_def_cfa_register %rbp</span><br><span class="line">	subq	$<span class="number">16</span>, %rsp</span><br><span class="line">	movl	$<span class="number">0</span>, <span class="number">-4</span>(%rbp)</span><br><span class="line">	movl	$<span class="number">2</span>, %edi</span><br><span class="line">	movl	$<span class="number">3</span>, %esi</span><br><span class="line">	callq	_add_a_and_b</span><br><span class="line">	addq	$<span class="number">16</span>, %rsp</span><br><span class="line">	popq	%rbp</span><br><span class="line">	retq</span><br><span class="line">	.cfi_endproc</span><br><span class="line">                                        ## -- End function</span><br><span class="line"></span><br><span class="line">.subsections_via_symbols</span><br></pre></td></tr></table></figure>
+
+<p><code>example.s</code>经过简化以后，大概是下面的样子。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">_add_a_and_b:</span><br><span class="line">   push   %ebx</span><br><span class="line">   mov    %eax, [%esp+<span class="number">8</span>] </span><br><span class="line">   mov    %ebx, [%esp+<span class="number">12</span>]</span><br><span class="line">   add    %eax, %ebx </span><br><span class="line">   pop    %ebx </span><br><span class="line">   ret  </span><br><span class="line"></span><br><span class="line">_main:</span><br><span class="line">   push   <span class="number">3</span></span><br><span class="line">   push   <span class="number">2</span></span><br><span class="line">   call   _add_a_and_b </span><br><span class="line">   add    %esp, <span class="number">8</span></span><br><span class="line">   ret</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，原程序的两个函数<code>add_a_and_b</code>和<code>main</code>，对应两个标签<code>_add_a_and_b</code>和<code>_main</code>。每个标签里面是该函数所转成的 CPU 运行流程。</p>
+<p>每一行就是 CPU 执行的一次操作。它又分成两部分，就以其中一行为例。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">push   %ebx</span><br></pre></td></tr></table></figure>
+
+<p>这一行里面，<code>push</code>是 CPU 指令，<code>%ebx</code>是该指令要用到的运算子。一个 CPU 指令可以有零个到多个运算子。</p>
+<p>下面我就一行一行讲解这个汇编程序，建议读者最好把这个程序，在另一个窗口拷贝一份，省得阅读的时候再把页面滚动上来。</p>
+<h3 id="push-指令"><a href="#push-指令" class="headerlink" title="push 指令"></a><code>push</code> 指令</h3><p>根据约定，程序从<code>_main</code>标签开始执行，这时会在 Stack 上为<code>main</code>建立一个帧，并将 Stack 所指向的地址，写入 ESP 寄存器。后面如果有数据要写入<code>main</code>这个帧，就会写在 ESP 寄存器所保存的地址。</p>
+<p>然后，开始执行第一行代码。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">push   <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p><code>push</code>指令用于将运算子放入 Stack，这里就是将3写入main这个帧。</p>
+<p>虽然看上去很简单，<code>push</code>指令其实有一个前置操作。它会先取出 ESP 寄存器里面的地址，将其减去4个字节，然后将新地址写入 ESP 寄存器。使用减法是因为 Stack 从高位向低位发展，4个字节则是因为<code>3</code>的类型是<code>int</code>，占用4个字节。得到新地址以后， <code>3</code> 就会写入这个地址开始的四个字节。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">push   <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<p>第二行也是一样，<code>push</code>指令将2写入<code>main</code>这个帧，位置紧贴着前面写入的3。这时，ESP 寄存器会再减去 4个字节（累计减去8）。</p>
+<p><img src="../images/bg2018012216.png" alt="图"></p>
+<h3 id="call-指令"><a href="#call-指令" class="headerlink" title="call 指令"></a>call 指令</h3><p>第三行的call指令用来调用函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">call   _add_a_and_b</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码表示调用<code>add_a_and_b</code>函数。这时，程序就会去找<code>_add_a_and_b</code>标签，并为该函数建立一个新的帧。</p>
+<p>下面就开始执行<code>_add_a_and_b</code>的代码。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">push   %ebx</span><br></pre></td></tr></table></figure>
+
+<p>这一行表示将 EBX 寄存器里面的值，写入<code>_add_a_and_b</code>这个帧。这是因为后面要用到这个寄存器，就先把里面的值取出来，用完后再写回去。</p>
+<p>这时，<code>push</code>指令会再将 ESP 寄存器里面的地址减去4个字节（累计减去12）。</p>
+<h3 id="mov-指令"><a href="#mov-指令" class="headerlink" title="mov 指令"></a>mov 指令</h3><p><code>mov</code>指令用于将一个值写入某个寄存器。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov    %eax, [%esp+<span class="number">8</span>]</span><br></pre></td></tr></table></figure>
+
+<p>这一行代码表示，先将 ESP 寄存器里面的地址加上8个字节，得到一个新的地址，然后按照这个地址在 Stack 取出数据。根据前面的步骤，可以推算出这里取出的是2，再将2写入 EAX 寄存器。</p>
+<p>下一行代码也是干同样的事情。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov    %ebx, [%esp+<span class="number">12</span>]</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码将 ESP 寄存器的值加12个字节，再按照这个地址在 Stack 取出数据，这次取出的是3，将其写入 EBX 寄存器。</p>
+<h3 id="add-指令"><a href="#add-指令" class="headerlink" title="add 指令"></a>add 指令</h3><p><code>add</code>指令用于将两个运算子相加，并将结果写入第一个运算子。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add    %eax, %ebx</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码将 EAX 寄存器的值（即2）加上 EBX 寄存器的值（即3），得到结果5，再将这个结果写入第一个运算子 EAX 寄存器。</p>
+<h3 id="pop-指令"><a href="#pop-指令" class="headerlink" title="pop 指令"></a>pop 指令</h3><p><code>pop</code>指令用于取出 Stack 最近一个写入的值（即最低位地址的值），并将这个值写入运算子指定的位置。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pop    %ebx</span><br></pre></td></tr></table></figure>
+<p>上面的代码表示，取出 Stack 最近写入的值（即 EBX 寄存器的原始值），再将这个值写回 EBX 寄存器（因为加法已经做完了，EBX 寄存器用不到了）。</p>
+<p>注意，<code>pop</code>指令还会将 ESP 寄存器里面的地址加4，即回收4个字节。</p>
+<h3 id="ret-指令"><a href="#ret-指令" class="headerlink" title="ret 指令"></a>ret 指令</h3><p><code>ret</code>指令用于终止当前函数的执行，将运行权交还给上层函数。也就是，当前函数的帧将被回收。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ret</span><br></pre></td></tr></table></figure>
+<p>可以看到，该指令没有运算子。</p>
+<p>随着<code>add_a_and_b</code>函数终止执行，系统就回到刚才<code>main</code>函数中断的地方，继续往下执行。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add    %esp, <span class="number">8</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的代码表示，将 ESP 寄存器里面的地址，手动加上8个字节，再写回 ESP 寄存器。这是因为 ESP 寄存器的是 Stack 的写入开始地址，前面的pop操作已经回收了4个字节，这里再回收8个字节，等于全部回收。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ret</span><br></pre></td></tr></table></figure>
+
+<p>最后，<code>main</code>函数运行结束，ret指令退出程序执行。</p>
 
       
 
@@ -420,7 +819,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Data Formatting</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">汇编</a>
         		</li>
       		
 		</ul>
@@ -430,7 +829,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="2017/02/23/DataFormatting/">展开全文 >></a>
+          <a class="article-more-a" href="2014/09/15/汇编入门/">展开全文 >></a>
         </p>
       
 
@@ -460,27 +859,45 @@
 
 
   
-    <article id="post-CoreVideo" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-大小端" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="2017/01/02/CoreVideo/">Core Video Programming Guide</a>
+      <a class="article-title" href="2014/08/26/大小端/">大小端</a>
     </h1>
   
 
         
-        <a href="2017/01/02/CoreVideo/" class="archive-article-date">
-  	<time datetime="2017-01-02T02:27:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-02</time>
+        <a href="2014/08/26/大小端/" class="archive-article-date">
+  	<time datetime="2014-08-25T21:54:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-08-26</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="https://developer.apple.com/library/archive/documentation/GraphicsImaging/Conceptual/CoreVideo/CVProg_Intro/CVProg_Intro.html#//apple_ref/doc/uid/TP40001536-CH201-DontLinkElementID_27" target="_blank" rel="noopener">传送门</a></p>
+        <blockquote>
+<p>计算机硬件有两种储存数据的方式：大端字节序（big endian）和小端字节序（little endian）。</p>
+</blockquote>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>大小端这部分考验的其实就有关计算机原理这一块。一般面试问题就是写出一个怎么判断机器大小端的代码。</p>
+<h2 id="什么是大小端"><a href="#什么是大小端" class="headerlink" title="什么是大小端"></a>什么是大小端</h2><p>这是因为在计算机系统中，我们是以字节为单位的，每个地址单元都对应着一个字节，一个字节为<code>8bit</code>。但是在C语言中除了<code>8bit</code>的<code>char</code>之外，还有<code>16bit</code>的<code>short</code>型，<code>32bit</code>的<code>long</code>型（要看具体的编译器），另外，对于位数大于8位的处理器，例如16位或者32位的处理器，由于寄存器宽度大于一个字节，那么必然存在着一个如何将多个字节安排的问题。因此就导致了大端存储模式和小端存储模式。<br>  例如一个<code>16bit</code>的<code>short</code>型x，在内存中的地址为<code>0x0010</code>，x的值为<code>0x1122</code>，那么<code>0x11</code>为高字节，<code>0x22</code>为低字节。对于大端模式，就将<code>0x11</code>放在低地址中，即<code>0x0010</code>中，<code>0x22</code>放在高地址中，即<code>0x0011</code>中。小端模式，刚好相反。我们常用的X86结构是小端模式，而KEIL C51则为大端模式。很多的ARM，DSP都为小端模式。有些ARM处理器还可以由硬件来选择是大端模式还是小端模式。</p>
+<h2 id="为什么有大小端"><a href="#为什么有大小端" class="headerlink" title="为什么有大小端"></a>为什么有大小端</h2><p>这部分其实要知道计算机原理字节序，对下面所有的会很有帮助。  </p>
+<ul>
+<li><strong>大端模式：内存高地址存放低字节</strong>， 高位在前，便于判断正负和大小；另外，一般芯片发送的接口都是高比特先发送。</li>
+<li><strong>小端模式：内存低地址存放低字节</strong>， cpu做数值运算中依次中内存中先去高位数据再到低位数据，计算更加高效</li>
+</ul>
+<blockquote>
+<p>计算机电路先处理低位字节，效率比较高，因为计算都是从低位开始的。所以，计算机的内部处理都是小端字节序。<br>但是，人类还是习惯读写大端字节序。所以，除了计算机的内部处理，其他的场合几乎都是大端字节序，比如网络传输和文件储存。</p>
+</blockquote>
+<h2 id="判断大小端"><a href="#判断大小端" class="headerlink" title="判断大小端"></a>判断大小端</h2><p>联合体union的存放顺序是所有成员都从低地址开始存放，利用该特性就可以轻松地获得了CPU对内存采用Little-endian还是Big-endian模式读写</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*return 1: little-endian, return 0: big-endian*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">checkCPUendian</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">union</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> a;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> b; </span><br><span class="line">  &#125;c;</span><br><span class="line">  c.a = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">return</span> (c.b == <span class="number">1</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="大小端转换"><a href="#大小端转换" class="headerlink" title="大小端转换"></a>大小端转换</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//16位字节：</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BigtoLittle16(A)   (( ((uint16)(A) &amp; 0xff00) &gt;&gt; 8)    | \</span></span><br><span class="line">                                       (( (uint16)(A) &amp; <span class="number">0x00ff</span>) &lt;&lt; <span class="number">8</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">//32位子节：</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BigtoLittle32(A)   ((( (uint32)(A) &amp; 0xff000000) &gt;&gt; 24) | \</span></span><br><span class="line">                                       (( (uint32)(A) &amp; <span class="number">0x00ff0000</span>) &gt;&gt; <span class="number">8</span>)   | \</span><br><span class="line">                                       (( (uint32)(A) &amp; <span class="number">0x0000ff00</span>) &lt;&lt; <span class="number">8</span>)   | \</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ntohs(n)     <span class="comment">//16位数据类型网络字节顺序到主机字节顺序的转换</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> htons(n)     <span class="comment">//16位数据类型主机字节顺序到网络字节顺序的转换</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ntohl(n)      <span class="comment">//32位数据类型网络字节顺序到主机字节顺序的转换</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> htonl(n)      <span class="comment">//32位数据类型主机字节顺序到网络字节顺序的转换</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>对于我们开发者其实不用担心大小端，因为你写代码的时候根本不会涉及到这一块的东西。在面向对象编程的程序员可以大可放心你写的代码不会用到大小端直接相关的东西。</p>
 
       
 
@@ -494,7 +911,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Core Video</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">大小端</a>
         		</li>
       		
 		</ul>
@@ -504,7 +921,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="2017/01/02/CoreVideo/">展开全文 >></a>
+          <a class="article-more-a" href="2014/08/26/大小端/">展开全文 >></a>
         </p>
       
 
@@ -534,27 +951,91 @@
 
 
   
-    <article id="post-CollectionViewPGforIOS" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-搭建博客" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="2016/12/19/CollectionViewPGforIOS/">Collection View Programming Guide for iOS</a>
+      <a class="article-title" href="2014/08/07/搭建博客/">搭建博客</a>
     </h1>
   
 
         
-        <a href="2016/12/19/CollectionViewPGforIOS/" class="archive-article-date">
-  	<time datetime="2016-12-19T10:22:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-19</time>
+        <a href="2014/08/07/搭建博客/" class="archive-article-date">
+  	<time datetime="2014-08-07T12:40:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-08-07</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="https://developer.apple.com/library/archive/documentation/WindowsViews/Conceptual/CollectionViewPGforIOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40012334-CH1-SW1" target="_blank" rel="noopener">传送门</a></p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>个人觉得还是需要一个自己的窝，可以自由发挥的地方。重点是装13。基本的静态博客就可以满足我们的要求。</p>
+</blockquote>
+<p>当下比较热门的两种方式。</p>
+<ul>
+<li><p><code>Hexo</code> + <code>GitHub Pages</code></p>
+</li>
+<li><p><code>Jekyll</code> + <code>GitHub Pages</code></p>
+</li>
+</ul>
+<h2 id="GitHub-Pages"><a href="#GitHub-Pages" class="headerlink" title="GitHub Pages"></a>GitHub Pages</h2><p><a href="https://pages.github.com/" target="_blank" rel="noopener">Github Pages</a>是面向用户、组织和项目开放的公共静态页面搭建托管服务，站点可以被免费托管在<code>Github</code>上，你可以选择使用<code>GithubPages</code>默认提供的域名<code>github.io</code>或者自定义域名来发布站点。</p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>完全免费，其中服务器、流量、域名什么的都管，完全零费用搭建一个技术博客</li>
+<li>写博客就是提交代码，让写作和编程的体验保持一致</li>
+<li>支持绑定自己的域名</li>
+<li>提供流行的网页主题模板</li>
+</ul>
+<p><strong>缺点:</strong></p>
+<ul>
+<li>不支持动态内容，博客必须都是静态网页，一般会使用 Jekyll 来构建内容。</li>
+<li>博客不能被百度索引，因 Github 和百度有过节，所以 Github 就把百度给屏蔽了。</li>
+<li>仓库空间不大于1G</li>
+<li>每个月的流量不超过100G</li>
+<li>每小时更新不超过 10 次</li>
+</ul>
+<h2 id="准备Github-Pages"><a href="#准备Github-Pages" class="headerlink" title="准备Github Pages"></a>准备Github Pages</h2><p><strong>注册Github:</strong></p>
+<blockquote>
+<p>全球最大同性注册网站怎么注册我就不过多展开。<a href="https://github.com/join?source=header-home" target="_blank" rel="noopener">注册地址</a></p>
+</blockquote>
+<p><strong>以下假定你的注册名称(<code>haoshuai</code>)</strong></p>
+<p><strong>Github Pages:</strong>  </p>
+<p>创建一个仓库,比如你的用户名(<code>haoshuai</code>),那你创建的仓库名就是(<code>haoshuai.github.io</code>)，是不是很简单。这样就可直接访问(<code>https://haoshuai.github.io</code>)这个网站。当然你的仓库里面需要有一些可以被访问的静态资源比如index.html文件</p>
+<p><strong>可以定制自己的域名:</strong><br>虽然通过地址(<code>https://haoshuai.github.io</code>)可以正常访问博客，但是技术小伙伴们肯定有人想使用自己的域名访问博客，这样的需求<code>GitHub Pages</code>也是支持的。</p>
+<p>首先需要设置域名解析，将域名的地址指向自己的<code>github</code>博客地址。这里以万网的域名配置为例，选择需要设置的域名点击解析，在域名解析页面添加以下两条记录.</p>
+<p><img src="../images/blogcdn.png" alt="域名点击解析"></p>
+<p><strong>红框内，需要填写自己Github账户名(<code>haoshuai</code>)值。</strong></p>
+<p>然后重新打开项目的 Settings &gt; GitHub Pages 页面，Custom domain 下的输入框输入刚才设置的域名：xxx.com，点击保存即可。<br><img src="../images/domain.png" alt="地址"></p>
+<p><strong>需要在仓库根目录下加入CNAME文件:</strong></p>
+<p>CNAME 是定制域名的时候使用的内容，如果不使用定制域名会存在冲突。<br>写入你自己的域名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xxx.com</span><br></pre></td></tr></table></figure>
+
+<h2 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h2><blockquote>
+<p>我用的是Hexo,下面就介绍Hexo</p>
+</blockquote>
+<p><a href="https://hexo.io/zh-cn/" target="_blank" rel="noopener">Hexo官网</a></p>
+<p><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">Hexo文档</a></p>
+<h3 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h3><p>Mac和Windows平台有差别。自行翻阅资料。</p>
+<h3 id="安装node"><a href="#安装node" class="headerlink" title="安装node"></a>安装node</h3><p>Mac和Windows平台有差别。自行翻阅资料。</p>
+<h3 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo</span><br></pre></td></tr></table></figure>
+
+<h3 id="建站"><a href="#建站" class="headerlink" title="建站"></a>建站</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init &lt;folder&gt;</span><br><span class="line">$ cd &lt;folder&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="写博客"><a href="#写博客" class="headerlink" title="写博客"></a>写博客</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new &lt;title&gt;</span><br></pre></td></tr></table></figure>
+
+<p>接下来就可以在<code>&lt;title&gt;.md</code>文件写文章 </p>
+<h3 id="编译生成静态文件"><a href="#编译生成静态文件" class="headerlink" title="编译生成静态文件"></a>编译生成静态文件</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo g</span><br></pre></td></tr></table></figure>
+
+<h3 id="预览"><a href="#预览" class="headerlink" title="预览"></a>预览</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo s</span><br></pre></td></tr></table></figure>
+
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p><a href="https://hexo.io/zh-cn/docs/github-pages" target="_blank" rel="noopener">部署到GitHub</a>， 一键部署需要安装<a href="https://github.com/hexojs/hexo-deployer-git" target="_blank" rel="noopener">hexo-deployer-git</a>插件。<br><img src="../images/deploy_git.png" alt="部署配置"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo d</span><br></pre></td></tr></table></figure>
+
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>hexo教程写的很详细我也不想过多的复制直接看文档跟着文档一起做就可以。</p>
+<p>Jekyll我没有用过，我也就不多展开。</p>
 
       
 
@@ -568,7 +1049,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Collection View</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">GitHub</a>
         		</li>
       		
 		</ul>
@@ -578,7 +1059,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="2016/12/19/CollectionViewPGforIOS/">展开全文 >></a>
+          <a class="article-more-a" href="2014/08/07/搭建博客/">展开全文 >></a>
         </p>
       
 
@@ -608,27 +1089,79 @@
 
 
   
-    <article id="post-Collections" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-版本控制之git" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="2016/11/01/Collections/">Collections Programming Topics</a>
+      <a class="article-title" href="2014/07/29/版本控制之git/">版本控制之git</a>
     </h1>
   
 
         
-        <a href="2016/11/01/Collections/" class="archive-article-date">
-  	<time datetime="2016-11-01T15:36:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-11-01</time>
+        <a href="2014/07/29/版本控制之git/" class="archive-article-date">
+  	<time datetime="2014-07-29T12:16:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-07-29</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Collections/Collections.html#//apple_ref/doc/uid/10000034i" target="_blank" rel="noopener">传送门</a></p>
+        <p><a href="https://git-scm.com/" target="_blank" rel="noopener">官方链接</a></p>
+<h2 id="牛逼的大神"><a href="#牛逼的大神" class="headerlink" title="牛逼的大神"></a>牛逼的大神</h2><p>自2002年开始，林纳斯·托瓦兹决定使用BitKeeper作为Linux内核主要的版本控制系统用以维护代码。因为BitKeeper为专有软件，这个决定在社群中长期遭受质疑。在Linux社群中，特别是理查德·斯托曼与自由软件基金会的成员，主张应该使用开放源代码的软件来作为Linux内核的版本控制系统。林纳斯·托瓦兹曾考虑过采用现成软件作为版本控制系统（例如Monotone），但这些软件都存在一些问题，特别是性能不佳。现成的方案，如CVS的架构，受到林纳斯·托瓦兹的批评。</p>
+<p>2005年，安德鲁·垂鸠写了一个简单程序，可以连接BitKeeper的存储库，BitKeeper著作权拥有者拉里·麦沃伊认为安德鲁·垂鸠对BitKeeper内部使用的协议进行逆向工程，决定收回无偿使用BitKeeper的许可。Linux内核开发团队与BitMover公司进行磋商，但无法解决他们之间的歧见。林纳斯·托瓦兹决定自行开发版本控制系统替代BitKeeper，以十天的时间编写出git第一个版本。</p>
+<h2 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a>主要功能</h2><p>git是用于Linux内核开发的版本控制工具。与CVS、Subversion一类的<strong>集中式版本控制</strong>工具不同，它采用了<strong>分布式版本库</strong>的作法，不需要服务器端软件，就可以运作版本控制，使得源代码的发布和交流极其方便。git的速度很快，这对于诸如Linux内核这样的大项目来说自然很重要。git最为出色的是它的合并追踪（merge tracing）能力。</p>
+<p>实际上内核开发团队决定开始开发和使用git来作为内核开发的版本控制系统的时候，世界上开源社群的反对声音不少，最大的理由是git太艰涩难懂，从git的内部工作机制来说，的确是这样。但是随着开发的深入，git的正常使用都由一些友善的命令来执行，使git变得非常好用。现在，越来越多的著名项目采用git来管理项目开发，例如：wine、U-boot等。</p>
+<p>作为开源自由原教旨主义项目，git没有对版本库的浏览和修改做任何的权限限制，通过其他工具也可以达到有限的权限控制，比如：gitosis、CodeBeamer MR。原本git的使用范围只适用于Linux/Unix平台，但在Windows平台下的使用也日渐成熟，这主要归功于Cygwin、msysgit环境，以及TortoiseGit这样易用的GUI工具。git的源代码中也已经加入了对Cygwin与MinGW编译环境的支持且逐渐完善，为Windows用户带来福音。</p>
+<h3 id="集中式版本控制"><a href="#集中式版本控制" class="headerlink" title="集中式版本控制"></a>集中式版本控制</h3><p>集中化的版本控制系统（Centralized Version Control Systems，简称 CVCS）应运而生。 这类系统，诸如 CVS、Subversion 以及 Perforce 等，都有一个单一的集中管理的服务器，保存所有文件的修订版本，而协同工作的人们都通过客户端连到这台服务器，取出最新的文件或者提交更新。 多年以来，这已成为版本控制系统的标准做法。</p>
+<p><img src="../images/centralized.png" alt="集中化的版本控制"><br>集中化的版本控制.</p>
+<p>这种做法带来了许多好处，特别是相较于老式的本地 VCS 来说。 现在，每个人都可以在一定程度上看到项目中的其他人正在做些什么。 而管理员也可以轻松掌控每个开发者的权限，并且管理一个 CVCS 要远比在各个客户端上维护本地数据库来得轻松容易。</p>
+<p>事分两面，有好有坏。 这么做最显而易见的缺点是中央服务器的单点故障。 如果宕机一小时，那么在这一小时内，谁都无法提交更新，也就无法协同工作。 如果中心数据库所在的磁盘发生损坏，又没有做恰当备份，毫无疑问你将丢失所有数据——包括项目的整个变更历史，只剩下人们在各自机器上保留的单独快照。 本地版本控制系统也存在类似问题，只要整个项目的历史记录被保存在单一位置，就有丢失所有历史更新记录的风险。</p>
+<h3 id="分布式版本控制"><a href="#分布式版本控制" class="headerlink" title="分布式版本控制"></a>分布式版本控制</h3><p>于是分布式版本控制系统（Distributed Version Control System，简称 DVCS）面世了。 在这类系统中，像 Git、Mercurial、Bazaar 以及 Darcs 等，客户端并不只提取最新版本的文件快照，而是把代码仓库完整地镜像下来。 这么一来，任何一处协同工作用的服务器发生故障，事后都可以用任何一个镜像出来的本地仓库恢复。 因为每一次的克隆操作，实际上都是一次对代码仓库的完整备份。</p>
+<p><img src="../images/distributed.png" alt="布式版本控制"><br>布式版本控制</p>
+<h2 id="库目录"><a href="#库目录" class="headerlink" title="库目录"></a>库目录</h2><ul>
+<li>hooks：存储钩子的文件夹</li>
+<li>logs：存储日志的文件夹</li>
+<li>refs：存储指向各个分支的指针（SHA-1标识）文件</li>
+<li>objects：存放git对象</li>
+<li>config：存放各种设置文档</li>
+<li>HEAD：指向当前所在分支的指针文件路径，一般指向refs下的某文件</li>
+</ul>
+<h2 id="编写项目-常用操作"><a href="#编写项目-常用操作" class="headerlink" title="编写项目,常用操作"></a>编写项目,常用操作</h2><h3 id="获取项目"><a href="#获取项目" class="headerlink" title="获取项目"></a>获取项目</h3><p>直接从服务器克隆分支</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> [需要存储的项目位置]</span><br><span class="line">$ git <span class="built_in">clone</span> [url]</span><br></pre></td></tr></table></figure>
+
+<p>或者创建自己的项目</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> [需要存储的项目位置]</span><br><span class="line">$ git init</span><br></pre></td></tr></table></figure>
+
+<p>这样就可以使用git来管理你的项目</p>
+<h3 id="记得完善-gitignore文件"><a href="#记得完善-gitignore文件" class="headerlink" title="记得完善.gitignore文件"></a>记得完善.gitignore文件</h3><p><code>.gitignore</code>文件是排除项目中不需要进行版本控制的文件，也就是忽略提交。<br><a href="https://git-scm.com/docs/gitignore" target="_blank" rel="noopener">官方链接</a><br><a href="https://github.com/github/gitignore" target="_blank" rel="noopener">常用语言的gitignore</a></p>
+<h3 id="提交变更，以及添加新的文件"><a href="#提交变更，以及添加新的文件" class="headerlink" title="提交变更，以及添加新的文件"></a>提交变更，以及添加新的文件</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add *.c</span><br><span class="line">$ git add LICENSE</span><br><span class="line">$ git commit -m <span class="string">'initial project version'</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建分支"><a href="#创建分支" class="headerlink" title="创建分支"></a>创建分支</h3><p><strong>1. 查看分支</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git branch</span><br><span class="line">  iss53</span><br><span class="line">* master</span><br><span class="line">  testing</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 创建分支一个新的分支并且切换到新的分支</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b my_branch</span><br></pre></td></tr></table></figure>
+
+<h3 id="合并"><a href="#合并" class="headerlink" title="合并"></a>合并</h3><p><strong>1. 线切换到住分支</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout master</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 合并</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge my_branch</span><br></pre></td></tr></table></figure>
+
+<p>稍后填写提交合并提交信息</p>
+<p><strong>3. 出现冲突后线处理冲突后再进行合并。</strong></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><ol>
+<li>个人比较喜欢使用git可以随时切换到一个提交点进行修改合并。</li>
+<li>git操作虽然麻烦但是使用得当会比SVN好的多。</li>
+<li>如果公司使用的是SVN，我先把公司的项目放到本地，本地在用git来管理。</li>
+<li>可以适当的了解git-flow</li>
+<li>推荐一款比较好的git管理工具<a href="https://www.sourcetreeapp.com/" target="_blank" rel="noopener">sourcetree</a></li>
+<li>必须要知道<a href="https://github.com/" target="_blank" rel="noopener">github</a>,免费的公共仓库，有很多大牛发布自己的开源项目。</li>
+</ol>
+<p>由于官方的文档很完善也很清楚很多细节部分我也就不展开，可以直接查看<a href="https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-%E5%85%B3%E4%BA%8E%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6" target="_blank" rel="noopener">官方文档</a></p>
 
       
 
@@ -642,7 +1175,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Collections</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">git</a>
         		</li>
       		
 		</ul>
@@ -652,7 +1185,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="2016/11/01/Collections/">展开全文 >></a>
+          <a class="article-more-a" href="2014/07/29/版本控制之git/">展开全文 >></a>
         </p>
       
 
@@ -682,27 +1215,76 @@
 
 
   
-    <article id="post-Kernel" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-版本控制之SVN" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="2016/10/14/Kernel/">Kernel Programming Guide</a>
+      <a class="article-title" href="2014/07/27/版本控制之SVN/">版本控制之SVN</a>
     </h1>
   
 
         
-        <a href="2016/10/14/Kernel/" class="archive-article-date">
-  	<time datetime="2016-10-14T10:36:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-10-14</time>
+        <a href="2014/07/27/版本控制之SVN/" class="archive-article-date">
+  	<time datetime="2014-07-27T13:05:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2014-07-27</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="https://developer.apple.com/library/archive/documentation/Darwin/Conceptual/KernelProgramming/About/About.html#//apple_ref/doc/uid/TP30000905" target="_blank" rel="noopener">传送门</a></p>
+        <p>本人开始最先是接触到的SVN。多人共同开发一个软件，是借助SVN实现的。大大的减少了代码的拷贝。</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Apache Subversion 通常被缩写成 SVN，是一个开放源代码的版本控制系统，Subversion 在 2000 年由 CollabNet Inc 开发，现在发展成为 Apache 软件基金会的一个项目，同样是一个丰富的开发者和用户社区的一部分。</p>
+<p>SVN相对于的RCS、CVS，采用了分支管理系统，它的设计目标就是取代CVS。互联网上免费的版本控制服务多基于Subversion。</p>
+<h2 id="SVN-的一些概念"><a href="#SVN-的一些概念" class="headerlink" title="SVN 的一些概念"></a>SVN 的一些概念</h2><ul>
+<li>repository（源代码库）:源代码统一存放的地方</li>
+<li>Checkout（提取）:当你手上没有源代码的时候，你需要从repository checkout一份</li>
+<li>Commit（提交）:当你已经修改了代码，你就需要Commit到repository</li>
+<li>Update (更新):当你已经Checkout了一份源代码， Update一下你就可以和Repository上的源代码同步，你手上的代码就会有最新的变更<br>日常开发过程其实就是这样的（假设你已经Checkout并且已经工作了几天）：Update(获得最新的代码) –&gt;作出自己的修改并调试成功 –&gt; Commit(大家就可以看到你的修改了) 。</li>
+</ul>
+<p>如果两个程序员同时修改了同一个文件呢, SVN 可以合并这两个程序员的改动，实际上SVN管理源代码是以行为单位的，就是说两个程序员只要不是修改了同一行程序，SVN都会自动合并两种修改。如果是同一行，SVN 会提示文件 Conflict, 冲突，需要手动确认。</p>
+<h2 id="开始项目"><a href="#开始项目" class="headerlink" title="开始项目"></a>开始项目</h2><p>一开始从项目经理那里拿到svn仓库地址。然后在你的办公电脑检出项目。这里需要写入你的用户名和密码，这里需要项目经理现行告知。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn checkout svn://192.168.0.1/<span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p>检出成功后在当前目录下生成test副本目录。查看检出的内容</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ll <span class="built_in">test</span>/</span><br><span class="line">total 24</span><br><span class="line">drwxr-xr-x 6 root root 4096 Jul 21 19:19 ./</span><br><span class="line">drwxr-xr-x 3 root root 4096 Jul 21 19:10 ../</span><br><span class="line">drwxr-xr-x 2 root root 4096 Jul 21 19:19 branches/</span><br><span class="line">drwxr-xr-x 4 root root 4096 Jul 21 19:19 .svn/</span><br><span class="line">drwxr-xr-x 2 root root 4096 Jul 21 19:19 tags/</span><br><span class="line">drwxr-xr-x 2 root root 4096 Jul 21 19:19 trunk/</span><br></pre></td></tr></table></figure>
+
+<p>你想查看更多关于版本库的信息，执行 info 命令。</p>
+<h2 id="编写项目-常用操作"><a href="#编写项目-常用操作" class="headerlink" title="编写项目,常用操作"></a>编写项目,常用操作</h2><p>也就是开始写代码。我一般拿到项目之后，我先会创建一个分支，在当前分支测试完成后，再合并到我检出的分支上，也就是项目经理给的地址。</p>
+<h3 id="先创建自己的分支，以防污染项目经理给的地址"><a href="#先创建自己的分支，以防污染项目经理给的地址" class="headerlink" title="先创建自己的分支，以防污染项目经理给的地址"></a>先创建自己的分支，以防污染项目经理给的地址</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn copy trunk/ branches/my_branch</span><br></pre></td></tr></table></figure>
+
+<p>切换到自己的分支</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> branches/my_branch/</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码改动之后是提交最新的代码"><a href="#代码改动之后是提交最新的代码" class="headerlink" title="代码改动之后是提交最新的代码"></a>代码改动之后是提交最新的代码</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn commit -m <span class="string">"add my_branch"</span></span><br></pre></td></tr></table></figure>
+
+<p>在项目当中添加了一个文档<code>readme.md</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ svn add readme.md</span><br><span class="line">$ svn commit -m <span class="string">"add readme.md"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="功能测试通过之后，合并代码，把自己分支的代码合并到项目经理给的地址"><a href="#功能测试通过之后，合并代码，把自己分支的代码合并到项目经理给的地址" class="headerlink" title="功能测试通过之后，合并代码，把自己分支的代码合并到项目经理给的地址"></a>功能测试通过之后，合并代码，把自己分支的代码合并到项目经理给的地址</h3><p>先切回到项目经理给的地址</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ../trunk</span><br></pre></td></tr></table></figure>
+
+<p>之后需要执行更新防止没有更新，合并的时候有冲突</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn update</span><br></pre></td></tr></table></figure>
+
+<p>进行合并</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn merge ../branches/my_branch/</span><br></pre></td></tr></table></figure>
+
+<p>将合并好的 trunk 提交到版本库中。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ svn commit -m <span class="string">"add index.html"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="如有冲突需要解决冲突然后在进行提交合并"><a href="#如有冲突需要解决冲突然后在进行提交合并" class="headerlink" title="如有冲突需要解决冲突然后在进行提交合并"></a>如有冲突需要解决冲突然后在进行提交合并</h3><blockquote>
+<p>两人的代码被互相覆盖，这样就导致了冲突，解决了代码的相互覆盖就可以了。</p>
+</blockquote>
+<h2 id="SVN-标签（tag）"><a href="#SVN-标签（tag）" class="headerlink" title="SVN 标签（tag）"></a>SVN 标签（tag）</h2><p>版本管理系统支持 tag 选项，通过使用 tag 的概念，我们可以给某一个具体版本的代码一个更加有意义的名字。</p>
+<p>Tags 即标签主要用于项目开发中的里程碑，比如开发到一定阶段可以单独一个版本作为发布等，它往往代表一个可以固定的完整的版本，这跟 VSS 中的 Tag 大致相同。</p>
+<p>我们在本地工作副本创建一个 tag。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ svn copy trunk/ tags/v1.0</span><br><span class="line">$ svn commit -m <span class="string">"tags v1.0"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>SVN的回退，SVN查看历史提交信息我没有过多的展开。可以看下面的教程学到很多。</p>
+<p><a href="https://www.runoob.com/svn/svn-tutorial.html" target="_blank" rel="noopener">SVN教程</a><br><a href="https://www.runoob.com/svn/tortoisesvn-intro.html" target="_blank" rel="noopener">SVN工具图文教程</a></p>
 
       
 
@@ -716,7 +1298,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Kernel</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SVN</a>
         		</li>
       		
 		</ul>
@@ -726,7 +1308,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="2016/10/14/Kernel/">展开全文 >></a>
+          <a class="article-more-a" href="2014/07/27/版本控制之SVN/">展开全文 >></a>
         </p>
       
 
@@ -758,7 +1340,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="page/2/">&amp;laquo; Prev</a><a class="page-number" href="">1</a><a class="page-number" href="page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="page/4/">4</a><a class="page-number" href="page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="page/8/">8</a><a class="extend next" rel="next" href="page/4/">Next &amp;raquo;</a>
+      <a class="extend prev" rel="prev" href="page/2/">&amp;laquo; Prev</a><a class="page-number" href="">1</a><a class="page-number" href="page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="page/4/">4</a><a class="extend next" rel="next" href="page/4/">Next &amp;raquo;</a>
     </nav>
   
 
@@ -925,135 +1507,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Concurrency 多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">KVC</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Threading 多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">算法 排序</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Apple Pay</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Image I/O</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Location Maps</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Core Data Formatting</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Attributed String</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Animation Types and Timing</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Audio Session</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Camera</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Core Strings</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Cocoa Drawing</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Cocoa Text ArchitectureGuide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Cocoa View</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Collection View</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Core Animation</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">CoreImage</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Core Text</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Data Formatting</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Date and Time</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Drawing and Printing</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kernel</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Mach-O</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Advanced Memory Management</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Core Video</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Objective-C Runtime</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Quartz 2D</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Text Layout</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Scroll View</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">View Controller</a>
               </li>
              
               <li class="article-tag-list-item">
